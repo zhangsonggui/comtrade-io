@@ -10,7 +10,7 @@ from pydantic import Field
 from comtrade_io.cfg import Configure
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.data import DataContent
-from comtrade_io.dmf import ComtradeModel
+from comtrade_io.dmf import AnalogChannel, ComtradeModel, StatusChannel
 from comtrade_io.dmf.bus import Bus
 from comtrade_io.dmf.line import Line
 from comtrade_io.dmf.transformer import Transformer
@@ -87,11 +87,22 @@ class Comtrade(ComtradeModel):
     def get_data(self) -> pd.DataFrame:
         return self.dat.data
 
-    def get_analog_data_by_index(self, index: int):
-        return self.dat.data.iloc[:, index].to_numpy() if index < self.dat.data.shape[1] else None
+    def get_analog_channel(self, index: int) -> Optional[AnalogChannel]:
+        """
+        根据通道标识获取模拟量通道，并加载通道数据
+        """
+        analog = super().get_analog_channel(index)
+        analog.data = self.dat.iloc[:,index].to_numpy()
+        return analog
 
-    def get_analog_data_by_range(self):
-        pass
+    def get_status_channel(self,index:int)->Optional[StatusChannel]:
+        """
+        根据通道标识获取状态量通道，并加载通道数据
+        """
+        digital = super().get_status_channel(index)
+        digital.data = self.dat.iloc[:,index].to_numpy()
+        return digital
+
 
     def _load_digital_data(self, channels: list, data: pd.DataFrame):
         """加载数字量通道数据到通道对象列表"""
@@ -107,6 +118,7 @@ class Comtrade(ComtradeModel):
             if chn:
                 col_index = chn.index + 2
                 chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
+
 
     def get_line(self, name: str) -> Line | None:
         """
@@ -124,6 +136,10 @@ class Comtrade(ComtradeModel):
 
         data = self.dat.data
         if data is None:
+
+
+
+
             return line
 
         # 加载电流通道数据
