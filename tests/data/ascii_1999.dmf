@@ -1,0 +1,1700 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ComtradeModel station_name="GHBZ" version="1.0" reference="0" rec_dev_name="SDL9001"  xsi:schemaLocation="http://www.iec.ch/61850/2003/SCLcomtrade_mdl_v1.1.xsd" xmlns:scl="http://www.iec.ch/61850/2003/SCL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<scl:AnalogChannel idx_cfg="1" idx_org="1" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="127017.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007854353" x01="0.000000000" ka1="0.000000000" kc2="0.007854353" x02="0.000000000" ka2="0.000000000" dx0="0.000000000" zero="0" pctk="2200.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="2" idx_org="2" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="127017.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007837632" x01="0.000000000" ka1="-0.000223762" kc2="0.007837632" x02="0.000000000" ka2="-0.000223762" dx0="0.000000000" zero="0" pctk="2200.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="3" idx_org="3" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="127017.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007834713" x01="0.000000000" ka1="-0.000791397" kc2="0.007834713" x02="0.000000000" ka2="-0.000791397" dx0="0.000000000" zero="0" pctk="2200.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="4" idx_org="4" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="73323.453" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="3.450" limit_low="0.000" limit_chg="3.450" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007837305" x01="0.000000000" ka1="-0.000463762" kc2="0.007837305" x02="0.000000000" ka2="-0.000463762" dx0="0.000000000" zero="0" pctk="1270.000053694" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="5" idx_org="5" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="20207.250" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007834441" x01="0.000000000" ka1="-0.001127481" kc2="0.007834441" x02="0.000000000" ka2="-0.001127481" dx0="0.000000000" zero="0" pctk="350.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="6" idx_org="6" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="20207.250" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007835544" x01="0.000000000" ka1="-0.001016985" kc2="0.007835544" x02="0.000000000" ka2="-0.001016985" dx0="0.000000000" zero="0" pctk="350.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="7" idx_org="7" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="20207.250" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007836046" x01="0.000000000" ka1="-0.000995001" kc2="0.007836046" x02="0.000000000" ka2="-0.000995001" dx0="0.000000000" zero="0" pctk="350.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="8" idx_org="8" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="11662.470" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="3.450" limit_low="0.000" limit_chg="3.450" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007836669" x01="0.000000000" ka1="-0.001378509" kc2="0.007836669" x02="0.000000000" ka2="-0.001378509" dx0="0.000000000" zero="0" pctk="201.999994804" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="9" idx_org="9" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007824931" x01="0.000000000" ka1="0.000799687" kc2="0.007824931" x02="0.000000000" ka2="0.000799687" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="10" idx_org="10" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007833188" x01="0.000000000" ka1="0.000926316" kc2="0.007833188" x02="0.000000000" ka2="0.000926316" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="11" idx_org="11" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007828924" x01="0.000000000" ka1="0.000434119" kc2="0.007828924" x02="0.000000000" ka2="0.000434119" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="12" idx_org="12" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="3.450" limit_low="0.000" limit_chg="3.450" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007827934" x01="0.000000000" ka1="0.000406386" kc2="0.007827934" x02="0.000000000" ka2="0.000406386" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="13" idx_org="13" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007827061" x01="0.000000000" ka1="0.000036357" kc2="0.007827061" x02="0.000000000" ka2="0.000036357" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="14" idx_org="14" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007828739" x01="0.000000000" ka1="0.000107289" kc2="0.007828739" x02="0.000000000" ka2="0.000107289" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="15" idx_org="15" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007828938" x01="0.000000000" ka1="-0.000193739" kc2="0.007828938" x02="0.000000000" ka2="-0.000193739" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="16" idx_org="16" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="57735.000" secondary="57.735" ps="S"  >
+		<scl:SDL_Limit limit_high="3.450" limit_low="0.000" limit_chg="3.450" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.007828603" x01="0.000000000" ka1="-0.000109227" kc2="0.007828603" x02="0.000000000" ka2="-0.000109227" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="57.735000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="17" idx_org="17" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109436" x01="0.000000000" ka1="0.002862206" kc2="0.002109436" x02="0.000000000" ka2="0.002862206" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="18" idx_org="18" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109958" x01="0.000000000" ka1="0.002142828" kc2="0.002109958" x02="0.000000000" ka2="0.002142828" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="19" idx_org="19" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109452" x01="0.000000000" ka1="0.003298802" kc2="0.002109452" x02="0.000000000" ka2="0.003298802" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="20" idx_org="20" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109353" x01="0.000000000" ka1="0.002433920" kc2="0.002109353" x02="0.000000000" ka2="0.002433920" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="21" idx_org="21" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107126" x01="0.000000000" ka1="0.002556123" kc2="0.002107126" x02="0.000000000" ka2="0.002556123" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="22" idx_org="22" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109160" x01="0.000000000" ka1="0.004817814" kc2="0.002109160" x02="0.000000000" ka2="0.004817814" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="23" idx_org="23" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108973" x01="0.000000000" ka1="0.003194124" kc2="0.002108973" x02="0.000000000" ka2="0.003194124" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="24" idx_org="24" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109353" x01="0.000000000" ka1="0.004153987" kc2="0.002109353" x02="0.000000000" ka2="0.004153987" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="25" idx_org="25" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="2000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002106231" x01="0.000000000" ka1="0.005173366" kc2="0.002106231" x02="0.000000000" ka2="0.005173366" dx0="0.000000000" zero="0" pctk="2000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="26" idx_org="26" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="2000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111985" x01="0.000000000" ka1="0.006258241" kc2="0.002111985" x02="0.000000000" ka2="0.006258241" dx0="0.000000000" zero="0" pctk="2000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="27" idx_org="27" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="2000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108029" x01="0.000000000" ka1="0.004599500" kc2="0.002108029" x02="0.000000000" ka2="0.004599500" dx0="0.000000000" zero="0" pctk="2000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="28" idx_org="28" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="2000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002113187" x01="0.000000000" ka1="0.007560575" kc2="0.002113187" x02="0.000000000" ka2="0.007560575" dx0="0.000000000" zero="0" pctk="2000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="29" idx_org="29" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112084" x01="0.000000000" ka1="0.005606297" kc2="0.002112084" x02="0.000000000" ka2="0.005606297" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="30" idx_org="30" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108330" x01="0.000000000" ka1="0.005382730" kc2="0.002108330" x02="0.000000000" ka2="0.005382730" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="31" idx_org="31" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109547" x01="0.000000000" ka1="0.005046202" kc2="0.002109547" x02="0.000000000" ka2="0.005046202" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="32" idx_org="32" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108649" x01="0.000000000" ka1="0.009240375" kc2="0.002108649" x02="0.000000000" ka2="0.009240375" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="33" idx_org="33" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002117583" x01="0.000000000" ka1="0.007967327" kc2="0.002117583" x02="0.000000000" ka2="0.007967327" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="34" idx_org="34" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107999" x01="0.000000000" ka1="0.007023365" kc2="0.002107999" x02="0.000000000" ka2="0.007023365" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="35" idx_org="35" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107375" x01="0.000000000" ka1="0.002749443" kc2="0.002107375" x02="0.000000000" ka2="0.002749443" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="36" idx_org="36" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="100.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110754" x01="0.000000000" ka1="0.006277737" kc2="0.002110754" x02="0.000000000" ka2="0.006277737" dx0="0.000000000" zero="0" pctk="100.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="37" idx_org="37" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107815" x01="0.000000000" ka1="0.003932005" kc2="0.002107815" x02="0.000000000" ka2="0.003932005" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="38" idx_org="38" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109432" x01="0.000000000" ka1="0.006589592" kc2="0.002109432" x02="0.000000000" ka2="0.006589592" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="39" idx_org="39" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002105866" x01="0.000000000" ka1="0.002562971" kc2="0.002105866" x02="0.000000000" ka2="0.002562971" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="40" idx_org="40" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="300.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111660" x01="0.000000000" ka1="0.003750785" kc2="0.002111660" x02="0.000000000" ka2="0.003750785" dx0="0.000000000" zero="0" pctk="300.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="41" idx_org="41" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002106706" x01="0.000000000" ka1="0.004717781" kc2="0.002106706" x02="0.000000000" ka2="0.004717781" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="42" idx_org="42" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111759" x01="0.000000000" ka1="0.005519283" kc2="0.002111759" x02="0.000000000" ka2="0.005519283" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="43" idx_org="43" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108803" x01="0.000000000" ka1="0.003304669" kc2="0.002108803" x02="0.000000000" ka2="0.003304669" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="44" idx_org="44" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111306" x01="0.000000000" ka1="0.004288854" kc2="0.002111306" x02="0.000000000" ka2="0.004288854" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="45" idx_org="45" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002115235" x01="0.000000000" ka1="0.009295125" kc2="0.002115235" x02="0.000000000" ka2="0.009295125" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="46" idx_org="46" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109563" x01="0.000000000" ka1="0.003658808" kc2="0.002109563" x02="0.000000000" ka2="0.003658808" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="47" idx_org="47" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112601" x01="0.000000000" ka1="0.005854719" kc2="0.002112601" x02="0.000000000" ka2="0.005854719" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="48" idx_org="48" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1250.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108686" x01="0.000000000" ka1="0.003814927" kc2="0.002108686" x02="0.000000000" ka2="0.003814927" dx0="0.000000000" zero="0" pctk="1250.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="49" idx_org="49" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="4000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109093" x01="0.000000000" ka1="0.003376987" kc2="0.002109093" x02="0.000000000" ka2="0.003376987" dx0="0.000000000" zero="0" pctk="4000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="50" idx_org="50" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="4000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002115291" x01="0.000000000" ka1="0.004260647" kc2="0.002115291" x02="0.000000000" ka2="0.004260647" dx0="0.000000000" zero="0" pctk="4000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="51" idx_org="51" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="4000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109643" x01="0.000000000" ka1="0.005567675" kc2="0.002109643" x02="0.000000000" ka2="0.005567675" dx0="0.000000000" zero="0" pctk="4000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="52" idx_org="52" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="4000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109632" x01="0.000000000" ka1="0.003229629" kc2="0.002109632" x02="0.000000000" ka2="0.003229629" dx0="0.000000000" zero="0" pctk="4000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="53" idx_org="53" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109989" x01="0.000000000" ka1="0.003817849" kc2="0.002109989" x02="0.000000000" ka2="0.003817849" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="54" idx_org="54" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110882" x01="0.000000000" ka1="0.001633813" kc2="0.002110882" x02="0.000000000" ka2="0.001633813" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="55" idx_org="55" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111164" x01="0.000000000" ka1="0.006019148" kc2="0.002111164" x02="0.000000000" ka2="0.006019148" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="56" idx_org="56" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111183" x01="0.000000000" ka1="0.001355237" kc2="0.002111183" x02="0.000000000" ka2="0.001355237" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="57" idx_org="57" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112500" x01="0.000000000" ka1="0.006836485" kc2="0.002112500" x02="0.000000000" ka2="0.006836485" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="58" idx_org="58" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107998" x01="0.000000000" ka1="0.002686856" kc2="0.002107998" x02="0.000000000" ka2="0.002686856" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="59" idx_org="59" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002115144" x01="0.000000000" ka1="0.009586160" kc2="0.002115144" x02="0.000000000" ka2="0.009586160" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="60" idx_org="60" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109416" x01="0.000000000" ka1="0.004821064" kc2="0.002109416" x02="0.000000000" ka2="0.004821064" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="61" idx_org="61" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110207" x01="0.000000000" ka1="0.008056387" kc2="0.002110207" x02="0.000000000" ka2="0.008056387" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="62" idx_org="62" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108687" x01="0.000000000" ka1="0.006319003" kc2="0.002108687" x02="0.000000000" ka2="0.006319003" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="63" idx_org="63" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109591" x01="0.000000000" ka1="0.007236064" kc2="0.002109591" x02="0.000000000" ka2="0.007236064" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="64" idx_org="64" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109096" x01="0.000000000" ka1="0.003263623" kc2="0.002109096" x02="0.000000000" ka2="0.003263623" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="65" idx_org="65" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002115950" x01="0.000000000" ka1="0.004405155" kc2="0.002115950" x02="0.000000000" ka2="0.004405155" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="66" idx_org="66" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110207" x01="0.000000000" ka1="0.003127075" kc2="0.002110207" x02="0.000000000" ka2="0.003127075" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="67" idx_org="67" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109607" x01="0.000000000" ka1="0.002555716" kc2="0.002109607" x02="0.000000000" ka2="0.002555716" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="68" idx_org="68" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112801" x01="0.000000000" ka1="0.006269382" kc2="0.002112801" x02="0.000000000" ka2="0.006269382" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="69" idx_org="69" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002109832" x01="0.000000000" ka1="0.002117413" kc2="0.002109832" x02="0.000000000" ka2="0.002117413" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="70" idx_org="70" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111294" x01="0.000000000" ka1="0.002164260" kc2="0.002111294" x02="0.000000000" ka2="0.002164260" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="71" idx_org="71" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002113171" x01="0.000000000" ka1="0.004641989" kc2="0.002113171" x02="0.000000000" ka2="0.004641989" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="72" idx_org="72" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110277" x01="0.000000000" ka1="0.002440403" kc2="0.002110277" x02="0.000000000" ka2="0.002440403" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="73" idx_org="73" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002108192" x01="0.000000000" ka1="0.005762757" kc2="0.002108192" x02="0.000000000" ka2="0.005762757" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="74" idx_org="74" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112532" x01="0.000000000" ka1="0.004595426" kc2="0.002112532" x02="0.000000000" ka2="0.004595426" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="75" idx_org="75" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107240" x01="0.000000000" ka1="0.004876358" kc2="0.002107240" x02="0.000000000" ka2="0.004876358" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="76" idx_org="76" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110378" x01="0.000000000" ka1="0.003972255" kc2="0.002110378" x02="0.000000000" ka2="0.003972255" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="77" idx_org="77" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111311" x01="0.000000000" ka1="0.004243525" kc2="0.002111311" x02="0.000000000" ka2="0.004243525" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="78" idx_org="78" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002107996" x01="0.000000000" ka1="0.004514725" kc2="0.002107996" x02="0.000000000" ka2="0.004514725" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="79" idx_org="79" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110169" x01="0.000000000" ka1="0.003537240" kc2="0.002110169" x02="0.000000000" ka2="0.003537240" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="80" idx_org="80" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111025" x01="0.000000000" ka1="0.004686117" kc2="0.002111025" x02="0.000000000" ka2="0.004686117" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="81" idx_org="81" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110917" x01="0.000000000" ka1="0.002386588" kc2="0.002110917" x02="0.000000000" ka2="0.002386588" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="82" idx_org="82" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111600" x01="0.000000000" ka1="0.007445731" kc2="0.002111600" x02="0.000000000" ka2="0.007445731" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="83" idx_org="83" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110199" x01="0.000000000" ka1="0.003834933" kc2="0.002110199" x02="0.000000000" ka2="0.003834933" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="84" idx_org="84" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110874" x01="0.000000000" ka1="0.004823082" kc2="0.002110874" x02="0.000000000" ka2="0.004823082" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="85" idx_org="85" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110722" x01="0.000000000" ka1="0.001545105" kc2="0.002110722" x02="0.000000000" ka2="0.001545105" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="86" idx_org="86" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112629" x01="0.000000000" ka1="0.006975569" kc2="0.002112629" x02="0.000000000" ka2="0.006975569" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="87" idx_org="87" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112778" x01="0.000000000" ka1="0.007038181" kc2="0.002112778" x02="0.000000000" ka2="0.007038181" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="88" idx_org="88" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002111847" x01="0.000000000" ka1="0.005472212" kc2="0.002111847" x02="0.000000000" ka2="0.005472212" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="89" idx_org="89" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112724" x01="0.000000000" ka1="0.003955695" kc2="0.002112724" x02="0.000000000" ka2="0.003955695" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="90" idx_org="90" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002112632" x01="0.000000000" ka1="0.006339920" kc2="0.002112632" x02="0.000000000" ka2="0.006339920" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="91" idx_org="91" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="5.500" limit_low="0.000" limit_chg="0.500" limit_harm2="1.000" limit_harm3="1.000" limit_harm5="1.000" limit_harm7="1.000" limit_dc="1.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002113588" x01="0.000000000" ka1="0.004964639" kc2="0.002113588" x02="0.000000000" ka2="0.004964639" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="92" idx_org="92" type="A" flag="ACC" detail_type="1" freq="50.0" au="1.00000" bu="0.00000" sIUnit="A" multiplier="" primary="1000.000" secondary="1.000" ps="S"  >
+		<scl:SDL_Limit limit_high="0.500" limit_low="0.000" limit_chg="0.500" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.002110309" x01="0.000000000" ka1="0.006086222" kc2="0.002110309" x02="0.000000000" ka2="0.006086222" dx0="0.000000000" zero="0" pctk="1000.000000000" rate2="1.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kA" unit2="A"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="463.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="93" idx_org="93" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="220.000" secondary="220.000" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.019403821" x01="0.000000000" ka1="0.000000000" kc2="0.019403821" x02="0.000000000" ka2="0.000000000" dx0="0.000000000" zero="0" pctk="1.000000000" rate2="220.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="94" idx_org="94" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="220.000" secondary="220.000" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.019510358" x01="0.000000000" ka1="0.000000000" kc2="0.019510358" x02="0.000000000" ka2="0.000000000" dx0="0.000000000" zero="0" pctk="1.000000000" rate2="220.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="95" idx_org="95" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="220.000" secondary="220.000" ps="S"  >
+		<scl:SDL_Limit limit_high="63.510" limit_low="51.970" limit_chg="2.890" limit_harm2="11.550" limit_harm3="11.550" limit_harm5="11.550" limit_harm7="11.550" limit_dc="11.550" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.019397772" x01="0.000000000" ka1="0.000000000" kc2="0.019397772" x02="0.000000000" ka2="0.000000000" dx0="0.000000000" zero="0" pctk="1.000000000" rate2="220.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:AnalogChannel idx_cfg="96" idx_org="96" type="A" flag="ACV" detail_type="0" freq="50.0" au="1.00000" bu="0.00000" sIUnit="V" multiplier="" primary="220.000" secondary="220.000" ps="S"  >
+		<scl:SDL_Limit limit_high="3.450" limit_low="0.000" limit_chg="3.450" limit_harm2="0.000" limit_harm3="0.000" limit_harm5="0.000" limit_harm7="0.000" limit_dc="0.000" limit_curchg="10.000"/>
+		<scl:SDL_PB limit_high="1" limit_low="1" limit_chg="1" limit_harm2="1" limit_harm3="1" limit_harm5="1" limit_harm7="1" limit_dc="1" limit_curchg="1"/>
+		<scl:SDL_KC kc1="0.019431289" x01="0.000000000" ka1="0.000000000" kc2="0.019431289" x02="0.000000000" ka2="0.000000000" dx0="0.000000000" zero="0" pctk="1.000000000" rate2="220.000000000" pctb="0.000000000" one_ratio="0.001000000" invert="0" sample_x0="0.000000000"/>
+		<scl:SDL_Unit unit1="kV" unit2="V"/>
+		<scl:SDL_GDSample is_gd="0" sample_type="1" rate2="11585.000" ratio="1.000000"/>
+		<scl:SDL_SPECIAL input_type="0" absamplerate="4000" csamplerate="2000" steadysamplerate="1000" />
+	</scl:AnalogChannel>
+	<scl:StatusChannel idx_cfg="1" idx_org="1" type="Breaker" flag="HWJPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="2" idx_org="2" type="Breaker" flag="TWJPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="3" idx_org="3" type="Breaker" flag="HWJPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="4" idx_org="4" type="Breaker" flag="TWJPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="5" idx_org="5" type="Breaker" flag="HWJPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="6" idx_org="6" type="Breaker" flag="TWJPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="6" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="7" idx_org="7" type="Breaker" flag="HWJ" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="8" idx_org="8" type="Breaker" flag="HWJ" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="9" idx_org="9" type="Breaker" flag="HWJPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="10" idx_org="10" type="Breaker" flag="TWJPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="11" idx_org="11" type="Breaker" flag="HWJPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="12" idx_org="12" type="Breaker" flag="TWJPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="13" idx_org="13" type="Breaker" flag="HWJPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="14" idx_org="14" type="Breaker" flag="TWJPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="6" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="15" idx_org="15" type="Breaker" flag="HWJPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="16" idx_org="16" type="Breaker" flag="TWJPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="17" idx_org="17" type="Breaker" flag="HWJPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="18" idx_org="18" type="Breaker" flag="TWJPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="19" idx_org="19" type="Breaker" flag="HWJPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="20" idx_org="20" type="Breaker" flag="TWJPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="6" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="21" idx_org="21" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="22" idx_org="22" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="23" idx_org="23" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="24" idx_org="24" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="25" idx_org="25" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="26" idx_org="26" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="27" idx_org="27" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="28" idx_org="28" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="29" idx_org="29" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="30" idx_org="30" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="31" idx_org="31" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="32" idx_org="32" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="33" idx_org="33" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="34" idx_org="34" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="35" idx_org="35" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="36" idx_org="36" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="37" idx_org="37" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="38" idx_org="38" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="39" idx_org="39" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="40" idx_org="40" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="41" idx_org="41" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="42" idx_org="42" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="43" idx_org="43" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="44" idx_org="44" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="45" idx_org="45" type="Warning" flag="WarnComm" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="4" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="46" idx_org="46" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="47" idx_org="47" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="48" idx_org="48" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="49" idx_org="49" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="50" idx_org="50" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="51" idx_org="51" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="52" idx_org="52" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="53" idx_org="53" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="54" idx_org="54" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="55" idx_org="55" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="56" idx_org="56" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="57" idx_org="57" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="58" idx_org="58" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="59" idx_org="59" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="60" idx_org="60" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="61" idx_org="61" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="62" idx_org="62" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="63" idx_org="63" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="64" idx_org="64" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="65" idx_org="65" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="66" idx_org="66" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="67" idx_org="67" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="68" idx_org="68" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="69" idx_org="69" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="70" idx_org="70" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="71" idx_org="71" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="72" idx_org="72" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="73" idx_org="73" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="74" idx_org="74" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="75" idx_org="75" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="76" idx_org="76" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="77" idx_org="77" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="78" idx_org="78" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="79" idx_org="79" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="80" idx_org="80" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="81" idx_org="81" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="82" idx_org="82" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="83" idx_org="83" type="Warning" flag="WarnComm" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="4" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="84" idx_org="84" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="85" idx_org="85" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="86" idx_org="86" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="87" idx_org="87" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="88" idx_org="88" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="89" idx_org="89" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="90" idx_org="90" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="91" idx_org="91" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="92" idx_org="92" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="93" idx_org="93" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="94" idx_org="94" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="95" idx_org="95" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="96" idx_org="96" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="97" idx_org="97" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="98" idx_org="98" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="99" idx_org="99" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="100" idx_org="100" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="101" idx_org="101" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="102" idx_org="102" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="103" idx_org="103" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="104" idx_org="104" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="105" idx_org="105" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="106" idx_org="106" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="107" idx_org="107" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="108" idx_org="108" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="109" idx_org="109" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="110" idx_org="110" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="111" idx_org="111" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="112" idx_org="112" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="113" idx_org="113" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="114" idx_org="114" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="115" idx_org="115" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="116" idx_org="116" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="117" idx_org="117" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="118" idx_org="118" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="119" idx_org="119" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="120" idx_org="120" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="121" idx_org="121" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="122" idx_org="122" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="123" idx_org="123" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="124" idx_org="124" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="125" idx_org="125" type="Breaker" flag="HWJ" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="126" idx_org="126" type="Breaker" flag="HWJ" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="0" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="127" idx_org="127" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="128" idx_org="128" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="129" idx_org="129" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="130" idx_org="130" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="131" idx_org="131" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="132" idx_org="132" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="133" idx_org="133" type="Relay" flag="Tr" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="134" idx_org="134" type="Warning" flag="WarnComm" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="4" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="135" idx_org="135" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="136" idx_org="136" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="137" idx_org="137" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="138" idx_org="138" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="139" idx_org="139" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="140" idx_org="140" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="141" idx_org="141" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="142" idx_org="142" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="143" idx_org="143" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="144" idx_org="144" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="145" idx_org="145" type="Relay" flag="TrPhsA" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="1" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="146" idx_org="146" type="Relay" flag="TrPhsB" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="2" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="147" idx_org="147" type="Relay" flag="TrPhsC" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="3" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="148" idx_org="148" type="Relay" flag="RecOpCls" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="5" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="149" idx_org="149" type="Relay" flag="OpTP" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="1" detail_type="4" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="150" idx_org="150" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="151" idx_org="151" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="152" idx_org="152" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="153" idx_org="153" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="154" idx_org="154" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="155" idx_org="155" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="156" idx_org="156" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="157" idx_org="157" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="158" idx_org="158" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="159" idx_org="159" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="160" idx_org="160" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="161" idx_org="161" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="162" idx_org="162" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="163" idx_org="163" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="164" idx_org="164" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="165" idx_org="165" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="166" idx_org="166" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="167" idx_org="167" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="168" idx_org="168" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="169" idx_org="169" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="170" idx_org="170" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="171" idx_org="171" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="172" idx_org="172" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="173" idx_org="173" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="174" idx_org="174" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="175" idx_org="175" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="176" idx_org="176" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="177" idx_org="177" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="178" idx_org="178" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="179" idx_org="179" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="180" idx_org="180" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="181" idx_org="181" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="182" idx_org="182" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="183" idx_org="183" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="184" idx_org="184" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="185" idx_org="185" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="186" idx_org="186" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="187" idx_org="187" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="188" idx_org="188" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="189" idx_org="189" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="190" idx_org="190" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="191" idx_org="191" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:StatusChannel idx_cfg="192" idx_org="192" type="Other" flag="general" contact="NormallyOpen" >
+		<scl:SDL_Set location="" type="2" detail_type="0" desc0="" desc1="" normal_state="0" trig_pb="0"/>
+	</scl:StatusChannel>
+	<scl:Bus idx="1" bus_name="220kV母线U" VRtg="220.0" VRtgSnd="100.0" VRtgSnd_Pos="BUS" is_location="0">
+		<scl:ACVChn ua_idx="1" ub_idx="2" uc_idx="3" un_idx="4" ul_idx=""/>
+		<scl:SDL_Limit neg_high="1.730" neg_chg="1.150" zero_high="1.150" zero_chg="1.150"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+	</scl:Bus>
+	<scl:Bus idx="2" bus_name="35kV母线ⅠU" VRtg="35.0" VRtgSnd="100.0" VRtgSnd_Pos="BUS" is_location="0">
+		<scl:ACVChn ua_idx="5" ub_idx="6" uc_idx="7" un_idx="8" ul_idx=""/>
+		<scl:SDL_Limit neg_high="1.730" neg_chg="1.150" zero_high="1.150" zero_chg="1.150"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+	</scl:Bus>
+	<scl:Bus idx="3" bus_name="电压3" VRtg="100.0" VRtgSnd="100.0" VRtgSnd_Pos="BUS" is_location="0">
+		<scl:ACVChn ua_idx="9" ub_idx="10" uc_idx="11" un_idx="12" ul_idx=""/>
+		<scl:SDL_Limit neg_high="1.730" neg_chg="1.150" zero_high="1.150" zero_chg="1.150"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+	</scl:Bus>
+	<scl:Bus idx="4" bus_name="电压4" VRtg="100.0" VRtgSnd="100.0" VRtgSnd_Pos="BUS" is_location="0">
+		<scl:ACVChn ua_idx="13" ub_idx="14" uc_idx="15" un_idx="16" ul_idx=""/>
+		<scl:SDL_Limit neg_high="1.730" neg_chg="1.150" zero_high="1.150" zero_chg="1.150"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+	</scl:Bus>
+	<scl:Bus idx="24" bus_name="直流1+" VRtg="0.4" VRtgSnd="381.0" VRtgSnd_Pos="BUS" is_location="1">
+		<scl:ACVChn ua_idx="93" ub_idx="94" uc_idx="95" un_idx="96" ul_idx=""/>
+		<scl:SDL_Limit neg_high="1.730" neg_chg="1.150" zero_high="1.150" zero_chg="1.150"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+	</scl:Bus>
+	<scl:Line idx="5" line_name="hh1x" bus_ID="1"  VRtg="220.0" ARtg="1250.0" ARtgSnd="1.0" LinLen="23.790" bran_num="1">
+		<scl:RX r1="0.046900000" x1="0.152500000" r0="0.128900000" x0="0.282500000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="17" ib_idx="18" ic_idx="19" in_idx="20" dir="POS"/>
+		<scl:AnaChn idx_cfg="17"/>
+		<scl:AnaChn idx_cfg="18"/>
+		<scl:AnaChn idx_cfg="19"/>
+		<scl:AnaChn idx_cfg="20"/>
+		<scl:StaChn idx_cfg="33"/>
+		<scl:StaChn idx_cfg="38"/>
+		<scl:StaChn idx_cfg="34"/>
+		<scl:StaChn idx_cfg="39"/>
+		<scl:StaChn idx_cfg="35"/>
+		<scl:StaChn idx_cfg="40"/>
+		<scl:StaChn idx_cfg="41"/>
+		<scl:StaChn idx_cfg="1"/>
+		<scl:StaChn idx_cfg="3"/>
+		<scl:StaChn idx_cfg="5"/>
+		<scl:StaChn idx_cfg="2"/>
+		<scl:StaChn idx_cfg="4"/>
+		<scl:StaChn idx_cfg="6"/>
+		<scl:SDL_Location is_location="0" auto_bus="0" neg_pt="0" neg_ct="0" obj_type="0" bus1="1" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+		<scl:SDL_Protect a_trip1="33" a_trip2="38" b_trip1="34" b_trip2="39" c_trip1="35" c_trip2="40" reclose1="41"/>
+		<scl:SDL_Breaker breaker_a="1" breaker_b="3" breaker_c="5"/>
+		<scl:SDL_OtherDigital d1="2" d2="4" d3="6"/>
+		<scl:SDL_RelatedAnalog a1="17" a2="18" a3="19" a4="20"/>
+	</scl:Line>
+	<scl:Line idx="6" line_name="1号主变高压侧电流" bus_ID=""  VRtg="" ARtg="1250.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="21" ib_idx="22" ic_idx="23" in_idx="24" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="7" line_name="ghx" bus_ID="1"  VRtg="220.0" ARtg="2000.0" ARtgSnd="1.0" LinLen="9.750" bran_num="1">
+		<scl:RX r1="0.021000000" x1="0.276000000" r0="0.062000000" x0="0.660000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="25" ib_idx="26" ic_idx="27" in_idx="28" dir="POS"/>
+		<scl:AnaChn idx_cfg="25"/>
+		<scl:AnaChn idx_cfg="26"/>
+		<scl:AnaChn idx_cfg="27"/>
+		<scl:AnaChn idx_cfg="28"/>
+		<scl:StaChn idx_cfg="129"/>
+		<scl:StaChn idx_cfg="135"/>
+		<scl:StaChn idx_cfg="140"/>
+		<scl:StaChn idx_cfg="130"/>
+		<scl:StaChn idx_cfg="136"/>
+		<scl:StaChn idx_cfg="141"/>
+		<scl:StaChn idx_cfg="131"/>
+		<scl:StaChn idx_cfg="137"/>
+		<scl:StaChn idx_cfg="142"/>
+		<scl:StaChn idx_cfg="132"/>
+		<scl:StaChn idx_cfg="138"/>
+		<scl:StaChn idx_cfg="143"/>
+		<scl:StaChn idx_cfg="9"/>
+		<scl:StaChn idx_cfg="11"/>
+		<scl:StaChn idx_cfg="13"/>
+		<scl:StaChn idx_cfg="10"/>
+		<scl:StaChn idx_cfg="12"/>
+		<scl:StaChn idx_cfg="14"/>
+		<scl:StaChn idx_cfg="145"/>
+		<scl:StaChn idx_cfg="146"/>
+		<scl:StaChn idx_cfg="147"/>
+		<scl:StaChn idx_cfg="148"/>
+		<scl:SDL_Location is_location="0" auto_bus="0" neg_pt="0" neg_ct="0" obj_type="0" bus1="1" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+		<scl:SDL_Protect a_trip1="129" a_trip2="135" a_trip3="140" b_trip1="130" b_trip2="136" b_trip3="141" c_trip1="131" c_trip2="137" c_trip3="142" reclose1="132" reclose2="138" reclose3="143"/>
+		<scl:SDL_Breaker breaker_a="9" breaker_b="11" breaker_c="13"/>
+		<scl:SDL_OtherDigital d1="10" d2="12" d3="14" d4="145" d5="146" d6="147" d7="148"/>
+		<scl:SDL_RelatedAnalog a1="25" a2="26" a3="27" a4="28"/>
+	</scl:Line>
+	<scl:Line idx="8" line_name="hh2x" bus_ID="1"  VRtg="220.0" ARtg="1250.0" ARtgSnd="1.0" LinLen="23.810" bran_num="1">
+		<scl:RX r1="0.046900000" x1="0.152500000" r0="0.128900000" x0="0.285000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="29" ib_idx="30" ic_idx="31" in_idx="32" dir="POS"/>
+		<scl:AnaChn idx_cfg="29"/>
+		<scl:AnaChn idx_cfg="30"/>
+		<scl:AnaChn idx_cfg="31"/>
+		<scl:AnaChn idx_cfg="32"/>
+		<scl:StaChn idx_cfg="71"/>
+		<scl:StaChn idx_cfg="76"/>
+		<scl:StaChn idx_cfg="72"/>
+		<scl:StaChn idx_cfg="77"/>
+		<scl:StaChn idx_cfg="73"/>
+		<scl:StaChn idx_cfg="78"/>
+		<scl:StaChn idx_cfg="75"/>
+		<scl:StaChn idx_cfg="79"/>
+		<scl:StaChn idx_cfg="15"/>
+		<scl:StaChn idx_cfg="17"/>
+		<scl:StaChn idx_cfg="19"/>
+		<scl:StaChn idx_cfg="16"/>
+		<scl:StaChn idx_cfg="18"/>
+		<scl:StaChn idx_cfg="20"/>
+		<scl:SDL_Location is_location="0" auto_bus="0" neg_pt="0" neg_ct="0" obj_type="0" bus1="1" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+		<scl:SDL_Protect a_trip1="71" a_trip2="76" b_trip1="72" b_trip2="77" c_trip1="73" c_trip2="78" reclose1="75" reclose2="79"/>
+		<scl:SDL_Breaker breaker_a="15" breaker_b="17" breaker_c="19"/>
+		<scl:SDL_OtherDigital d1="16" d2="18" d3="20"/>
+		<scl:SDL_RelatedAnalog a1="29" a2="30" a3="31" a4="32"/>
+	</scl:Line>
+	<scl:Line idx="9" line_name="主变间隙电流" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="33" ib_idx="34" ic_idx="35" in_idx="36" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="10" line_name="主变高压侧零序电流" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="37" ib_idx="38" ic_idx="39" in_idx="40" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="11" line_name="220kV #1电抗器_" bus_ID=""  VRtg="" ARtg="1250.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="41" ib_idx="42" ic_idx="43" in_idx="44" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="12" line_name="220kV #2电抗器_" bus_ID=""  VRtg="" ARtg="1250.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="45" ib_idx="46" ic_idx="47" in_idx="48" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="13" line_name="1号主变低压侧电流" bus_ID=""  VRtg="" ARtg="4000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="49" ib_idx="50" ic_idx="51" in_idx="52" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="14" line_name="电流10" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="53" ib_idx="54" ic_idx="55" in_idx="56" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="15" line_name="电流11" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="57" ib_idx="58" ic_idx="59" in_idx="60" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="16" line_name="电流12" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="61" ib_idx="62" ic_idx="63" in_idx="64" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="17" line_name="电流13" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="65" ib_idx="66" ic_idx="67" in_idx="68" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="18" line_name="电流14" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="69" ib_idx="70" ic_idx="71" in_idx="72" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="19" line_name="电流15" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="73" ib_idx="74" ic_idx="75" in_idx="76" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="20" line_name="电流16" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="77" ib_idx="78" ic_idx="79" in_idx="80" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="21" line_name="电流17" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="81" ib_idx="82" ic_idx="83" in_idx="84" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="22" line_name="电流18" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="85" ib_idx="86" ic_idx="87" in_idx="88" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Line idx="23" line_name="电流19" bus_ID=""  VRtg="" ARtg="1000.0" ARtgSnd="1.0" LinLen="0.000" bran_num="1">
+		<scl:RX r1="0.000000000" x1="0.000000000" r0="0.000000000" x0="0.000000000"/>
+		<scl:CG c1="0.000000000" c0="0.000000000"/>
+		<scl:PX px="0.000000000" px0="0.000000000"/>
+		<scl:ACC_Bran bran_idx="1" ia_idx="89" ib_idx="90" ic_idx="91" in_idx="92" dir="POS"/>
+		<scl:SDL_Location is_location="1" auto_bus="1" neg_pt="0" neg_ct="0" obj_type="0" bus1="0" bus2="0"/>
+		<scl:SDL_Equivalent local_r="0.00000" local_x="50.00000" remote_r="0.00000" remote_x="50.00000"/>
+		<scl:SDL_Reactor x="0.000" neutral_x="0.000"/>
+		<scl:SDL_Limit neg_high="0.500" neg_chg="0.500" zero_high="0.500" zero_chg="0.500"/>
+		<scl:SDL_PB neg_high="1" neg_chg="1" zero_high="1" zero_chg="1"/>
+		<scl:SDL_Unit p_unit1="MW" p_unit2="W" q_unit1="MVar" q_unit2="Var" s_unit1="MVA" s_unit2="VA"/>
+	</scl:Line>
+	<scl:Transformer idx="1" trm_name="1号主变"  pwrRtg="0.0" >
+		<scl:TransformerWinding location="High"  VRtg="0.0" ARtg="1.0" bran_num="1" wG="y0">
+			<scl:ACVChn ua_idx="1" ub_idx="2" uc_idx="3" un_idx="4"/>
+			<scl:ACC_Bran bran_idx="1" ia_idx="21" ib_idx="22" ic_idx="23" in_idx="24" dir="POS"/>
+		</scl:TransformerWinding>
+		<scl:TransformerWinding location="Low" VRtg="0.0" ARtg="1.0" bran_num="1" wG="yn0">
+			<scl:ACVChn ua_idx="5" ub_idx="6" uc_idx="7" un_idx="8"/>
+			<scl:ACC_Bran bran_idx="1" ia_idx="49" ib_idx="50" ic_idx="51" in_idx="52" dir="POS"/>
+		</scl:TransformerWinding>
+		<scl:SDL_Type type="1" diff_type="0" limit="0.000" pb="0" break_limit="0.000" obj_type="0"/>
+	</scl:Transformer>
+	<scl:SDL_SysConfig company_name="" station_name="GHBZ" dev_name="220kV线路故障" factory_id="">
+		<scl:SDL_Global dev_model="0" dev_type="2" monitor_type="0" steady_board="0" is_location="0" mu_protocol="0" mu_samplerate="0" ft3_baudrate="0" supply_area="0" net_num="0" sampling_mode="0"/>
+		<scl:SDL_SampleRate max_sample_rate="10000" ab_sample_rate="10000" c_sample_rate="10000" steady_sample_rate="10000"/>
+		<scl:SDL_Segment a_length="5" b_length="150" c_length="100" d_length="0" c_interval="1" d_interval="5" a_time="100" b_time="3000" c_time="2000"/>
+		<scl:SDL_Limit freq_high="50.500" freq_low="49.500" current_change="10.000" current_change_time="75" freq_change="0.100" freq_change_time="5" over_magnetism="1.10000" counter_power="-0.05000" neg_sequence="0.01000" over_current_low_freq="2.00000" lose_magnetism="-0.05000"/>
+		<scl:SDL_PB freq_high="1" freq_low="1" current_change="1" freq_change="1" over_magnetism="1" counter_power="1" neg_sequence="1" over_current_low_freq="1" lose_magnetism="1"/>
+		<scl:SDL_Counter counter_freq="3" counter_current_chg="1" counter_analog_over="1" counter_analog_chg="1"/>
+		<scl:SDL_NetNum ad1_gd_net_num="2" ad2_gd_net_num="2" ad3_gd_net_num="2" ad4_gd_net_num="2" ad5_gd_net_num="2" ad6_gd_net_num="2" gd_sample_rcv="5" ad1_tdm_num="0" ad2_tdm_num="0" ad3_tdm_num="0" ad4_tdm_num="0" ad5_tdm_num="0" ad6_tdm_num="0"/>
+		<scl:SDL_MaxFileLength fault_file="20" steady_file="100" sv_file="100" goose_file="60" ptp1588_file="30" mms_file="60" other_file="30" self_frame="4096" handle_instant="0" location_pos="0"/>
+		<scl:SDL_Time gps="0" gps_mode="0" sntp="0" sntp_server=""/>
+		<scl:SDL_NAS use_nas="0" server="" dir="" capacity="0.0"/>
+		<scl:SDL_Relay rec_str="0" dev_abn="0" dev_alm="0"/>
+		<scl:SDL_Alarm b_code="0" net_interrupt="0" data_interrupt="0" ptct_interrupt="0"/>
+		<scl:SDL_Other gmrp="0" start_part_file="0" manual_line_chn_no="0" freq_mode="0" freq_analogno="0" freq_analogno2="0" freq_analogno3="0" freq_analogno4="0" freq_analogno5="0" addr1="1" addr2="2" vol_level="220.0" gen_xd="0.00000" gen_xq="0.00000" rec_steady="0" rec_steady_interval="1"/>
+	</scl:SDL_SysConfig>
+	<scl:SDL_Trig version="70" cycle_before="5" value="000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" />
+</ComtradeModel>

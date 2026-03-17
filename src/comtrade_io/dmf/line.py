@@ -1,0 +1,168 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+线路模型模块
+
+定义线路类，用于表示电力系统中的输电线路模型。
+线路是连接两个母线的电力输送通道，包含电气参数和电流分支信息。
+"""
+from typing import List
+from xml.etree.ElementTree import Element
+
+from pydantic import Field
+
+from comtrade_io.dmf import Bus
+from comtrade_io.dmf.branch import ACCBranch
+from comtrade_io.dmf.dmf_base_model import DmfBaseModelModel
+from comtrade_io.dmf.line_param import CG, MR, RX
+from comtrade_io.type import LineBranchNum
+from comtrade_io.utils import parse_float, parse_int
+
+
+class Line(DmfBaseModelModel):
+    """
+    线路类
+    
+    表示电力系统中的输电线路模型，包含线路的电气参数、额定值和电流分支信息。
+    线路连接两个母线，用于传输电力，是电力系统分析的基本元素之一。
+    
+    属性:
+        bus_index: 母线索引号，表示线路首端连接的母线
+        v_rtg: 一次额定电压，单位通常为kV
+        a_rtg: 一次额定电流，单位通常为A
+        a_rtg_snd: 二次额定电流，用于保护装置的额定电流，单位通常为A
+        lin_len: 线路长度，单位通常为km
+        bran_num: 线路分段数，表示线路被分割成的段数，用于分布参数模型
+        rx: 线路阻抗参数，包含正序和零序的电阻和电抗
+        cg: 线路电容参数，包含正序和零序的电容和电导
+        mr: 线路互感参数，用于表示与其他线路的互感关系
+        currents: 交流电流通道列表，包含线路各段的电流分支信息
+        anas: 模拟通道列表，继承自基类
+        stas: 开关量通道列表，继承自基类
+    """
+    bus_index: int = Field(..., description="母线索引号")
+    v_rtg: float = Field(default=0.0, description="一次额定电压")
+    a_rtg: float = Field(default=0.0, description="一次额定电流")
+    a_rtg_snd: float = Field(default=1.0, description="二次额定电流")
+    lin_len: float = Field(default=0.0, description="线路长度")
+    bran_num: LineBranchNum = Field(default=LineBranchNum.B1, description="线路分段数")
+    rx: RX = Field(default=RX(), description="线路阻抗")
+    cg: CG = Field(default=CG(), description="线路电容")
+    mr: MR = Field(default=MR(), description="线路互感")
+    currents: List[ACCBranch] = Field(default_factory=list, description="交流电流通道")
+    buses: List[Bus] = Field(default_factory=list, description="关联的母线列表")
+
+    def __str__(self):
+        """
+        返回线路的XML字符串表示形式
+        
+        返回:
+            格式化的XML字符串，包含线路及其所有子元素的完整表示
+        """
+        attrs = [
+            f'idx="{self.index}"',
+            f'line_name="{self.name}"',
+            f'bus_ID="{self.bus_index}"',
+            f'srcRef="{self.reference}"',
+            f'VRtg="{self.v_rtg}"',
+            f'ARtg="{self.a_rtg}"',
+            f'ARtgSnd="{self.a_rtg_snd}"',
+            f'LinLen="{self.lin_len}"',
+            f'bran_num="{self.bran_num.value}"',
+            f'line_uuid="{self.uuid}"'
+        ]
+        attrs = [attr for attr in attrs if attr is not None]
+        xml = f"\t<scl:Line {' '.join(attrs)} />"
+        xml += "\n\t\t" + str(self.rx)
+        xml += "\n\t\t" + str(self.cg)
+        xml += "\n\t\t" + str(self.mr)
+        for acc_branch in self.currents:
+            xml += "\n\t\t" + str(acc_branch)
+        xml += self.get_ana_chn_xml()
+        xml += self.get_sta_chn_xml()
+        xml += "\n\t</scl:Line>"
+        return xml
+
+    @classmethod
+    def from_xml(cls, element: Element, ns: dict, analog_channels: dict = None, status_channels: dict = None) -> 'Line':
+        """
+        从XML元素中解析线路模型
+
+        参数:
+            element: XML元素
+            ns: 命名空间映射
+            analog_channels: 模拟通道字典（可选），用于解析模拟通道对象
+            status_channels: 开关量通道字典（可选），用于解析开关量通道对象
+            
+        返回:
+            Line: 线路实例
+        """
+        line_bran_num = element.get('bran_num', 1)
+        idx = parse_int(element.get('idx', 1))
+        line_name = element.get('line_name', "")
+        bus_id = parse_int(element.get('bus_ID', 0))
+        src_ref = element.get('srcRef', "")
+        v_rtg = parse_float(element.get('VRtg', 0.0))
+        a_rtg = parse_float(element.get('ARtg', 0.0))
+        a_rtg_snd = parse_float(element.get('ARtgSnd', 0.0))
+        line_len = parse_float(element.get('LinLen', 0.0))
+        bran_num = LineBranchNum.from_value(line_bran_num, default=LineBranchNum.B1)
+        line_uuid = element.get('line_uuid', "")
+
+        line = cls(
+            index=idx,
+            name=line_name,
+            bus_index=bus_id,
+            reference=src_ref,
+            v_rtg=v_rtg,
+            a_rtg=a_rtg,
+            a_rtg_snd=a_rtg_snd,
+            lin_len=line_len,
+            bran_num=bran_num,
+            uuid=line_uuid
+        )
+
+        # 解析线路参数（支持带/不带命名空间）
+        rx_elem = element.find('scl:RX', ns) if 'scl' in ns else element.find('RX')
+        if rx_elem is not None:
+            line.rx = RX(
+                r1=parse_float(rx_elem.get('r1', 0.0)),
+                x1=parse_float(rx_elem.get('x1', 0.0)),
+                r0=parse_float(rx_elem.get('r0', 0.0)),
+                x0=parse_float(rx_elem.get('x0', 0.0))
+            )
+
+        cg_elem = element.find('scl:CG', ns) if 'scl' in ns else element.find('CG')
+        if cg_elem is not None:
+            line.cg = CG(
+                c0=parse_float(cg_elem.get('c0', 0.0)),
+                c1=parse_float(cg_elem.get('c1', 0.0)),
+                g0=parse_float(cg_elem.get('g0', 0.0)),
+                g1=parse_float(cg_elem.get('g1', 0.0))
+            )
+
+        mr_elem = element.find('scl:MR', ns) if 'scl' in ns else element.find('MR')
+        if mr_elem is not None:
+            line.mr = MR(
+                idx=parse_int(mr_elem.get('idx', 0)),
+                mr0=parse_float(mr_elem.get('mr0', 0.0)),
+                mx0=parse_float(mr_elem.get('mx0', 0.0))
+            )
+
+        # 解析分支和通道（支持带/不带命名空间）
+        if 'scl' in ns:
+            acc_elems = element.findall('scl:ACC_Bran', ns)
+            line.anas = cls.parse_ans_from_xml(element, ns, analog_channels=analog_channels, use_scl_prefix=True)
+            line.stas = cls.parse_sts_from_xml(element, ns, status_channels=status_channels, use_scl_prefix=True)
+        else:
+            acc_elems = element.findall('ACC_Bran')
+            line.anas = cls.parse_ans_from_xml(element, ns, analog_channels=analog_channels, use_scl_prefix=False)
+            line.stas = cls.parse_sts_from_xml(element, ns, status_channels=status_channels, use_scl_prefix=False)
+
+        # 解析ACC_Bran
+        line.currents = [
+            ACCBranch.from_xml(acc_elem, ns, analog_channels=analog_channels)
+            for acc_elem in acc_elems
+        ]
+
+        return line

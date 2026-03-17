@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FaultReport>
+	<DeviceInfo>
+		<name>厂站名称</name>
+		<value>GHBZ</value>
+	</DeviceInfo>
+	<DeviceInfo>
+		<name>录波器名称</name>
+		<value>220kV.220kV线路故障</value>
+	</DeviceInfo>
+	<DeviceInfo>
+		<name>设备识别代码</name>
+		<value>SDDL</value>
+	</DeviceInfo>
+	<DeviceInfo>
+		<name>装置型号</name>
+		<value>WDGL-VI-A</value>
+	</DeviceInfo>
+	<FaultStartTime>2023-05-12 19:45:25:814</FaultStartTime>
+	<FaultInfo>
+		<name>故障设备名称</name>
+		<value>ghx</value>
+	</FaultInfo>
+	<FaultInfo>
+		<name>故障相别</name>
+		<value>ABN</value>
+	</FaultInfo>
+	<FaultInfo>
+		<name>A相故障电压</name>
+		<value>85.296</value>
+		<unit>kV</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>B相故障电压</name>
+		<value>127.675</value>
+		<unit>kV</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>C相故障电压</name>
+		<value>123.356</value>
+		<unit>kV</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>A相故障电流</name>
+		<value>0.751</value>
+		<unit>kA</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>B相故障电流</name>
+		<value>0.720</value>
+		<unit>kA</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>C相故障电流</name>
+		<value>0.647</value>
+		<unit>kA</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>故障测距结果</name>
+		<value></value>
+		<unit>km</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>区内故障</name>
+		<value>否</value>
+	</FaultInfo>
+	<FaultInfo>
+		<name>重合闸动作时间</name>
+		<value></value>
+		<unit>ms</unit>
+	</FaultInfo>
+	<FaultInfo>
+		<name>故障性质</name>
+		<value></value>
+	</FaultInfo>
+	<FaultKeepingTime>0.000ms</FaultKeepingTime>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_A相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_A相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_B相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_B相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_C相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_C相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变高压侧_断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变高压侧_断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_212开关_A相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_212开关_A相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_212开关_B相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_212开关_B相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_212开关_C相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_212开关_C相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_213开关_A相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_213开关_A相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_213开关_B相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_213开关B相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_213开关_C相断路器合位</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_213开关_C相断路器分位</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV母差保护一_I母差动动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV母差保护一_I母失灵动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV母差保护一_断线告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV母差保护二_I母差动动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV母差保护二_I母失灵动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护一_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护一_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护一_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护一_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护一_远跳</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护一_通道故障</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量32</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_操作箱A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_操作箱B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_操作箱C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_操作箱三跳</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_操作箱重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_远传</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_不一致跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_过负荷告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_211开关_通道告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护二_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护二_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护二_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护二_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh1x_保护二_保护三跳</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_保护动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_过负荷告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_非电量保护动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_绕组温度高温报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_油面温度高温报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_本体油位异常报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_本体轻瓦斯报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_绕组温度超温跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_油面温度超温跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_本体压力释放跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_本体重瓦斯跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_突发压力继电器报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#1电抗器_跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量64</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护一_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护一_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护一_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护一_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护一_远跳</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护一_通道故障</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_操作箱A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_操作箱B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_操作箱C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_操作箱三跳</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_操作箱重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_远传</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_不一致跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_过负荷告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_212开关_通道告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护二_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护二_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护二_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护二_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV hh2x_保护二_保护三跳</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_保护一_保护动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_保护一_过负荷</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_保护二_过负荷</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_保护二_跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量93</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量94</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量95</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量96</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_保护动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_过负荷告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_非电量保护动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_绕组温度高温报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_油面温度高温报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_本体油位异常报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_本体轻瓦斯报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_绕组温度超温跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_油面温度超温跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_本体压力释放跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_本体重瓦斯跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_突发压力继电器报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>#2电抗器_跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_非电量保护动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_绕组过温报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_油温高报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_本体油位异常报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_本体轻瓦斯报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_绕组过温跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_油温高跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_本体压力释放跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_本体重瓦斯跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_本体压力释放阀报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_速动油压继电器报警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_高压侧_第一组三跳动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_高压侧_第二组三跳动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_低压侧_第一组三跳动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_低压侧_第二组三跳动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_低压侧_断路器分闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>主变_低压侧_断路器合闸</name>
+		<value>1</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量127</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量128</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护一_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护一_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护一_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护一_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护一_其他动作</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护一_通道告警</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱一_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱一_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱一_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱一_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱一_三相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护二_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护二_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护二_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护二_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_保护二_远传</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱二_A相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱二_B相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱二_C相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱二_重合闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>220kV ghx_操作箱二_三相跳闸</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量150</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量151</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量152</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量153</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量154</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量155</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量156</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量157</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量158</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量159</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量160</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量161</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量162</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量163</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量164</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量165</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量166</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量167</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量168</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量169</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量170</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量171</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量172</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量173</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量174</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量175</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量176</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量177</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量178</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量179</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量180</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量181</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量182</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量183</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量184</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量185</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量186</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量187</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量188</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量189</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量190</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量191</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DigitalStatus>
+		<name>开关量192</name>
+		<value>0</value>
+	</DigitalStatus>
+	<DataFileSize>9993464</DataFileSize>
+</FaultReport>

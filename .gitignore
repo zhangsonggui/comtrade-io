@@ -1,0 +1,16 @@
+__pycache__/
+*$py.class
+*.pyc
+/.venv/
+/.idea/
+/.vscode/
+.pytest_cache/
+/data/
+/dist/
+/src/comtrade_io.egg-info/
+.claude/
+config.json
+CLAUDE.md
+error_log.txt
+*.log
+compatibility.md

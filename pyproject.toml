@@ -1,0 +1,43 @@
+[project]
+name = "comtrade_io"
+version = "0.1.0"
+description = "COMTRADE文件读取工具,并提供便捷的 Pandas DataFrame 接口"
+readme = "README_zh.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "张松贵", email = "82018238@qq.com" }
+]
+
+dependencies = [
+    "pandas>=2.3.3",
+    "openpyxl>=3.1.5",
+    "pydantic>=2.12.5",
+    "path>=17.1.1",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "black>=26.1.0",
+    "setuptools>=80.9.0",
+    "pytest>=9.0.2",
+    "pandas-stubs~=2.3.3",
+    "wheel>=0.45.1",
+    "build>=1.4.0",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+
+[build-system]
+requires = ["setuptools>=80.9.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["comtrade_io*"]
