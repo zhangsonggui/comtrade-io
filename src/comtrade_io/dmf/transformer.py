@@ -75,7 +75,7 @@ class TransformerWinding(BaseModel):
         igap: 中性点电流信息，包含接地电流的通道号
     """
     bus_id: int = Field(default=0, description="母线索引号")
-    location: str = Field(default='high', description="绕组位置")
+    location: TransWindLocation = Field(default=TransWindLocation.HIGH, description="绕组位置")
     reference: Optional[str] = Field(default="", description="IEC61850参引")
     v_rtg: float = Field(default=0.0, description="额定电压")
     a_rtg: float = Field(default=0.0, description="一次额定电流")
@@ -93,7 +93,7 @@ class TransformerWinding(BaseModel):
             格式化的XML字符串，包含绕组及其所有子元素的完整表示
         """
         attrs = [
-            f'location={self.location}"',
+            f'location={self.location.value}"',
             f'srcRef={self.reference}"',
             f'VRtg={self.v_rtg}"',
             f'ARtg={self.a_rtg}"',
@@ -123,6 +123,7 @@ class TransformerWinding(BaseModel):
         返回:
             TransformerWinding: 变压器绕组实例
         """
+
         location = TransWindLocation.from_value(element.get('location', ""),
                                                 default=TransWindLocation.HIGH)
         src_ref = element.get('srcRef', "")
