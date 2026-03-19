@@ -14,7 +14,7 @@ from pydantic import Field, field_serializer
 
 from comtrade_io.cfg import Analog
 from comtrade_io.dmf.dmf_channel import DmfChannel
-from comtrade_io.type import (AnalogChannelFlag, AnalogChannelType)
+from comtrade_io.type import (AnalogChannelFlag, AnalogChannelType, Phase, TranSide, Unit)
 from comtrade_io.utils import parse_float, parse_int
 from comtrade_io.utils.channel_recognizer import recognize_channel
 
@@ -65,17 +65,17 @@ class AnalogChannel(Analog, DmfChannel):
         attrs = [
             f'idx_cfg="{self.index}"',
             f'idx_org="{self.idx_org}"',
-            f'type="{self.type}"',
-            f'flag="{self.flag}"',
+            f'type="{self.type.value}"',
+            f'flag="{self.flag.value}"',
             f'freq="{self.freq}"',
             f'au="{self.au}"',
             f'bu="{self.bu}"',
-            f'sIUnit="{self.unit}"',
+            f'sIUnit="{self.unit.value}"',
             f'multiplier="{self.unit_multiplier}"',
             f'primary="{self.primary}"',
             f'secondary="{self.secondary}"',
-            f'ps="{self.tran_side}"',
-            f'ph="{self.phase}"',
+            f'ps="{self.tran_side.value}"',
+            f'ph="{self.phase.value}"',
         ]
         return f"\t<scl:AnalogChannel {''.join(attrs)} />"
 
@@ -95,6 +95,9 @@ class AnalogChannel(Analog, DmfChannel):
         _flag = AnalogChannelFlag.from_value(element.get('flag', ''))
         if _type != _flag.type:
             _type = _flag.type
+        _unit_str = element.get('sIUnit', '')
+        _phase_str = element.get('ph', '')
+        _tran_side_str = element.get('ps', '')
         channel = cls(
             index=parse_int(element.get('idx_cfg', 1)),
             idx_org=parse_int(element.get('idx_org', 1)),
@@ -107,12 +110,12 @@ class AnalogChannel(Analog, DmfChannel):
             freq=parse_float(element.get('freq', 50.0)),
             au=parse_float(element.get('au', 1.0)),
             bu=parse_float(element.get('bu', 0.0)),
-            unit=element.get('sIUnit', ''),
+            unit=Unit.from_value(_unit_str),
             unit_multiplier=element.get('multiplier', ""),
-            phase=element.get('ph', ''),
+            phase=Phase.from_value(_phase_str),
             primary=parse_float(element.get('primary', 1.0)),
             secondary=parse_float(element.get('secondary', 1.0)),
-            tran_side=element.get('ps', '')
+            tran_side=TranSide.from_value(_tran_side_str)
         )
 
         if analog is not None:
