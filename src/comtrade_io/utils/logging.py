@@ -55,7 +55,8 @@ _LOG_LEVEL = _env.get("LOG_LEVEL", _DEFAULT_LEVEL)
 _LOG_FORMAT = _env.get("LOG_FORMAT", _DEFAULT_FORMAT)
 
 # 文件日志配置（可选）
-_LOG_TO_FILE = _env.get("LOG_TO_FILE", _DEFAULT_LOG_TO_FILE)
+_log_to_file_str = _env.get("LOG_TO_FILE", "")
+_LOG_TO_FILE = _log_to_file_str.lower() in ("true", "1", "yes", "on") if _log_to_file_str else _DEFAULT_LOG_TO_FILE
 _LOG_FILE_PATH = _env.get("LOG_FILE_PATH",_DEFAULT_LOG_FILE_PATH)
 _LOG_FILE_MAX_MB = int(_env.get("LOG_FILE_MAX_MB", "5") or 0)
 _LOG_FILE_BACKUP_COUNT = int(_env.get("LOG_FILE_BACKUP_COUNT", "5") or 0)
@@ -93,19 +94,26 @@ def _get_file_handler(level: int) -> Optional[logging.Handler]:
     return handler
 
 
+_configured = False
+
+
 def _configure_root_logger():
+    global _configured
+    if _configured:
+        return
+
     level = _level_from_str(_LOG_LEVEL)
     root = logging.getLogger()
-    # Remove any existing StreamHandler instances to prevent duplicates
+    # Remove any existing handlers to prevent duplicates
     for h in list(root.handlers):
-        if isinstance(h, logging.StreamHandler):
-            root.removeHandler(h)
+        root.removeHandler(h)
     # Always attach a single StreamHandler
     root.addHandler(_get_root_handler(level))
     root.setLevel(level)
     file_handler = _get_file_handler(level)
-    if file_handler and file_handler not in root.handlers:
+    if file_handler:
         root.addHandler(file_handler)
+    _configured = True
 
 
 def _caller_module_name():
