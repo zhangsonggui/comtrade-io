@@ -40,12 +40,12 @@ from comtrade_io import Comtrade
 c = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
 
 # 访问 CFG 配置
-c.cfg.header          # 变电站名、录波设备名、版本
-c.cfg.analogs         # 模拟量通道字典
-c.cfg.digitals        # 数字量通道字典
+c.cfg.header  # 变电站名、录波设备名、版本
+c.cfg.analogs  # 模拟量通道字典
+c.cfg.digitals  # 数字量通道字典
 
 # 访问 DAT 数据（返回 DataFrame）
-c.get_data()          # 返回包含所有采样数据的 pandas DataFrame
+c.get_data()  # 返回包含所有采样数据的 pandas DataFrame
 
 # 访问指定模拟通道数据
 c.get_analog_channel(1)  # 按索引获取模拟通道
@@ -57,11 +57,11 @@ c.get_analog_channel(1)  # 按索引获取模拟通道
 
 ```python
 # 访问电力系统数据模型
-c.buses              # 母线列表
-c.lines              # 线路列表
-c.transformers      # 变压器列表
-c.analog_channels   # 模拟通道字典
-c.status_channels   # 状态通道字典
+c.buses  # 母线列表
+c.lines  # 线路列表
+c.transformers  # 变压器列表
+c.analog_channels  # 模拟通道字典
+c.status_channels  # 状态通道字典
 
 # 按名称获取设备（自动加载通道数据）
 bus = c.get_bus("母线名称")

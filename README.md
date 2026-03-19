@@ -40,12 +40,12 @@ from comtrade_io import Comtrade
 c = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
 
 # Access CFG configuration
-c.cfg.header          # Substation name, recorder name, version
-c.cfg.analogs         # Analog channel dictionary
-c.cfg.digitals        # Digital channel dictionary
+c.cfg.header  # Substation name, recorder name, version
+c.cfg.analogs  # Analog channel dictionary
+c.cfg.digitals  # Digital channel dictionary
 
 # Access DAT data as DataFrame
-c.get_data()          # Returns pandas DataFrame with all sample data
+c.get_data()  # Returns pandas DataFrame with all sample data
 
 # Access specific analog channel data
 c.get_analog_channel(1)  # Get analog channel by index
@@ -57,11 +57,11 @@ c.get_analog_channel(1)  # Get analog channel by index
 
 ```python
 # Access power system data model
-c.buses              # List of buses
-c.lines              # List of lines
-c.transformers      # List of transformers
-c.analog_channels   # Analog channel dictionary
-c.status_channels   # Status channel dictionary
+c.buses  # List of buses
+c.lines  # List of lines
+c.transformers  # List of transformers
+c.analog_channels  # Analog channel dictionary
+c.status_channels  # Status channel dictionary
 
 # Get equipment by name (loads channel data automatically)
 bus = c.get_bus("Bus Name")

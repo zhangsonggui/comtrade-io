@@ -61,9 +61,9 @@ class ComtradeModel(ComtradeBaseModel):
         data['status_channels'] = list(self.status_channels.values())
         return data
 
-    def get_bus(self, name: str) -> Bus | None:
+    def get_bus_info(self, name: str) -> Bus | None:
         """
-        根据名称获取母线
+        根据名称获取母线信息
         
         参数:
             name: 母线名称
@@ -73,9 +73,9 @@ class ComtradeModel(ComtradeBaseModel):
         """
         return next((bus for bus in self.buses if bus.name == name), None)
 
-    def get_line(self, name: str) -> Line | None:
+    def get_line_info(self, name: str) -> Line | None:
         """
-        根据名称获取线路
+        根据名称获取线路信息
         
         参数:
             name: 线路名称
@@ -85,9 +85,9 @@ class ComtradeModel(ComtradeBaseModel):
         """
         return next((line for line in self.lines if line.name == name), None)
 
-    def get_transformer(self, name: str) -> Transformer | None:
+    def get_transformer_info(self, name: str) -> Transformer | None:
         """
-        根据名称获取变压器
+        根据名称获取变压器信息
         
         参数:
             name: 变压器名称
@@ -97,7 +97,7 @@ class ComtradeModel(ComtradeBaseModel):
         """
         return next((trans for trans in self.transformers if trans.name == name), None)
 
-    def get_analog_channel(self, index: int) -> Optional[AnalogChannel]:
+    def get_analog_channel_info(self, index: int) -> Optional[AnalogChannel]:
         """
         根据 index 获取模拟量通道
 
@@ -109,7 +109,7 @@ class ComtradeModel(ComtradeBaseModel):
         """
         return self.analog_channels.get(index)
 
-    def get_status_channel(self, index: int) -> Optional[StatusChannel]:
+    def get_status_channel_info(self, index: int) -> Optional[StatusChannel]:
         """
         根据 index 获取开关量通道
 

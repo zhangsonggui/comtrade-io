@@ -64,12 +64,12 @@ class TestDataModelFault:
 
         dmf = ComtradeModel.from_file(dmf_file)
 
-        bus = dmf.get_bus("Bus1")
+        bus = dmf.get_bus_info("Bus1")
         assert bus is not None
         assert bus.name == "Bus1"
         assert bus.v_rtg == 500.0
 
-        bus = dmf.get_bus("NonExistent")
+        bus = dmf.get_bus_info("NonExistent")
         assert bus is None
 
     def test_get_line(self, temp_dir, sample_xml_content):
@@ -79,13 +79,13 @@ class TestDataModelFault:
 
         dmf = ComtradeModel.from_file(dmf_file)
 
-        line = dmf.get_line("Line1")
+        line = dmf.get_line_info("Line1")
         assert line is not None
         assert line.name == "Line1"
         assert line.v_rtg == 500.0
         assert line.bran_num == LineBranchNum.B1
 
-        line = dmf.get_line("NonExistent")
+        line = dmf.get_line_info("NonExistent")
         assert line is None
 
     def test_get_transformer(self, temp_dir, sample_xml_content):
@@ -95,12 +95,12 @@ class TestDataModelFault:
 
         dmf = ComtradeModel.from_file(dmf_file)
 
-        transformer = dmf.get_transformer("Transformer1")
+        transformer = dmf.get_transformer_info("Transformer1")
         assert transformer is not None
         assert transformer.name == "Transformer1"
         assert len(transformer.windings) == 2
 
-        transformer = dmf.get_transformer("NonExistent")
+        transformer = dmf.get_transformer_info("NonExistent")
         assert transformer is None
 
     def test_empty_file(self, temp_dir):
@@ -156,7 +156,7 @@ class TestDataModelFault:
         dmf_file.write_text(xml_content, encoding="utf-8")
 
         dmf = ComtradeModel.from_file(dmf_file)
-        transformer = dmf.get_transformer("ThreeWinding")
+        transformer = dmf.get_transformer_info("ThreeWinding")
         assert transformer is not None
         assert len(transformer.windings) == 3
 

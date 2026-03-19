@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from enum import Enum
 from pathlib import Path
 from typing import Optional
 
@@ -19,48 +18,23 @@ from comtrade_io.utils import get_logger
 logging = get_logger()
 
 
-class ComtradeDumpType(str, Enum):
-    MODEL = "model"
-    DATA = "dat"
-
-
 class Comtrade(ComtradeModel):
     file: ComtradeFile = Field(default_factory=ComtradeFile, description="文件路径")
     cfg: Configure = Field(..., description="参数配置文件")
     dat: Optional[DataContent] = Field(default=None, description="故障数据")
 
-    def model_dump_json(self, *, dump_type: ComtradeDumpType = ComtradeDumpType.MODEL, indent: int | None = None,
-                        **kwargs):
-        dump_type = dump_type or ComtradeDumpType.MODEL
-
+    def model_dump_json(self, *, indent: int | None = None, **kwargs) -> str:
+        """
+        将Comtrade模型转换为JSON字符串（不包含dat、cfg、file字段）
+        """
         data = self.model_dump(mode='python')
         data.pop("cfg", None)
         data.pop("dat", None)
-
-        if dump_type == ComtradeDumpType.MODEL:
-            return self._create_dmf_json(data, indent)
-
-        if dump_type == ComtradeDumpType.DATA:
-            if self.dat is not None and self.dat.data is not None:
-                df = self.dat.data
-                analog_list = data.get("analog_channels", [])
-                for channel in analog_list:
-                    if channel.get("index") is not None:
-                        col_index = channel["index"] + 2
-                        if col_index < df.shape[1]:
-                            channel["data"] = df.iloc[:, col_index].tolist()
-                status_list = data.get("status_channels", [])
-                for channel in status_list:
-                    if channel.get("index") is not None:
-                        col_index = self.cfg.channel_num.analog + channel["index"] + 2
-                        if col_index < df.shape[1]:
-                            channel["data"] = df.iloc[:, col_index].tolist()
-            return self._create_dmf_json(data, indent)
-
-        return "{}"
+        data.pop("file", None)
+        return self._to_json(data, indent)
 
     @staticmethod
-    def _create_dmf_json(data: dict, indent: int | None = None) -> str:
+    def _to_json(data: dict, indent: int | None = None) -> str:
         import json
         from uuid import UUID
 
@@ -91,18 +65,17 @@ class Comtrade(ComtradeModel):
         """
         根据通道标识获取模拟量通道，并加载通道数据
         """
-        analog = super().get_analog_channel(index)
-        analog.data = self.dat.iloc[:,index].to_numpy()
+        analog = super().get_analog_channel_info(index)
+        analog.data = self.dat.iloc[:, index].to_numpy()
         return analog
 
-    def get_status_channel(self,index:int)->Optional[StatusChannel]:
+    def get_status_channel(self, index: int) -> Optional[StatusChannel]:
         """
         根据通道标识获取状态量通道，并加载通道数据
         """
-        digital = super().get_status_channel(index)
-        digital.data = self.dat.iloc[:,index].to_numpy()
+        digital = super().get_status_channel_info(index)
+        digital.data = self.dat.iloc[:, index].to_numpy()
         return digital
-
 
     def _load_digital_data(self, channels: list, data: pd.DataFrame):
         """加载数字量通道数据到通道对象列表"""
@@ -119,7 +92,6 @@ class Comtrade(ComtradeModel):
                 col_index = chn.index + 2
                 chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
 
-
     def get_line(self, name: str) -> Line | None:
         """
         根据名称获取线路，并加载通道数据
@@ -130,16 +102,12 @@ class Comtrade(ComtradeModel):
         返回:
             线路对象，如果未找到则返回None
         """
-        line = super().get_line(name)
+        line = super().get_line_info(name)
         if line is None or self.dat is None:
             return line
 
         data = self.dat.data
         if data is None:
-
-
-
-
             return line
 
         # 加载电流通道数据
@@ -166,7 +134,7 @@ class Comtrade(ComtradeModel):
         返回:
             母线对象，如果未找到则返回None
         """
-        bus = super().get_bus(name)
+        bus = super().get_bus_info(name)
         if bus is None or self.dat is None:
             return bus
 
@@ -194,7 +162,7 @@ class Comtrade(ComtradeModel):
         返回:
             变压器对象，如果未找到则返回None
         """
-        transformer = super().get_transformer(name)
+        transformer = super().get_transformer_info(name)
         if transformer is None or self.dat is None:
             return transformer
 
@@ -271,11 +239,30 @@ class Comtrade(ComtradeModel):
         super().write_file(cf.dmf_path.path)
         return f"文件保存成功：参数文件位置：{cf.cfg_path.path}，数据文件位置：{cf.dat_path.path},模型文件位置{cf.dmf_path.path}"
 
-    def to_json_file(self):
+    def to_json_file(self, *, indent: int | None = None) -> str:
         """
-        将Comtrade对象转换为JSON字符串
+        将Comtrade对象转换为JSON字符串（包含dat数据）
         """
-        return self.model_dump_json()
+        data = self.model_dump(mode='python')
+        data.pop("cfg", None)
+        data.pop("file", None)
+
+        if self.dat is not None and self.dat.data is not None:
+            df = self.dat.data
+            analog_list = data.get("analog_channels", [])
+            for channel in analog_list:
+                if channel.get("index") is not None:
+                    col_index = channel["index"] + 2
+                    if col_index < df.shape[1]:
+                        channel["data"] = df.iloc[:, col_index].tolist()
+            status_list = data.get("status_channels", [])
+            for channel in status_list:
+                if channel.get("index") is not None:
+                    col_index = self.cfg.channel_num.analog + channel["index"] + 2
+                    if col_index < df.shape[1]:
+                        channel["data"] = df.iloc[:, col_index].tolist()
+
+        return self._to_json(data, indent)
 
     def to_dict_file(self):
         """
