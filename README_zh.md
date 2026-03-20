@@ -23,13 +23,28 @@ Python 库，用于从 COMTRADE 标准的 CFG/DAT/INF/DMF/HDR 文件序列加载
 
 ## 安装
 
-```bash
-# 使用 uv
-uv sync
+### 使用pypi仓库安装
 
-# 或直接安装
-pip install comtrade_io
+```bash
+# 使用UV
+uv add comtrade-io
+
+# 使用pip
+pip install comtrade-io
+
 ```
+
+### 使用git仓库源码安装
+
+```bash
+# 克隆源码
+git clone https://github.com/zhangsonggui/comtrade-io.git
+git clone https://gitee.com/zhangsonggui/comtrade-io.git
+# 进入项目安装依赖
+cd comtrade-io
+uv sync
+```
+
 
 ## 快速开始
 
@@ -37,68 +52,44 @@ pip install comtrade_io
 from comtrade_io import Comtrade
 
 # 加载 COMTRADE 文件（自动查找 cfg/dat/dmf/hdr/inf 文件）
-c = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
+wave = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
 
-# 访问 CFG 配置
-c.cfg.header  # 变电站名、录波设备名、版本
-c.cfg.analogs  # 模拟量通道字典
-c.cfg.digitals  # 数字量通道字典
+# 访问模型方法（不含采样数据）
+wave.get_bus_info("母线名称")  # 返回指定母线名称的模型包含电压通道、开关量通道
+wave.get_line_info("线路名称")  # 返回指定线路名称的模型包含电压通道、开关量通道
+wave.get_transformer_info("主变名称")  # 返回指定主变、绕组名称的模型包含电压通道、开关量通道
+wave.get_analog_channel_info("模拟量an")  # 返回指定模拟量标识的模型
+wave.get_status_channel_info("开关量dn")  # 返回指定开关量标识的模型
 
-# 访问 DAT 数据（返回 DataFrame）
-c.get_data()  # 返回包含所有采样数据的 pandas DataFrame
+# 访问 DAT 数据（DataFrame列结构：第1列为时间戳，第2列开始为模拟量，之后为开关量）
+data = wave.get_data()  # 或wave.dat.data 返回包含所有采样数据的 pandas DataFrame，
 
 # 访问指定模拟通道数据
-c.get_analog_channel(1)  # 按索引获取模拟通道
+wave.get_analog_channel(1)  # 按通道标识获取模拟量通道包含瞬时值采样数据
+wave.get_status_channel(1)  # 按通道标识获取开关量通道包含瞬时值采样数据
+
+# 访问指定线路、母线、主变通道数据
+wave.get_bus("母线名称")  # 按母线名称获取母线参数及关联的电压通道及瞬时值数据
+wave.get_line("线路名称")  # 按线路名称获取线路参数及关联的电流通道及瞬时值数据、母线参数及电压通道瞬时值数据
+wave.get_transformer("主变名称")  # 按主变名称获取主变和各绕组的参数及关联电压电流通道和瞬时值数据
+
+
 ```
 
 ## 进阶用法
-
-### 数据模型（DMF）
-
-```python
-# 访问电力系统数据模型
-c.buses  # 母线列表
-c.lines  # 线路列表
-c.transformers  # 变压器列表
-c.analog_channels  # 模拟通道字典
-c.status_channels  # 状态通道字典
-
-# 按名称获取设备（自动加载通道数据）
-bus = c.get_bus("母线名称")
-line = c.get_line("线路名称")
-transformer = c.get_transformer("变压器名称")
-
-# 按索引获取通道
-analog = c.get_analog_channel(1)
-status = c.get_status_channel(1)
-```
 
 ### 写入文件
 
 ```python
 # 保存 Comtrade 对象为文件
-c.to_file("output.cfg", data_type="BINARY")  # 二进制格式
-c.to_file("output.cfg", data_type="ASCII")   # ASCII 格式
+wave.to_file("output.cfg", data_type="BINARY")  # 二进制格式
+wave.to_file("output.cfg", data_type="ASCII")   # ASCII 格式
 
-# 导出为 JSON
-c.to_json_file("output.json")
+# 导出为 JSON文件
+wave.to_json_file("output.json")
 
-# 导出为字典（pickle）
-c.to_dict_file("output.pkl")
 ```
 
-### 配置操作
-
-```python
-# 获取模拟量通道
-analog = c.cfg.get_analog(1)
-
-# 获取数字量通道
-digital = c.cfg.get_digital(1)
-
-# 获取采样段信息
-nrate = c.cfg.get_sampling_nrate(1)
-```
 
 ## 项目结构
 
@@ -130,6 +121,7 @@ comtrade_io/
 ## 核心类说明
 
 ### Comtrade
+**注意** 本模块所有模型由pydantic进行约束，对于对象转json或dict可以调用pydantic的model_dump_json方法来实现
 
 主类，封装完整的 COMTRADE 文件数据。
 
@@ -145,11 +137,16 @@ comtrade_io/
 - `from_file(file_name)`: 从文件加载 Comtrade 对象
 - `to_file(filename, data_type)`: 保存为 COMTRADE 文件
 - `to_json_file(filename)`: 导出为 JSON
-- `get_bus(name)`: 根据名称获取母线
-- `get_line(name)`: 根据名称获取线路
-- `get_transformer(name)`: 根据名称获取变压器
-- `get_analog_channel(index)`: 根据索引获取模拟通道
-- `get_status_channel(index)`: 根据索引获取状态通道
+- `get_bus(name)`: 根据名称获取母线及对应电压通道的瞬时值数据
+- `get_line(name)`: 根据名称获取线路及对应母线电压、电流通道的瞬时值数据
+- `get_transformer(name)`: 根据名称获取变压器及对应电压、电流通道的瞬时值数据
+- `get_analog_channel(index)`: 根据索引获取模拟通道及瞬时值数据
+- `get_status_channel(index)`: 根据索引获取状态通道及瞬时值数据
+- `get_bus_info()`: 根据名称获取母线模型
+- `get_line_info()`: 根据名称获取线路模型
+- `get_transformers_info()`: 根据名称获取主变模型
+- `get_analog_channel_info()`: 根据名称获取模拟量模型
+- `get_status_channel_info()`: 根据名称获取开关量模型
 
 ### Configure
 

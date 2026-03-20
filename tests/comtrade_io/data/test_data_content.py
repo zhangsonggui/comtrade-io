@@ -1,230 +1,176 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """DataContent测试"""
-import tempfile
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
 import pytest
 
+from comtrade_io.cfg import Configure
 from comtrade_io.data.data_content import DataContent
-from comtrade_io.cfg import Analog, ChannelNum, Configure, Digital, Header, Sampling
-from comtrade_io.type import DataType
+
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
+CFG_FILE = DATA_DIR / "binary_1999.cfg"
+CSV_FILE = DATA_DIR / "binary_1999.csv"
 
 
-class TestDataContent:
-    """DataContent测试类"""
+@pytest.fixture(scope="module")
+def comtrade_cfg():
+    """从binary_1999.cfg加载配置"""
+    return Configure.from_file(CFG_FILE)
 
-    @pytest.fixture
-    def temp_dir(self):
-        """创建临时目录"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            yield Path(tmpdir)
 
-    @pytest.fixture
-    def sample_config(self):
-        """创建示例配置"""
-        return Configure(
-            header=Header(station="TEST", recorder="TEST"),
-            channel_num=ChannelNum(analog=4, digital=8),
-            analogs=[
-                Analog(index=1, name="IA", multiplier=1.0, offset=0.0),
-                Analog(index=2, name="IB", multiplier=1.0, offset=0.0),
-                Analog(index=3, name="IC", multiplier=1.0, offset=0.0),
-                Analog(index=4, name="V", multiplier=100.0, offset=0.0),
-            ],
-            digitals=[
-                Digital(index=1, name="D1"),
-                Digital(index=2, name="D2"),
-                Digital(index=3, name="D3"),
-                Digital(index=4, name="D4"),
-                Digital(index=5, name="D5"),
-                Digital(index=6, name="D6"),
-                Digital(index=7, name="D7"),
-                Digital(index=8, name="D8"),
-            ],
-            sampling=Sampling(freq=1000),
-            data_type=DataType.BINARY,
-        )
+@pytest.fixture(scope="module")
+def comtrade_data(comtrade_cfg):
+    """从binary_1999.cfg加载数据"""
+    return DataContent(cfg=comtrade_cfg, file_name=CFG_FILE)
 
-    def test_ascii_file_reading(self, temp_dir, sample_config):
-        """测试ASCII文件读取"""
-        # 创建测试ASCII数据文件
-        dat_file = temp_dir / "test.dat"
-        data = [
-            "0,0.0,100,200,300,400,1,0,1,0,1,0,1,0",
-            "1,0.001,101,201,301,401,1,0,1,0,1,0,1,0",
-            "2,0.002,102,202,302,402,1,0,1,0,1,0,1,0",
-        ]
-        dat_file.write_text("\n".join(data), encoding="utf-8")
 
-        # 创建DataContent并读取
-        content = DataContent(cfg=sample_config, dat_path=dat_file)
-        df = content.read()
+@pytest.fixture(scope="module")
+def expected_df():
+    """从CSV文件加载期望数据（跳过标题行）"""
+    df = pd.read_csv(CSV_FILE, header=None, encoding="gbk", skiprows=1, low_memory=False)
+    return df
 
-        assert df is not None
-        assert df.shape[0] == 3  # 3行数据
-        assert df.shape[1] == 14  # 2列时间 + 4模拟量 + 8数字量
 
-    def test_binary_file_reading(self, temp_dir, sample_config):
-        """测试二进制文件读取"""
-        # 创建测试二进制数据文件
-        dat_file = temp_dir / "test.dat"
+class TestDataShape:
+    """测试数据形状"""
 
-        # 构建二进制数据
-        samples = []
-        for i in range(3):
-            index = i
-            timestamp = i * 1000  # 微秒
-            analogs = [100 + i, 200 + i, 300 + i, 400 + i]
-            digital_word = 0b10101010  # 8个数字量
+    def test_dataframe_shape(self, comtrade_data, expected_df):
+        """验证DataFrame的行列数"""
+        row_num, col_num = comtrade_data.data.shape
+        assert row_num == expected_df.shape[0], f"行数不匹配: {row_num} vs {expected_df.shape[0]}"
+        expected_col_num = expected_df.shape[1] - 1
+        assert col_num == expected_col_num, f"列数不匹配: {col_num} vs {expected_col_num}"
 
-            # 打包为二进制格式
-            binary_data = struct.pack(
-                "<ii4hH",
-                index,
-                timestamp,
-                *analogs,
-                digital_word
-            )
-            samples.append(binary_data)
 
-        dat_file.write_bytes(b"".join(samples))
+class TestPointColumn:
+    """测试点号列（第0列）"""
 
-        # 创建DataContent并读取
-        content = DataContent(cfg=sample_config, dat_path=dat_file)
-        df = content.read()
+    def test_point_values(self, comtrade_data, expected_df):
+        """验证点号列的值"""
+        actual = comtrade_data.data.iloc[:, 0].values
+        expected = expected_df.iloc[:, 0].values
+        assert np.array_equal(actual, expected), "点号列值不匹配"
 
-        assert df is not None
-        assert df.shape[0] == 3  # 3行数据
-        assert df.shape[1] == 14  # 2列时间 + 4模拟量 + 8数字量
 
-    def test_binary32_file_reading(self, temp_dir):
-        """测试BINARY32格式文件读取"""
-        config = Configure(
-            header=Header(station="TEST", recorder="TEST"),
-            channel_num=ChannelNum(analog=2, digital=0),
-            analogs=[
-                Analog(index=1, name="IA", multiplier=1.0, offset=0.0),
-                Analog(index=2, name="IB", multiplier=1.0, offset=0.0),
-            ],
-            sampling=Sampling(freq=1000),
-            data_type=DataType.BINARY32,
-        )
+class TestTimeColumn:
+    """测试时间列（第1列）"""
 
-        dat_file = temp_dir / "test.dat"
-        samples = []
-        for i in range(5):
-            index = i
-            timestamp = i * 1000
-            analogs = [1000 + i, 2000 + i]
-            binary_data = struct.pack(
-                "<ii2i",
-                index,
-                timestamp,
-                *analogs
-            )
-            samples.append(binary_data)
-        dat_file.write_bytes(b"".join(samples))
+    def test_time_values(self, comtrade_data, expected_df):
+        """验证时间列的值"""
+        actual = comtrade_data.data.iloc[:, 1].values
+        expected = expected_df.iloc[:, 1].values
+        assert np.array_equal(actual, expected), "时间列值不匹配"
 
-        content = DataContent(cfg=config, dat_path=dat_file)
-        df = content.read()
 
-        assert df is not None
-        assert df.shape[0] == 5
-        assert df.shape[1] == 4  # 2时间列 + 2模拟量
+class TestAnalogColumns:
+    """测试模拟量列（第2列及以后）"""
 
-    def test_analog_value_conversion(self, temp_dir, sample_config):
-        """测试模拟量值转换"""
-        dat_file = temp_dir / "test.dat"
-        data = [
-            "0,0.0,10,20,30,4,1,0,1,0,1,0,1,0",
-            "1,0.001,11,21,31,5,1,0,1,0,1,0,1,0",
-        ]
-        dat_file.write_text("\n".join(data), encoding="utf-8")
+    def test_analog_all_values(self, comtrade_data, expected_df, comtrade_cfg):
+        """验证所有模拟量列的值"""
+        analog_count = comtrade_cfg.channel_num.analog
+        for col_idx in range(analog_count):
+            actual = comtrade_data.data.iloc[:, 2 + col_idx].values
+            expected = expected_df.iloc[:, 2 + col_idx].values.astype(float)
+            max_diff = np.max(np.abs(actual - expected))
+            assert max_diff < 0.01, \
+                f"模拟量通道{col_idx + 1}值不匹配, 最大差异: {max_diff}"
 
-        content = DataContent(cfg=sample_config, dat_path=dat_file)
-        df = content.read()
+    def test_analog_first_row(self, comtrade_data, expected_df):
+        """验证第一行模拟量值"""
+        actual = comtrade_data.data.iloc[0, 2:6].values
+        expected = expected_df.iloc[0, 2:6].values.astype(float)
+        max_diff = np.max(np.abs(actual - expected))
+        assert max_diff < 0.01, f"第一行模拟量最大差异: {max_diff}"
 
-        # 第4个模拟量的multiplier是100，所以应该被转换
-        assert df.iloc[0, 5] == 400  # 4 * 100
-        assert df.iloc[1, 5] == 500  # 5 * 100
+    def test_analog_last_row(self, comtrade_data, expected_df):
+        """验证最后一行模拟量值"""
+        actual = comtrade_data.data.iloc[-1, 2:6].values
+        expected = expected_df.iloc[-1, 2:6].values.astype(float)
+        max_diff = np.max(np.abs(actual - expected))
+        assert max_diff < 0.01, f"最后一行模拟量最大差异: {max_diff}"
 
-    def test_empty_digital_channels(self, temp_dir):
-        """测试无数字量通道的情况"""
-        config = Configure(
-            header=Header(station="TEST", recorder="TEST"),
-            channel_num=ChannelNum(analog=2, digital=0),
-            analogs=[
-                Analog(index=1, name="IA", multiplier=1.0, offset=0.0),
-                Analog(index=2, name="IB", multiplier=1.0, offset=0.0),
-            ],
-            sampling=Sampling(freq=1000),
-            data_type=DataType.ASCII,
-        )
 
-        dat_file = temp_dir / "test.dat"
-        data = [
-            "0,0.0,100,200",
-            "1,0.001,101,201",
-        ]
-        dat_file.write_text("\n".join(data), encoding="utf-8")
+class TestDigitalColumns:
+    """测试数字量列"""
 
-        content = DataContent(cfg=config, dat_path=dat_file)
-        df = content.read()
+    def test_digital_all_values(self, comtrade_data, expected_df, comtrade_cfg):
+        """验证所有数字量列的值"""
+        analog_count = comtrade_cfg.channel_num.analog
+        digital_count = comtrade_cfg.channel_num.digital
+        for col_idx in range(digital_count):
+            actual = comtrade_data.data.iloc[:, 2 + analog_count + col_idx].values
+            expected = expected_df.iloc[:, 2 + analog_count + col_idx].values
+            assert np.array_equal(actual, expected), \
+                f"数字量通道{col_idx + 1}值不匹配"
 
-        assert df.shape[1] == 4  # 2时间列 + 2模拟量
+    def test_digital_first_row(self, comtrade_data, expected_df, comtrade_cfg):
+        """验证第一行数字量值"""
+        analog_count = comtrade_cfg.channel_num.analog
+        actual = comtrade_data.data.iloc[0, 2 + analog_count:2 + analog_count + 10].values
+        expected = expected_df.iloc[0, 2 + analog_count:2 + analog_count + 10].values
+        assert np.array_equal(actual, expected), \
+            f"第一行数字量不匹配: {actual} vs {expected}"
 
-    def test_invalid_file_path(self, temp_dir, sample_config):
-        """测试无效文件路径"""
-        invalid_file = temp_dir / "nonexistent.dat"
-        content = DataContent(cfg=sample_config, dat_path=invalid_file)
 
-        with pytest.raises(Exception):
-            content.read()
+class TestDataConsistency:
+    """测试数据一致性"""
 
-    def test_data_validation(self, temp_dir, sample_config):
-        """测试数据验证"""
-        dat_file = temp_dir / "test.dat"
-        # 创建比配置文件期望更多的数据
-        data = [
-            "0,0.0,100,200,300,400,1,0,1,0,1,0,1,0",
-            "1,0.001,101,201,301,401,1,0,1,0,1,0,1,0",
-            "2,0.002,102,202,302,402,1,0,1,0,1,0,1,0",
-            "3,0.003,103,203,303,403,1,0,1,0,1,0,1,0",
-        ]
-        dat_file.write_text("\n".join(data), encoding="utf-8")
+    def test_no_nan_in_data(self, comtrade_data):
+        """验证数据中没有NaN值"""
+        assert not comtrade_data.data.isna().any().any(), "数据中存在NaN值"
 
-        # 修改采样信息使其期望更少的数据点
-        sample_config.sampling.nrates[0].end_point = 2
+    def test_first_sample_index(self, comtrade_data):
+        """验证第一个采样点的索引为1"""
+        assert comtrade_data.data.iloc[0, 0] == 1, "第一个采样点索引应为1"
 
-        content = DataContent(cfg=sample_config, dat_path=dat_file)
-        df = content.read()
+    def test_last_sample_index(self, comtrade_data):
+        """验证最后一个采样点的索引"""
+        last_idx = comtrade_data.data.iloc[-1, 0]
+        expected_count = comtrade_data.data.shape[0]
+        assert last_idx == expected_count, f"最后采样点索引应为{expected_count}, 实际为{last_idx}"
 
-        # 应该仍然读取所有数据，但会有警告
-        assert df.shape[0] >= 2
+    def test_time_increment(self, comtrade_data):
+        """验证时间戳增量一致"""
+        time_col = comtrade_data.data.iloc[:, 1].values
+        time_diff = np.diff(time_col)
+        expected_increment = time_diff[0] if len(time_diff) > 0 else 0
+        assert np.all(time_diff == expected_increment), \
+            f"时间戳增量不一致: {np.unique(time_diff)}"
 
-    def test_performance_large_file(self, temp_dir, sample_config):
-        """测试大文件性能（基准测试）"""
-        dat_file = temp_dir / "large_test.dat"
 
-        # 生成10000行测试数据
-        data_lines = []
-        for i in range(10000):
-            line = f"{i},{i * 0.001},{100 + i},{200 + i},{300 + i},{400 + i},1,0,1,0,1,0,1,0"
-            data_lines.append(line)
+class TestGetDataMethod:
+    """测试get_data方法"""
 
-        dat_file.write_text("\n".join(data_lines), encoding="utf-8")
+    def test_get_point_data(self, comtrade_data):
+        """测试获取点号数据"""
+        point_data = comtrade_data.get_data(0, data_type="point")
+        assert point_data is not None
+        assert len(point_data) == comtrade_data.data.shape[0]
 
-        import time
-        start_time = time.time()
-        content = DataContent(cfg=sample_config, dat_path=dat_file)
-        df = content.read()
-        elapsed_time = time.time() - start_time
+    def test_get_time_data(self, comtrade_data):
+        """测试获取时间数据"""
+        time_data = comtrade_data.get_data(0, data_type="time")
+        assert time_data is not None
+        assert len(time_data) == comtrade_data.data.shape[0]
 
-        assert df is not None
-        assert df.shape[0] == 10000
-        # 验证读取性能（应该在合理时间内完成）
-        assert elapsed_time < 5.0  # 5秒内完成
+    def test_get_analog_data(self, comtrade_data, comtrade_cfg):
+        """测试获取模拟量数据"""
+        for ch in range(min(3, comtrade_cfg.channel_num.analog)):
+            analog_data = comtrade_data.get_data(ch, data_type="analog")
+            assert analog_data is not None
+            expected = comtrade_data.data.iloc[:, 2 + ch].values
+            assert np.allclose(analog_data, expected)
+
+    def test_get_digital_data(self, comtrade_data, comtrade_cfg):
+        """测试获取数字量数据"""
+        analog_count = comtrade_cfg.channel_num.analog
+        digital_data = comtrade_data.get_data(0, data_type="digital")
+        assert digital_data is not None
+        expected = comtrade_data.data.iloc[:, 2 + analog_count].values
+        assert np.array_equal(digital_data, expected)
 
 
 if __name__ == "__main__":

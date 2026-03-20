@@ -66,7 +66,7 @@ class Comtrade(ComtradeModel):
         根据通道标识获取模拟量通道，并加载通道数据
         """
         analog = super().get_analog_channel_info(index)
-        analog.data = self.dat.iloc[:, index].to_numpy()
+        analog.data = self.dat.data.iloc[:, index + 1].to_numpy()
         return analog
 
     def get_status_channel(self, index: int) -> Optional[StatusChannel]:
@@ -74,14 +74,14 @@ class Comtrade(ComtradeModel):
         根据通道标识获取状态量通道，并加载通道数据
         """
         digital = super().get_status_channel_info(index)
-        digital.data = self.dat.iloc[:, index].to_numpy()
+        digital.data = self.dat.data.iloc[:, index + self.cfg.channel_num.analog + 1].to_numpy()
         return digital
 
     def _load_digital_data(self, channels: list, data: pd.DataFrame):
         """加载数字量通道数据到通道对象列表"""
         for chn in channels:
             if chn and chn.index is not None:
-                col_index = self.cfg.channel_num.analog + chn.index + 2
+                col_index = self.cfg.channel_num.analog + chn.index + 1
                 chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
 
     @staticmethod
@@ -89,7 +89,7 @@ class Comtrade(ComtradeModel):
         """加载模拟量通道数据（ia, ib, ic, i0 或 ua, ub, uc, ul, un）"""
         for chn in channels:
             if chn:
-                col_index = chn.index + 2
+                col_index = chn.index + 1
                 chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
 
     def get_line(self, name: str) -> Line | None:

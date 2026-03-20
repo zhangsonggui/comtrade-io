@@ -23,13 +23,28 @@ Python library for loading waveform data from COMTRADE specification CFG/DAT/INF
 
 ## Installation
 
+### Install from PyPI
+
 ```bash
 # Using uv
-uv sync
+uv add comtrade-io
 
-# Or install directly
-pip install comtrade_io
+# Using pip
+pip install comtrade-io
+
 ```
+
+### Install from source
+
+```bash
+# Clone the repository
+git clone https://github.com/zhangsonggui/comtrade-io.git
+git clone https://gitee.com/zhangsonggui/comtrade-io.git
+# Install dependencies
+cd comtrade-io
+uv sync
+```
+
 
 ## Quick Start
 
@@ -37,68 +52,44 @@ pip install comtrade_io
 from comtrade_io import Comtrade
 
 # Load COMTRADE file (automatically finds cfg/dat/dmf/hdr/inf files)
-c = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
+wave = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
 
-# Access CFG configuration
-c.cfg.header  # Substation name, recorder name, version
-c.cfg.analogs  # Analog channel dictionary
-c.cfg.digitals  # Digital channel dictionary
+# Access model methods (without sample data)
+wave.get_bus_info("Bus Name")  # Returns model for specified bus name, including voltage and status channels
+wave.get_line_info("Line Name")  # Returns model for specified line name, including voltage and status channels
+wave.get_transformer_info("Transformer Name")  # Returns model for specified transformer/winding name, including voltage and status channels
+wave.get_analog_channel_info("Analog Ch ID")  # Returns model for specified analog channel
+wave.get_status_channel_info("Status Ch ID")  # Returns model for specified status channel
 
-# Access DAT data as DataFrame
-c.get_data()  # Returns pandas DataFrame with all sample data
+# Access DAT data (DataFrame column structure: col 1 is timestamp, col 2+ are analog data, then status data)
+data = wave.get_data()  # or wave.dat.data - returns pandas DataFrame with all sample data
 
 # Access specific analog channel data
-c.get_analog_channel(1)  # Get analog channel by index
+wave.get_analog_channel(1)  # Get analog channel by index, includes instantaneous sample data
+wave.get_status_channel(1)  # Get status channel by index, includes instantaneous sample data
+
+# Access specific line, bus, transformer channel data
+wave.get_bus("Bus Name")  # Get bus parameters and associated voltage channels with instantaneous data by bus name
+wave.get_line("Line Name")  # Get line parameters and associated current channels with instantaneous data, bus parameters and voltage channel data by line name
+wave.get_transformer("Transformer Name")  # Get transformer and winding parameters with associated voltage/current channels and instantaneous data by transformer name
+
+
 ```
 
 ## Advanced Usage
-
-### Data Model (DMF)
-
-```python
-# Access power system data model
-c.buses  # List of buses
-c.lines  # List of lines
-c.transformers  # List of transformers
-c.analog_channels  # Analog channel dictionary
-c.status_channels  # Status channel dictionary
-
-# Get equipment by name (loads channel data automatically)
-bus = c.get_bus("Bus Name")
-line = c.get_line("Line Name")
-transformer = c.get_transformer("Transformer Name")
-
-# Get channel by index
-analog = c.get_analog_channel(1)
-status = c.get_status_channel(1)
-```
 
 ### Write Files
 
 ```python
 # Save Comtrade object to files
-c.to_file("output.cfg", data_type="BINARY")  # Binary format
-c.to_file("output.cfg", data_type="ASCII")    # ASCII format
+wave.to_file("output.cfg", data_type="BINARY")  # Binary format
+wave.to_file("output.cfg", data_type="ASCII")   # ASCII format
 
-# Export to JSON
-c.to_json_file("output.json")
+# Export to JSON file
+wave.to_json_file("output.json")
 
-# Export to dictionary (pickle)
-c.to_dict_file("output.pkl")
 ```
 
-### Configuration Operations
-
-```python
-# Get analog channel
-analog = c.cfg.get_analog(1)
-
-# Get digital channel
-digital = c.cfg.get_digital(1)
-
-# Get sampling rate info
-nrate = c.cfg.get_sampling_nrate(1)
-```
 
 ## Project Structure
 
@@ -130,6 +121,7 @@ comtrade_io/
 ## Core Classes
 
 ### Comtrade
+**Note**: All models in this module are constrained by pydantic. For object to JSON/dict conversion, use pydantic's model_dump_json method.
 
 Main class encapsulating complete COMTRADE file data.
 
@@ -145,11 +137,16 @@ Main class encapsulating complete COMTRADE file data.
 - `from_file(file_name)`: Load Comtrade from file
 - `to_file(filename, data_type)`: Save as COMTRADE file
 - `to_json_file(filename)`: Export to JSON
-- `get_bus(name)`: Get bus by name
-- `get_line(name)`: Get line by name
-- `get_transformer(name)`: Get transformer by name
-- `get_analog_channel(index)`: Get analog channel by index
-- `get_status_channel(index)`: Get status channel by index
+- `get_bus(name)`: Get bus and instantaneous data of associated voltage channels by name
+- `get_line(name)`: Get line and instantaneous data of associated bus voltage and current channels by name
+- `get_transformer(name)`: Get transformer and instantaneous data of associated voltage/current channels by name
+- `get_analog_channel(index)`: Get analog channel and instantaneous data by index
+- `get_status_channel(index)`: Get status channel and instantaneous data by index
+- `get_bus_info()`: Get bus model by name
+- `get_line_info()`: Get line model by name
+- `get_transformers_info()`: Get transformer model by name
+- `get_analog_channel_info()`: Get analog channel model by name
+- `get_status_channel_info()`: Get status channel model by name
 
 ### Configure
 
@@ -179,11 +176,11 @@ Standard format for power system fault recording data:
 
 | File | Required | Description |
 |------|----------|-------------|
-| .cfg | Yes | Configuration file - channels, sampling rate |
-| .dat | Yes | Data file - sample point data |
-| .dmf | No | Data model file - equipment models |
-| .hdr | No | Header file - recorder info |
-| .inf | No | Information file - additional config |
+| .cfg | Yes | Configuration file - defines channels, sampling rate and other metadata |
+| .dat | Yes | Data file - contains sample point data |
+| .dmf | No | Data model file - defines power system equipment models |
+| .hdr | No | Header file - contains recorder device information |
+| .inf | No | Information file - contains additional configuration information |
 
 ## License
 
