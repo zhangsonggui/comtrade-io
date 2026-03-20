@@ -1,6 +1,6 @@
 [project]
 name = "comtrade_io"
-version = "0.1.0"
+version = "0.1.1"
 description = "COMTRADE文件读取工具,并提供便捷的 Pandas DataFrame 接口"
 readme = "README_zh.md"
 requires-python = ">=3.10"
