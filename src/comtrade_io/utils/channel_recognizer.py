@@ -8,158 +8,178 @@
 - AnalogChannelFlag (电压/电流/频率/功率等)
 """
 
-import json
-import re
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Optional, Tuple
 
 from comtrade_io.type import AnalogChannelFlag, AnalogChannelType
 
 
-class ChannelPatternConfig:
-    """通道模式配置"""
-
-    def __init__(self, config_file: Optional[Path] = None):
-        """
-        初始化通道模式配置
-
-        Args:
-            config_file: 配置文件路径，如果为None则使用默认路径
-        """
-        if config_file is None:
-            # 使用默认配置文件路径
-            config_file = Path(__file__).parent.parent / 'config' / 'channel_patterns.json'
-
-        self.config_file = config_file
-        self._load_config()
-
-    def _load_config(self):
-        """加载配置文件"""
-        if not self.config_file.exists():
-            raise FileNotFoundError(f"通道模式配置文件不存在: {self.config_file}")
-
-        with open(self.config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-
-        self.type_patterns = config.get('analog_channel_type_patterns', [])
-        self.flag_patterns = config.get('analog_channel_flag_patterns', [])
-        self.default_values = config.get('default_values', {
-            'type': 'A',
-            'flag': 'ACV'
-        })
-
-    def reload(self):
-        """重新加载配置文件"""
-        self._load_config()
+@dataclass
+class ChannelComponents:
+    """通道解析结果"""
+    device_id: str
+    channel_type: AnalogChannelFlag
+    phase: str
 
 
 class ChannelRecognizer:
-    """通道识别器：根据通道名称识别类型和标志"""
+    """通道识别器：根据通道名称识别类型和标识"""
 
-    def __init__(self, config: Optional[ChannelPatternConfig] = None):
-        """
-        初始化通道识别器
+    TYPE_PATTERNS = [
+        (['电压'], AnalogChannelFlag.ACV),
+        (['电流'], AnalogChannelFlag.ACC),
+        (['高频'], AnalogChannelFlag.HF),
+        (['频率', '频率曲线'], AnalogChannelFlag.FQ),
+        (['功率'], AnalogChannelFlag.PW),
+        (['阻抗'], AnalogChannelFlag.ZX),
+        (['直1+', '直1-', '直2+', '直2-', '直+', '直-'], AnalogChannelFlag.CONST),
+    ]
 
-        Args:
-            config: 通道模式配置，如果为None则使用默认配置
-        """
-        self.config = config or ChannelPatternConfig()
+    DC_CONST_KEYWORDS = ['直1+', '直1-', '直2+', '直2-', '直+', '直-']
+    DC_FREQ_KEYWORDS = ['高频', '频率', '频率曲线']
+
+    PHASE_VOLTAGE = ['Ua', 'Ub', 'Uc', '3U0', '3Uo', 'U1', 'U2']
+    PHASE_CURRENT = ['Ia', 'Ib', 'Ic', '3I0', '3Io', 'I1', 'I2', '1Ia', '1Ib', '1Ic', '1a', '1b', '1c', '31o']
+    ALL_PHASES = PHASE_VOLTAGE + PHASE_CURRENT
 
     def recognize_type(self, channel_name: str) -> AnalogChannelType:
-        """
-        根据通道名称识别通道类型
-
-        Args:
-            channel_name: 通道名称
-
-        Returns:
-            AnalogChannelType: 识别的通道类型
-        """
+        """根据通道名称识别通道类型"""
         if not channel_name:
-            return AnalogChannelType.from_value(self.config.default_values['type'])
+            return AnalogChannelType.A
 
-        # 按顺序匹配类型模式
-        for pattern_config in self.config.type_patterns:
-            for pattern_str in pattern_config['patterns']:
-                try:
-                    if re.fullmatch(pattern_str, channel_name, re.IGNORECASE):
-                        return AnalogChannelType.from_value(pattern_config['type'])
-                except re.error as e:
-                    # 正则表达式错误，跳过
-                    continue
+        for keyword in self.DC_FREQ_KEYWORDS:
+            if keyword in channel_name:
+                return AnalogChannelType.D
 
-        # 默认返回交流类型
-        return AnalogChannelType.from_value(self.config.default_values['type'])
+        for keyword in self.DC_CONST_KEYWORDS:
+            if keyword in channel_name:
+                return AnalogChannelType.D
+
+        name_upper = channel_name.upper()
+        for phase in self.PHASE_VOLTAGE:
+            if name_upper.endswith(phase.upper()):
+                return AnalogChannelType.A
+
+        return AnalogChannelType.A
 
     def recognize_flag(self, channel_name: str) -> AnalogChannelFlag:
-        """
-        根据通道名称识别通道标志
-
-        Args:
-            channel_name: 通道名称
-
-        Returns:
-            AnalogChannelFlag: 识别的通道标志
-        """
+        """根据通道名称识别通道标志"""
         if not channel_name:
-            return AnalogChannelFlag.from_value(self.config.default_values['flag'])
+            return AnalogChannelFlag.ACV
 
-        # 存储匹配结果和优先级
-        matches = []
+        name = channel_name.strip()
+        if name == 'P':
+            return AnalogChannelFlag.PW
+        if name == 'Q':
+            return AnalogChannelFlag.PW
+        if name == 'f':
+            return AnalogChannelFlag.FQ
 
-        # 匹配标志模式
-        for pattern_config in self.config.flag_patterns:
-            for pattern_str in pattern_config['patterns']:
-                try:
-                    if re.fullmatch(pattern_str, channel_name, re.IGNORECASE):
-                        priority = pattern_config.get('priority', 0)
-                        matches.append((
-                            priority,
-                            pattern_config['flag']
-                        ))
-                except re.error as e:
-                    # 正则表达式错误，跳过
-                    continue
+        for keywords, flag in self.TYPE_PATTERNS:
+            for keyword in keywords:
+                if keyword in channel_name:
+                    return flag
 
-        # 选择优先级最高的匹配
-        if matches:
-            # 按优先级降序排序
-            matches.sort(key=lambda x: x[0], reverse=True)
-            return AnalogChannelFlag.from_value(matches[0][1])
+        name_upper = channel_name.upper()
+        for phase in self.PHASE_VOLTAGE:
+            if name_upper.endswith(phase.upper()):
+                return AnalogChannelFlag.ACV
 
-        # 默认返回电压标志
-        return AnalogChannelFlag.from_value(self.config.default_values['flag'])
+        for phase in self.PHASE_CURRENT:
+            if name_upper.endswith(phase.upper()):
+                return AnalogChannelFlag.ACC
+
+        return AnalogChannelFlag.ACV
+
+    def extract_device_id(self, channel_name: str) -> str:
+        """从通道名称中提取设备标识"""
+        if not channel_name:
+            return ''
+
+        if channel_name.startswith('模拟量'):
+            return channel_name
+
+        type_keywords = [kw for kws, _ in self.TYPE_PATTERNS for kw in kws]
+        type_keywords.sort(key=len, reverse=True)
+
+        keyword_idx = -1
+        found_keyword = None
+        for keyword in type_keywords:
+            idx = channel_name.find(keyword)
+            if idx >= 0:
+                keyword_idx = idx
+                found_keyword = keyword
+                break
+
+        if keyword_idx >= 0:
+            before_keyword = channel_name[:keyword_idx].strip()
+            after_keyword = channel_name[keyword_idx + len(found_keyword):].strip()
+
+            if after_keyword:
+                parts_after = after_keyword.split()
+                if parts_after and parts_after[0].upper() in ('AD1', 'AD2'):
+                    after_keyword = ' '.join(parts_after[1:])
+
+            device_id = before_keyword
+            if after_keyword:
+                phase = self.extract_phase(after_keyword)
+                if phase:
+                    device_id = (before_keyword + ' ' + after_keyword.replace(phase, '')).strip()
+
+            if not device_id:
+                device_id = before_keyword
+
+            return device_id
+
+        phase = self.extract_phase(channel_name)
+        if phase:
+            idx = channel_name.rfind(phase)
+            if idx > 0:
+                device_id = channel_name[:idx].strip()
+                if device_id:
+                    return device_id
+
+        return channel_name
+
+    def extract_phase(self, channel_name: str) -> str:
+        """从通道名称中提取相位标识"""
+        if not channel_name:
+            return ''
+
+        parts = channel_name.split()
+        for part in reversed(parts):
+            part_upper = part.upper()
+            for phase in self.ALL_PHASES:
+                if part_upper == phase.upper():
+                    return phase
+                if part_upper.endswith(phase.upper()):
+                    return phase
+        return ''
+
+    def parse(self, channel_name: str) -> ChannelComponents:
+        """完整解析通道名称，返回各组件"""
+        device_id = self.extract_device_id(channel_name)
+        flag = self.recognize_flag(channel_name)
+        phase = self.extract_phase(channel_name)
+
+        return ChannelComponents(
+            device_id=device_id,
+            channel_type=flag,
+            phase=phase
+        )
 
     def recognize(self, channel_name: str) -> Tuple[AnalogChannelType, AnalogChannelFlag]:
-        """
-        根据通道名称识别类型和标志
-
-        Args:
-            channel_name: 通道名称
-
-        Returns:
-            (AnalogChannelType, AnalogChannelFlag): 识别的类型和标志
-        """
+        """识别通道类型和标志"""
         channel_type = self.recognize_type(channel_name)
         channel_flag = self.recognize_flag(channel_name)
         return channel_type, channel_flag
 
-    def reload_patterns(self):
-        """重新加载模式配置"""
-        self.config.reload()
 
-
-# 全局单例识别器
 _recognizer: Optional[ChannelRecognizer] = None
 
 
 def get_recognizer() -> ChannelRecognizer:
-    """
-    获取全局通道识别器单例
-
-    Returns:
-        ChannelRecognizer: 通道识别器实例
-    """
+    """获取全局通道识别器单例"""
     global _recognizer
     if _recognizer is None:
         _recognizer = ChannelRecognizer()
@@ -167,44 +187,20 @@ def get_recognizer() -> ChannelRecognizer:
 
 
 def recognize_channel_type(channel_name: str) -> AnalogChannelType:
-    """
-    识别通道类型（便捷函数）
-
-    Args:
-        channel_name: 通道名称
-
-    Returns:
-        AnalogChannelType: 识别的通道类型
-    """
+    """识别通道类型"""
     return get_recognizer().recognize_type(channel_name)
 
 
 def recognize_channel_flag(channel_name: str) -> AnalogChannelFlag:
-    """
-    识别通道标志（便捷函数）
-
-    Args:
-        channel_name: 通道名称
-
-    Returns:
-        AnalogChannelFlag: 识别的通道标志
-    """
+    """识别通道标志"""
     return get_recognizer().recognize_flag(channel_name)
 
 
 def recognize_channel(channel_name: str) -> Tuple[AnalogChannelType, AnalogChannelFlag]:
-    """
-    识别通道类型和标志（便捷函数）
-
-    Args:
-        channel_name: 通道名称
-
-    Returns:
-        (AnalogChannelType, AnalogChannelFlag): 识别的类型和标志
-    """
+    """识别通道类型和标志"""
     return get_recognizer().recognize(channel_name)
 
 
-def reload_channel_patterns():
-    """重新加载通道模式配置（便捷函数）"""
-    get_recognizer().reload_patterns()
+def parse_channel(channel_name: str) -> ChannelComponents:
+    """解析通道名称，返回各组件"""
+    return get_recognizer().parse(channel_name)
