@@ -175,7 +175,7 @@ class Configure(BaseModel):
             logging.error(error_str)
             raise ValueError(f"配置文件{cfg_path}行数不对应,{e}")
 
-    def write_file(self, output_file_path: Path | str):
+    def write_file(self, output_file_path: ComtradeFile | Path | str):
         """将配置写入文件
 
         将当前Configure对象序列化并写入指定的CFG配置文件。
@@ -190,6 +190,7 @@ class Configure(BaseModel):
         with open(cfg_path, "w", encoding="gbk") as f:
             f.write(self.__str__())
         logging.info(f"配置文件{cfg_path}写入成功")
+        return True
 
     def get_analog(self, index: int) -> Optional[Analog]:
         """
@@ -211,7 +212,7 @@ class Configure(BaseModel):
         """
         return self.digitals.get(index)
 
-    def get_sampling_nrate(self,index:int)->Optional[Nrate]:
+    def get_sampling_nrate(self, index: int) -> Optional[Nrate]:
         """
         按采样段号获取该采样段的采样频率和结束采样点
         参数:
@@ -221,4 +222,4 @@ class Configure(BaseModel):
         """
         if 1 <= index <= len(self.sampling.nrates):
             return None
-        return self.sampling.nrates[index-1]
+        return self.sampling.nrates[index - 1]

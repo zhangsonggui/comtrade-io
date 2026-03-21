@@ -218,28 +218,25 @@ class Comtrade(ComtradeModel):
         )
         return result
 
-    def to_file(self, filename: Path | str, data_type: str = "BINARY"):
+    def save_comtrade(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
         """
         将 comtrade 对象保存为文件
         参数:
-            wave_data(Comtrade): comtrade 对象
-            file_path(str) 保存路径，后缀名可选
+            output_file_path(str) 保存路径，后缀名可选
             data_file_type(str) 保存格式，默认保存为二进制文件
-        返回:
-            ComtradeFile 对象或压缩文件路径
         """
-        cf = ComtradeFile.from_path(file_path=filename)
+        output_file_path = ComtradeFile.from_path(output_file_path)
 
-        self.cfg.write_file(str(cf.cfg_path.path))
-        if self.dat is not None:
-            if data_type.upper() == "ASCII":
-                self.dat.write_ascii_dat_file(cf.dat_path.path)
-            else:
-                self.dat.write_binary_dat_file(cf.dat_path.path)
-        super().write_file(cf.dmf_path.path)
-        return f"文件保存成功：参数文件位置：{cf.cfg_path.path}，数据文件位置：{cf.dat_path.path},模型文件位置{cf.dmf_path.path}"
+        self.cfg.write_file(output_file_path)
+        self.dat.write_file(output_file_path, data_type=data_type)
 
-    def to_json_file(self, *, indent: int | None = None) -> str:
+        return (f"文件保存成功："
+                f"参数文件位置：{output_file_path.cfg_path.path}，"
+                f"数据文件位置：{output_file_path.dat_path.path},"
+                f"模型文件位置{output_file_path.dmf_path.path}")
+
+    def save_json(self, output_file_path: Path | str,
+                  indent: int | None = None):
         """
         将Comtrade对象转换为JSON字符串（包含dat数据）
         """
@@ -261,11 +258,7 @@ class Comtrade(ComtradeModel):
                     col_index = self.cfg.channel_num.analog + channel["index"] + 2
                     if col_index < df.shape[1]:
                         channel["data"] = df.iloc[:, col_index].tolist()
-
-        return self._to_json(data, indent)
-
-    def to_dict_file(self):
-        """
-        将Comtrade对象转换为字典
-        """
-        return self.model_dump()
+        with open(output_file_path, "w", encoding="utf-8") as f:
+            f.write(self._to_json(data, indent))
+        logging.info(f"json数据写入{output_file_path}成功")
+        return True

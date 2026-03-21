@@ -82,11 +82,11 @@ wave.get_transformer("主变名称")  # 按主变名称获取主变和各绕组�
 
 ```python
 # 保存 Comtrade 对象为文件
-wave.to_file("output.cfg", data_type="BINARY")  # 二进制格式
-wave.to_file("output.cfg", data_type="ASCII")   # ASCII 格式
+wave.save_comtrade("output.cfg", data_type="BINARY")  # 二进制格式
+wave.save_comtrade("output.cfg", data_type="ASCII")  # ASCII 格式
 
 # 导出为 JSON文件
-wave.to_json_file("output.json")
+wave.save_json("output.json")
 
 ```
 

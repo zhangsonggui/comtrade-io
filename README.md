@@ -82,11 +82,11 @@ wave.get_transformer("Transformer Name")  # Get transformer and winding paramete
 
 ```python
 # Save Comtrade object to files
-wave.to_file("output.cfg", data_type="BINARY")  # Binary format
-wave.to_file("output.cfg", data_type="ASCII")   # ASCII format
+wave.save_comtrade("output.cfg", data_type="BINARY")  # Binary format
+wave.save_comtrade("output.cfg", data_type="ASCII")  # ASCII format
 
 # Export to JSON file
-wave.to_json_file("output.json")
+wave.save_json("output.json")
 
 ```
 

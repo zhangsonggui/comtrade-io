@@ -74,9 +74,9 @@ class DataContent(BaseModel):
         # 根据数据类型计算列索引
         # DataFrame列结构：第0列为索引，第1列为时间戳，第2列开始为模拟量，之后为开关量
         col_index_map = {
-            "point"  : 0,
-            "time"   : 1,
-            "analog" : 2,
+            "point": 0,
+            "time": 1,
+            "analog": 2,
             "digital": self.cfg.channel_num.analog + 2
         }
 
@@ -255,28 +255,35 @@ class DataContent(BaseModel):
         content = pd.DataFrame(data_array)
         return content
 
-    def write_ascii_dat_file(self, output_file_path: Path | str):
+    def write_file(self,
+                   output_file_path: ComtradeFile | Path | str,
+                   data_type: str = "BINARY"):
+        output_file_path = ComtradeFile.from_path(output_file_path)
+        data_path = output_file_path.dat_path.path
+
+        if data_type.upper() == "ASCII":
+            self._write_ascii_dat_file(data_path)
+        else:
+            self._write_binary_dat_file(data_path)
+        return True
+
+    def _write_ascii_dat_file(self, output_file_path: Path | str):
         """
         将数据写入ASCII格式文件
 
         参数:
             output_file_path: 输出文件路径
         """
-        if self.data is None:
-            return None
         self.data.to_csv(str(output_file_path), header=False, index=False)
         logging.info(f"数据文件{output_file_path}写入成功")
-        return None
 
-    def write_binary_dat_file(self, output_file_path: Path | str):
+    def _write_binary_dat_file(self, output_file_path: Path | str):
         """
         将数据写入二进制格式文件，符合 COMTRADE 标准格式
 
         参数:
             output_file_path: 输出文件路径
         """
-        if self.data is None:
-            return None
         analog_int32 = self.cfg.data_type in {DataType.BINARY32, DataType.FLOAT32}
         analog_fmt = "<i" if analog_int32 else "<h"
 

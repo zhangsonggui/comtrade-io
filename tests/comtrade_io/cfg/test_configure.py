@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+from pathlib import Path
 
 import pytest
 
 from comtrade_io.cfg import Configure
 from comtrade_io.type import Version
 
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
+CFG_FILE = DATA_DIR / "binary_1999.cfg"
 
 @pytest.fixture(scope="session")
 def config():
-    filename = r"../../data/binary_1999.cfg"
-    config = Configure.from_file(file_name=filename)
+    config = Configure.from_file(file_name=CFG_FILE)
     return config
 
 def test_config_header(config):

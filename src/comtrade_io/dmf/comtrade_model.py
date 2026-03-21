@@ -346,11 +346,13 @@ class ComtradeModel(ComtradeBaseModel):
         参数:
             output_file_path: 输出文件路径，可以是ComtradeFile对象、Path对象或字符串路径
         """
-        cf = ComtradeFile.from_path(output_file_path)
-        dmf_path = cf.dmf_path.path
+        output_file_path = ComtradeFile.from_path(output_file_path)
+        dmf_path = output_file_path.dmf_path.path
+
         with open(dmf_path, "w", encoding="utf-8") as f:
             f.write(self.__str__())
         logging.info(f"数据模型文件{output_file_path}写入成功")
+        return True
 
 
 if __name__ == '__main__':
