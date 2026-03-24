@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import io
 import struct
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -41,6 +42,64 @@ class DataContent(BaseModel):
         self.file_name = cf.dat_path.path
         self.data = self.read()
 
+    # ------------------------------------------------------------------ #
+    # In-memory constructor (used by CFF reader)                          #
+    # ------------------------------------------------------------------ #
+
+    @classmethod
+    def from_str(
+        cls,
+        cfg: Configure,
+        dat_str: Optional[str] = None,
+        dat_bytes: Optional[bytes] = None,
+    ) -> "DataContent":
+        """
+        Construct a DataContent directly from in-memory DAT content,
+        bypassing the filesystem entirely.
+
+        This is the CFF analogue of the normal constructor: instead of
+        pointing at a file on disk, we hand the raw content straight to
+        the same parsing methods that the file-based path uses.
+
+        Exactly one of dat_str or dat_bytes must be provided:
+          - dat_str   → ASCII encoding
+          - dat_bytes → BINARY / BINARY32 / FLOAT32 encoding
+
+        参数:
+            cfg:       Already-parsed Configure for this record.
+            dat_str:   Raw ASCII DAT content as a string.
+            dat_bytes: Raw binary DAT content as bytes.
+        """
+        if dat_str is None and dat_bytes is None:
+            raise ValueError("Either dat_str or dat_bytes must be provided.")
+        if dat_str is not None and dat_bytes is not None:
+            raise ValueError("Provide either dat_str or dat_bytes, not both.")
+
+        # Build a minimal instance without triggering model_post_init's file
+        # resolution logic.  We pass a sentinel path that intentionally does
+        # not exist so that model_post_init returns early, then we set .data
+        # ourselves via the appropriate parser.
+        instance = cls.model_construct(
+            cfg=cfg,
+            file_name=Path("__cff_in_memory__"),
+            data=None,
+        )
+
+        expected_rows = cfg.sampling.nrates[-1].end_point
+        expected_cols = cfg.channel_num.total + 2
+
+        if dat_str is not None:
+            instance.data = instance._parse_ascii_str(dat_str, expected_rows, expected_cols)
+        else:
+            instance.data = instance._parse_binary_bytes(dat_bytes, expected_rows)
+
+        instance.data = instance._apply_type_mapping_and_scaling(instance.data)
+        return instance
+
+    # ------------------------------------------------------------------ #
+    # Public instance API (unchanged from original)                       #
+    # ------------------------------------------------------------------ #
+
     def get_data(
             self,
             index: int,
@@ -50,54 +109,30 @@ class DataContent(BaseModel):
     ):
         """
         获取指定通道的数据
-
-        根据data_type参数获取不同类型的数据：
-        - "point": 获取数据点索引列（第0列）
-        - "time": 获取时间戳列（第1列）
-        - "analog": 获取模拟量通道数据
-        - "digital": 获取开关量通道数据
-
-        参数:
-            index: 通道索引（从0开始）
-            data_type: 数据类型，可选值为 "point"、"time"、"analog"、"digital"，默认为 "analog"
-            start_point: 起始列（保留参数，当前未使用）
-            end_point: 结束列（保留参数，当前未使用）
-
-        返回:
-            np.ndarray: 返回一维numpy数组，如果列索引超出范围则返回None
         """
         if self.data is None:
             return None
 
         data_type = data_type.lower()
-
-        # 根据数据类型计算列索引
-        # DataFrame列结构：第0列为索引，第1列为时间戳，第2列开始为模拟量，之后为开关量
         col_index_map = {
             "point": 0,
             "time": 1,
             "analog": 2,
             "digital": self.cfg.channel_num.analog + 2
         }
-
         base_col = col_index_map.get(data_type, 2)
-
-        # 对于模拟量和开关量，需要加上通道索引
         if data_type in ("analog", "digital"):
             col_index = base_col + index
         else:
             col_index = base_col
-        # 检查采样点是否在有效范围内
         if not end_point:
             end_point = self.data.shape[0]
         if start_point > 0:
             start_point -= 1
         if start_point < 0 or start_point >= end_point or end_point > self.data.shape[0]:
             return None
-        # 检查列索引是否在有效范围内
         if 0 <= col_index < self.data.shape[1]:
             return self.data.iloc[start_point:end_point, col_index].to_numpy()
-
         return None
 
     def read(self) -> pd.DataFrame | None:
@@ -110,24 +145,24 @@ class DataContent(BaseModel):
             content = self.from_ascii_file(expected_rows, expected_cols)
         else:
             content = self.from_binary_file(expected_rows)
-        # type_mapping = {i + 2: "float64" for i in range(self.cfg.channel_num.analog)}
-        type_mapping = {i: "int32" for i in range(2)}
-        type_mapping.update(
-            {i + 2: "float64" for i in range(self.cfg.channel_num.analog)}
-        )
-        type_mapping.update(
-            {
-                self.cfg.channel_num.analog + 2 + i: "int32"
-                for i in range(self.cfg.channel_num.digital)
-            }
-        )
-        content = content.astype(type_mapping)
+        return self._apply_type_mapping_and_scaling(content)
 
-        # 将模拟量的原始采样值转换为瞬时值数值
+    # ------------------------------------------------------------------ #
+    # Internal parsers — shared between file-based and in-memory paths    #
+    # ------------------------------------------------------------------ #
+
+    def _apply_type_mapping_and_scaling(self, content: pd.DataFrame) -> pd.DataFrame | None:
+        """Apply dtype casting and analog channel scaling to a raw DataFrame."""
         if content is None:
             return None
+        type_mapping = {i: "int32" for i in range(2)}
+        type_mapping.update({i + 2: "float64" for i in range(self.cfg.channel_num.analog)})
+        type_mapping.update({
+            self.cfg.channel_num.analog + 2 + i: "int32"
+            for i in range(self.cfg.channel_num.digital)
+        })
+        content = content.astype(type_mapping)
 
-        # 使用向量化操作替代循环，提升性能
         analog_count = self.cfg.channel_num.analog
         if analog_count > 0:
             analog_list = list(self.cfg.analogs.values())
@@ -138,10 +173,100 @@ class DataContent(BaseModel):
 
         return content
 
+    def _parse_ascii_str(self, dat_str: str, expected_rows: int, expected_cols: int) -> pd.DataFrame | None:
+        """
+        Parse ASCII DAT content from a string.
+
+        Mirrors from_ascii_file() but reads from a StringIO instead of a file
+        path — same logic, different front door.
+        """
+        try:
+            content = pd.read_csv(
+                io.StringIO(dat_str),
+                sep=",",
+                na_values=["", "NA", "null", "NULL", "None", "-", "NaN"],
+                keep_default_na=False,
+                header=None,
+            )
+            content = content.fillna(0)
+        except Exception as e:
+            raise ValueError(f"Failed to parse ASCII DAT content: {e}")
+
+        actual_rows, actual_cols = content.shape
+        if actual_cols == expected_cols and actual_rows == expected_rows:
+            return content
+        if actual_rows > expected_rows:
+            try:
+                pd.isna(content.iloc[actual_rows, 0])
+                logging.warning(f"CFF DAT: actual rows {actual_rows} > expected {expected_rows}")
+            except Exception:
+                logging.warning(f"CFF DAT: truncating {actual_rows} rows to {expected_rows}")
+                content = content.iloc[:expected_rows, :]
+        if actual_cols != expected_cols:
+            digital_cols = actual_cols - self.cfg.channel_num.analog - 2
+            if digital_cols < 0:
+                logging.error(f"CFF DAT: too few columns ({actual_cols}), expected at least "
+                              f"{self.cfg.channel_num.analog + 2}")
+                return None
+            else:
+                logging.warning(f"CFF DAT: column mismatch ({actual_cols} vs {expected_cols}), "
+                                f"padding digital channels with zeros")
+                content = content.iloc[:, : self.cfg.channel_num.analog + 2]
+                new_columns = [self.cfg.channel_num.analog + 2 + i
+                               for i in range(self.cfg.channel_num.digital)]
+                new_data = pd.DataFrame(0, index=content.index, columns=new_columns)
+                content = pd.concat([content, new_data], axis=1)
+        return content
+
+    def _parse_binary_bytes(self, dat_bytes: bytes, expected_rows: int) -> pd.DataFrame | None:
+        """
+        Parse binary DAT content from a bytes object.
+
+        Mirrors from_binary_file() but accepts raw bytes instead of a Path —
+        same numpy dtype layout, different data source.
+        """
+        digital_word_count = (self.cfg.channel_num.digital + 15) // 16
+        INT32_TYPES = {DataType.BINARY32, DataType.FLOAT32}
+        analog_dtype = np.int32 if self.cfg.data_type in INT32_TYPES else np.int16
+        dt = np.dtype([
+            ("index",     np.int32,     1),
+            ("timestamp", np.int32,     1),
+            ("analog",    analog_dtype, self.cfg.channel_num.analog),
+            ("digital",   np.uint16,    digital_word_count),
+        ])
+        item_size = dt.itemsize
+        sample_count = len(dat_bytes) // item_size
+
+        if sample_count != expected_rows:
+            logging.warning(f"CFF DAT: expected {expected_rows} samples, got {sample_count}")
+
+        samples = np.frombuffer(dat_bytes, dtype=dt, count=sample_count)
+
+        index_data     = samples["index"].astype(np.int32)
+        timestamp_data = samples["timestamp"].astype(np.int32)
+        analog_data    = samples["analog"].astype(np.float64)
+
+        if self.cfg.channel_num.digital > 0:
+            digital_data  = samples["digital"].reshape(-1, digital_word_count)
+            digital_bytes = digital_data.view(np.uint8).reshape(sample_count, -1)
+            bits          = np.unpackbits(digital_bytes, axis=1, bitorder="little")
+            digital_bits  = bits[:, : self.cfg.channel_num.digital]
+        else:
+            digital_bits = np.zeros((sample_count, 0), dtype=np.int32)
+
+        if self.cfg.channel_num.analog > 0:
+            data_array = np.column_stack([index_data, timestamp_data, analog_data, digital_bits])
+        else:
+            data_array = np.column_stack([index_data, timestamp_data, digital_bits])
+
+        return pd.DataFrame(data_array)
+
+    # ------------------------------------------------------------------ #
+    # File-based parsers (original implementations, unchanged)            #
+    # ------------------------------------------------------------------ #
+
     def from_ascii_file(self, expected_rows, expected_cols):
-        """
-        读取ASCII格式的数据文件
-        """
+        """读取ASCII格式的数据文件"""
         try:
             content = pd.read_csv(
                 self.file_name,
@@ -154,24 +279,20 @@ class DataContent(BaseModel):
         except Exception as e:
             raise ValueError(f"读取数据文件失败:{str(e)}")
         actual_rows, actual_cols = content.shape
-        # 读取行列号和配置文件一致
         if actual_cols == expected_cols and actual_rows == expected_rows:
             return content
-        # 实际读取的采样点和配置文件的采样点数量不一致
         if actual_rows != expected_rows:
-            # 实际读取的采样点大于配置文件
             if actual_rows > expected_rows:
                 try:
                     pd.isna(content.iloc[actual_rows, 0])
                     logging.warning(
                         f"数据文件{self.file_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},需要重新计算采样信息"
                     )
-                except:
+                except Exception:
                     logging.warning(
                         f"数据文件{self.file_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},数据类型错误进行剪切"
                     )
                     content = content.iloc[:expected_rows, :]
-        # 实际读取的列和通道数量不一样
         if actual_cols != expected_cols:
             digital_cols = actual_cols - self.cfg.channel_num.analog - 2
             if digital_cols < 0:
@@ -193,26 +314,17 @@ class DataContent(BaseModel):
         return content
 
     def from_binary_file(self, expected_rows):
-        """
-        读取BINARY格式的数据文件
-        """
-        # 文件大小
+        """读取BINARY格式的数据文件"""
         file_size = self.file_name.stat().st_size
-        # 数字量占用字节长度
         digital_word_count = (self.cfg.channel_num.digital + 15) // 16
-        # 单个模拟量占用字节长度
         INT32_TYPES = {DataType.BINARY32, DataType.FLOAT32}
         analog_dtype = np.int32 if self.cfg.data_type in INT32_TYPES else np.int16
-        # 单个采样点结构
-        dt = np.dtype(
-            [
-                ("index", np.int32, 1),  # 数据点索引
-                ("timestamp", np.int32, 1),  # 相对时间
-                ("analog", analog_dtype, self.cfg.channel_num.analog),  # 模拟量
-                ("digital", np.uint16, digital_word_count),  # 开关量（以16位字为单位）
-            ]
-        )
-        # 当个采样点的字节长度
+        dt = np.dtype([
+            ("index",     np.int32,     1),
+            ("timestamp", np.int32,     1),
+            ("analog",    analog_dtype, self.cfg.channel_num.analog),
+            ("digital",   np.uint16,    digital_word_count),
+        ])
         item_size = dt.itemsize
         sample_count = file_size // item_size
 
@@ -230,37 +342,28 @@ class DataContent(BaseModel):
             )
             samples = np.frombuffer(binary_data, dtype=dt, count=sample_count)
 
-        # 使用向量化操作优化，避免循环逐行构建DataFrame
-        index_data = samples["index"].astype(np.int32)
+        index_data     = samples["index"].astype(np.int32)
         timestamp_data = samples["timestamp"].astype(np.int32)
-        analog_data = samples["analog"].astype(np.float64)
+        analog_data    = samples["analog"].astype(np.float64)
 
-        # 处理数字量：向量化展开比特位
         if self.cfg.channel_num.digital > 0:
-            digital_data = samples["digital"].reshape(-1, digital_word_count)
+            digital_data  = samples["digital"].reshape(-1, digital_word_count)
             digital_bytes = digital_data.view(np.uint8).reshape(sample_count, -1)
-            bits = np.unpackbits(digital_bytes, axis=1, bitorder="little")
-            digital_bits = bits[:, : self.cfg.channel_num.digital]
+            bits          = np.unpackbits(digital_bytes, axis=1, bitorder="little")
+            digital_bits  = bits[:, : self.cfg.channel_num.digital]
         else:
             digital_bits = np.zeros((sample_count, 0), dtype=np.int32)
 
-        # 使用np.column_stack高效合并数组
         if self.cfg.channel_num.analog > 0:
-            data_array = np.column_stack(
-                [index_data, timestamp_data, analog_data, digital_bits]
-            )
+            data_array = np.column_stack([index_data, timestamp_data, analog_data, digital_bits])
         else:
             data_array = np.column_stack([index_data, timestamp_data, digital_bits])
 
-        content = pd.DataFrame(data_array)
-        return content
+        return pd.DataFrame(data_array)
 
-    def write_file(self,
-                   output_file_path: ComtradeFile | Path | str,
-                   data_type: str = "BINARY"):
+    def write_file(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
         output_file_path = ComtradeFile.from_path(output_file_path)
         data_path = output_file_path.dat_path.path
-
         if data_type.upper() == "ASCII":
             self._write_ascii_dat_file(data_path)
         else:
@@ -268,26 +371,13 @@ class DataContent(BaseModel):
         return True
 
     def _write_ascii_dat_file(self, output_file_path: Path | str):
-        """
-        将数据写入ASCII格式文件
-
-        参数:
-            output_file_path: 输出文件路径
-        """
         self.data.to_csv(str(output_file_path), header=False, index=False)
         logging.info(f"数据文件{output_file_path}写入成功")
 
     def _write_binary_dat_file(self, output_file_path: Path | str):
-        """
-        将数据写入二进制格式文件，符合 COMTRADE 标准格式
-
-        参数:
-            output_file_path: 输出文件路径
-        """
         analog_int32 = self.cfg.data_type in {DataType.BINARY32, DataType.FLOAT32}
         analog_fmt = "<i" if analog_int32 else "<h"
-
-        analog_count = self.cfg.channel_num.analog
+        analog_count  = self.cfg.channel_num.analog
         digital_count = self.cfg.channel_num.digital
         digital_word_count = (digital_count + 15) // 16
 
@@ -295,21 +385,16 @@ class DataContent(BaseModel):
             for i in range(len(self.data)):
                 sample_index = int(float(self.data.iloc[i, 0].real))
                 f.write(struct.pack("<i", sample_index))
-
                 sample_time = int(float(self.data.iloc[i, 1].real))
                 f.write(struct.pack("<i", sample_time))
-
                 for a in range(analog_count):
                     col = 2 + a
                     if col < self.data.shape[1]:
                         val = self.data.iloc[i, col]
-                        ival = int(
-                            float(val.real) if hasattr(val, "real") else float(val)
-                        )
+                        ival = int(float(val.real) if hasattr(val, "real") else float(val))
                     else:
                         ival = 0
                     f.write(struct.pack(analog_fmt, ival))
-
                 for word_idx in range(digital_word_count):
                     digital_word = 0
                     for bit_idx in range(16):
@@ -324,5 +409,5 @@ class DataContent(BaseModel):
                             if bit_val != 0:
                                 digital_word |= 1 << bit_idx
                     f.write(struct.pack("<H", digital_word))
-            logging.info(f"数据文件{output_file_path}写入成功")
+        logging.info(f"数据文件{output_file_path}写入成功")
         return True

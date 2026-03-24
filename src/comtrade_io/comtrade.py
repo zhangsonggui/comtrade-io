@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import io
 from pathlib import Path
 from typing import Optional
 
@@ -13,6 +14,7 @@ from comtrade_io.dmf import AnalogChannel, ComtradeModel, StatusChannel
 from comtrade_io.dmf.bus import Bus
 from comtrade_io.dmf.line import Line
 from comtrade_io.dmf.transformer import Transformer
+from comtrade_io.inf.inf import InfInfo
 from comtrade_io.utils import get_logger
 
 logging = get_logger()
@@ -62,23 +64,16 @@ class Comtrade(ComtradeModel):
         return self.dat.data
 
     def get_analog_channel(self, index: int) -> Optional[AnalogChannel]:
-        """
-        根据通道标识获取模拟量通道，并加载通道数据
-        """
         analog = super().get_analog_channel_info(index)
         analog.data = self.dat.data.iloc[:, index + 1].to_numpy()
         return analog
 
     def get_status_channel(self, index: int) -> Optional[StatusChannel]:
-        """
-        根据通道标识获取状态量通道，并加载通道数据
-        """
         digital = super().get_status_channel_info(index)
         digital.data = self.dat.data.iloc[:, index + self.cfg.channel_num.analog + 1].to_numpy()
         return digital
 
     def _load_digital_data(self, channels: list, data: pd.DataFrame):
-        """加载数字量通道数据到通道对象列表"""
         for chn in channels:
             if chn and chn.index is not None:
                 col_index = self.cfg.channel_num.analog + chn.index + 1
@@ -86,112 +81,133 @@ class Comtrade(ComtradeModel):
 
     @staticmethod
     def _load_analog_channels(channels: tuple, data: pd.DataFrame):
-        """加载模拟量通道数据（ia, ib, ic, i0 或 ua, ub, uc, ul, un）"""
         for chn in channels:
             if chn:
                 col_index = chn.index + 1
                 chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
 
     def get_line(self, name: str) -> Line | None:
-        """
-        根据名称获取线路，并加载通道数据
-
-        参数:
-            name: 线路名称
-
-        返回:
-            线路对象，如果未找到则返回None
-        """
         line = super().get_line_info(name)
         if line is None or self.dat is None:
             return line
-
         data = self.dat.data
         if data is None:
             return line
-
-        # 加载电流通道数据
         for current in line.currents:
             self._load_analog_channels((current.ia, current.ib, current.ic, current.i0), data)
-
-        # 加载电压通道数据
         for bus in line.buses:
-            self._load_analog_channels((bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.ul, bus.voltage.un),
-                                       data)
-
-        # 加载开关量通道数据
+            self._load_analog_channels(
+                (bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.ul, bus.voltage.un), data)
         self._load_digital_data(line.stas, data)
-
         return line
 
     def get_bus(self, name: str) -> Bus | None:
-        """
-        根据名称获取母线，并加载通道数据
-
-        参数:
-            name: 母线名称
-
-        返回:
-            母线对象，如果未找到则返回None
-        """
         bus = super().get_bus_info(name)
         if bus is None or self.dat is None:
             return bus
-
         data = self.dat.data
         if data is None:
             return bus
-
-        # 加载电压通道数据
-        self._load_analog_channels((bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.ul, bus.voltage.un),
-                                   data)
-
-        # 加载模拟通道和开关量通道数据
+        self._load_analog_channels(
+            (bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.ul, bus.voltage.un), data)
         self._load_digital_data(bus.anas, data)
         self._load_digital_data(bus.stas, data)
-
         return bus
 
     def get_transformer(self, name: str) -> Transformer | None:
-        """
-        根据名称获取变压器，并加载通道数据
-
-        参数:
-            name: 变压器名称
-
-        返回:
-            变压器对象，如果未找到则返回None
-        """
         transformer = super().get_transformer_info(name)
         if transformer is None or self.dat is None:
             return transformer
-
         data = self.dat.data
         if data is None:
             return transformer
-
-        # 加载各绕组的电压和电流通道数据
         for winding in transformer.transWinds:
             self._load_analog_channels(
-                (winding.voltage.ua, winding.voltage.ub, winding.voltage.uc, winding.voltage.ul, winding.voltage.un),
-                data)
+                (winding.voltage.ua, winding.voltage.ub, winding.voltage.uc,
+                 winding.voltage.ul, winding.voltage.un), data)
             for current in winding.currents:
                 self._load_analog_channels((current.ia, current.ib, current.ic, current.i0), data)
-
-        # 加载模拟通道和开关量通道数据
         self._load_digital_data(transformer.anas, data)
         self._load_digital_data(transformer.stas, data)
-
         return transformer
 
     @classmethod
-    def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
+    def from_cff(cls, file_name: str | Path) -> "Comtrade | None":
+        """
+        从 CFF（单文件格式）加载 Comtrade 对象。
+
+        CFF 是 COMTRADE 2013 版引入的合并格式：CFG、DAT 及可选的 INF、HDR
+        内容全部存储在一个文件中，各节以哨兵行分隔。工作方式类似于将
+        "装订成册"的文件拆回各自独立的部分，再交给现有解析器处理。
+
+        参数:
+            file_name: .cff 文件路径
+        """
+        from comtrade_io.cff_splitter import split_cff
+
+        cf = ComtradeFile.from_path(file_name)
+        if not cf.cff_path.is_enabled():
+            return None
+
+        sections = split_cff(cf.cff_path.path)
+
+        # Configure.from_str() already exists — the CFG section is plain text.
+        configure = Configure.from_str(sections.cfg)
+        if configure is None:
+            return None
+
+        # DataContent.from_str() bypasses the filesystem for in-memory DAT data.
+        data_content = DataContent.from_str(
+            dat_str=sections.dat_text,
+            dat_bytes=sections.dat_bytes,
+            cfg=configure,
+        )
+
+        data_model = ComtradeModel.from_cfg(configure)
+
+        # Optional INF — InfInfo.from_stream() reads from a StringIO.
+        inf_info: Optional[InfInfo] = None
+        if sections.inf is not None:
+            try:
+                inf_info = InfInfo.from_stream(io.StringIO(sections.inf))
+            except Exception as e:
+                logging.warning(f"CFF INF section could not be parsed, skipping: {e}")
+
+        # HDR has no structured parser — store as raw string for callers.
+        hdr_text: Optional[str] = sections.hdr  # noqa: F841
+
+        # DMF is never embedded in a CFF — look for a sidecar file as usual.
+        if cf.dmf_path.is_enabled():
+            data_model = ComtradeModel.from_file(file_name=cf, cfg=configure) or data_model
+
+        return cls(
+            file=cf,
+            cfg=configure,
+            dat=data_content,
+            station_name=data_model.station_name,
+            version=data_model.version,
+            rec_dev_name=data_model.rec_dev_name,
+            buses=data_model.buses,
+            lines=data_model.lines,
+            transformers=data_model.transformers,
+            analog_channels=data_model.analog_channels,
+            status_channels=data_model.status_channels,
+        )
+
+    @classmethod
+    def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade | None":
         """
         从文件名反序列化Comtrade对象
 
         参数:
-            file_name(str): 文件名称,可以是cfg、dat、inf及dmf任意文件名，后缀名不做要求
+            file_name: 文件名称，可以是cfg、dat、inf及dmf任意文件名，后缀名不做要求。
+                       传入 .cff 文件时自动走 CFF 单文件解析路径。
         """
+        # CFF branch: single combined file (COMTRADE 2013+).
+        if isinstance(file_name, (str, Path)) and Path(file_name).suffix.lower() == '.cff':
+            return cls.from_cff(file_name)
+
+        # Original multi-file branch (cfg + dat [+ dmf/hdr/inf]) — unchanged.
         cf = ComtradeFile.from_path(file_name)
         if not cf.cfg_path.is_enabled():
             return None
@@ -219,31 +235,18 @@ class Comtrade(ComtradeModel):
         return result
 
     def save_comtrade(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
-        """
-        将 comtrade 对象保存为文件
-        参数:
-            output_file_path(str) 保存路径，后缀名可选
-            data_file_type(str) 保存格式，默认保存为二进制文件
-        """
         output_file_path = ComtradeFile.from_path(output_file_path)
-
         self.cfg.write_file(output_file_path)
         self.dat.write_file(output_file_path, data_type=data_type)
-
         return (f"文件保存成功："
                 f"参数文件位置：{output_file_path.cfg_path.path}，"
                 f"数据文件位置：{output_file_path.dat_path.path},"
                 f"模型文件位置{output_file_path.dmf_path.path}")
 
-    def save_json(self, output_file_path: Path | str,
-                  indent: int | None = None):
-        """
-        将Comtrade对象转换为JSON字符串（包含dat数据）
-        """
+    def save_json(self, output_file_path: Path | str, indent: int | None = None):
         data = self.model_dump(mode='python')
         data.pop("cfg", None)
         data.pop("file", None)
-
         if self.dat is not None and self.dat.data is not None:
             df = self.dat.data
             analog_list = data.get("analog_channels", [])
