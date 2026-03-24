@@ -3,7 +3,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from comtrade_io.comtrade import Comtrade
 
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -51,11 +50,11 @@ class TestGetLine:
         line = comtrade.get_line("ghx")
         assert line.index == 3
         assert line.name == "ghx"
-        assert line.lin_len == 9.75
+        assert line.line_length == 9.75
         assert line.bran_num.value == 1
         assert len(line.currents) == line.bran_num.value
-        assert line.rx.r0 == 0.062
-        assert line.rx.r1 == 0.021
+        assert line.impedance.r0 == 0.062
+        assert line.impedance.r1 == 0.021
 
     def test_get_line_currents(self, comtrade):
         """测试线路电流通道"""
@@ -106,7 +105,7 @@ class TestGetBus:
         bus = comtrade.get_bus("220kV母线U")
         assert bus.index == 1
         assert bus.name == "220kV母线U"
-        assert bus.v_rtg_snd_pos.value == "BUS"
+        assert bus.tv_install_site.value == "BUS"
 
     def test_get_bus_voltages(self, comtrade):
         """测试母线电压通道"""
@@ -143,8 +142,8 @@ class TestGetTransformer:
         """测试变压器绕组信息"""
         trans = comtrade.get_transformer("1号主变")
         trans_h = trans.transWinds[0]
-        assert trans_h.location.value == "high"
-        assert trans_h.v_rtg == 0
+        assert trans_h.trans_wind_location.value == "high"
+        assert trans_h.rated_voltage == 0
         assert trans_h.bran_num == len(trans_h.currents)
         assert trans_h.currents[0].idx == 1
         assert trans_h.currents[0].dir.value == "pos"
@@ -166,8 +165,8 @@ class TestGetTransformer:
         assert trans_h.voltage.ub.index == 2
         assert trans_h.voltage.uc.index == 3
         assert trans_h.voltage.un.index == 4
-        assert trans_h.igap.zgap_idx == 0
-        assert trans_h.igap.zsgap_idx == 0
+        assert trans_h.igap.zgap == 0
+        assert trans_h.igap.zsgap == 0
 
     def test_get_transformer_current_data(self, comtrade, expected_df):
         """测试变压器电流通道数据"""

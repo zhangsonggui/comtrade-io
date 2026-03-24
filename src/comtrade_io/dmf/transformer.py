@@ -9,15 +9,15 @@
 from typing import List, Optional
 from xml.etree.ElementTree import Element
 
+from comtrade_io.dmf.analog_channel import AnalogChannel
+from comtrade_io.dmf.branch import ACCBranch, ACVBranch
+from comtrade_io.dmf.dmf_base_model import DmfBaseModel
+from comtrade_io.type import TransWindLocation, WindFlag
+from comtrade_io.utils import parse_float, parse_int
 from pydantic import BaseModel, Field
 
-from comtrade_io.dmf.branch import ACCBranch, ACVBranch
-from comtrade_io.dmf.dmf_base_model import DmfBaseModelModel
-from comtrade_io.type import TransWindLocation, WGFlag
-from comtrade_io.utils import parse_float, parse_int
 
-
-class WG(BaseModel):
+class WindGroup(BaseModel):
     """
     绕组标识类
     
@@ -27,7 +27,7 @@ class WG(BaseModel):
         wgroup: 绕组标识符，如Y（星形）、D（三角形）等
         angle: 绕组角度，表示星形连接绕组的相角偏移
     """
-    wgroup: WGFlag = Field(default=WGFlag.Y, description="绕组标识符")
+    wgroup: WindFlag = Field(default=WindFlag.Y, description="绕组标识符")
     angle: int = Field(default=0, description="绕组角度")
 
 
@@ -37,12 +37,15 @@ class Igap(BaseModel):
     
     表示变压器中性点的接地电流通道信息，用于记录中性点电流测量。
     
+    实例化时可以传入通道索引和analog_channels字典，会自动解析为AnalogChannel对象。
+    也可以直接传入AnalogChannel对象。
+
     属性:
-        zgap_idx: 中性点直接接地电流的通道号
-        zsgap_idx: 中性点经间隙接地电流的通道号
+        zgap_idx: 中性点直接接地电流的通道
+        zsgap_idx: 中性点经间隙接地电流的通道
     """
-    zgap_idx: int = Field(default=0, description="中性点直接接地电流的通道号")
-    zsgap_idx: int = Field(default=0, description="中性点经间隙接地电流的通道号")
+    zgap: Optional[AnalogChannel] = Field(default=None, description="中性点直接接地电流的通道")
+    zsgap: Optional[AnalogChannel] = Field(default=None, description="中性点经间隙接地电流的通道")
 
     def __str__(self):
         """
@@ -51,8 +54,36 @@ class Igap(BaseModel):
         返回:
             格式化的XML字符串，表示中性点电流通道信息
         """
-        xml = f"<scl:Igap zGap_idx={self.zgap_idx} zSGap_idx={self.zsgap_idx} />"
+        zgap_idx = self.zgap.index if self.zgap else 0
+        zsgap_idx = self.zsgap.index if self.zsgap else 0
+        xml = f"<scl:Igap zGap_idx={zgap_idx} zSGap_idx={zsgap_idx} />"
         return xml
+
+    @classmethod
+    def from_xml(cls, element: Element, ns: dict = None, analog_channels: dict = None) -> "Igap":
+        """
+        从XML元素中解析中性点电流
+
+        参数:
+            element: XML元素
+            ns: 命名空间映射（可选）
+            analog_channels: 模拟通道字典（可选），用于解析通道对象
+
+        返回:
+            Igap: 中性点电流实例
+        """
+        zgap_idx_val = parse_int(element.get("zGap_idx", 0))
+        zsgap_idx_val = parse_int(element.get("zSGap_idx", 0))
+
+        if analog_channels is None:
+            return cls()
+        kwargs = {}
+        if zgap_idx_val:
+            kwargs["zgap_idx"] = analog_channels.get(zgap_idx_val, None)
+        if zsgap_idx_val:
+            kwargs["zsgap_idx"] = analog_channels.get(zsgap_idx_val, None)
+
+        return cls(**kwargs)
 
 
 class TransformerWinding(BaseModel):
@@ -75,15 +106,15 @@ class TransformerWinding(BaseModel):
         igap: 中性点电流信息，包含接地电流的通道号
     """
     bus_id: int = Field(default=0, description="母线索引号")
-    location: TransWindLocation = Field(default=TransWindLocation.HIGH, description="绕组位置")
+    trans_wind_location: TransWindLocation = Field(default=TransWindLocation.HIGH, description="绕组位置")
     reference: Optional[str] = Field(default="", description="IEC61850参引")
-    v_rtg: float = Field(default=0.0, description="额定电压")
-    a_rtg: float = Field(default=0.0, description="一次额定电流")
+    rated_voltage: float = Field(default=0.0, description="额定电压")
+    rated_current: float = Field(default=0.0, description="一次额定电流")
     bran_num: int = Field(default=0, description="分路数")
-    wg: WG = Field(default=WG(), description="绕组标识符")
-    voltage: ACVBranch = Field(default=ACVBranch(), description="交流电压通道")
+    wind_group: WindGroup = Field(default_factory=WindGroup, description="绕组标识符")
+    voltage: ACVBranch = Field(default_factory=ACVBranch, description="交流电压通道")
     currents: List[ACCBranch] = Field(default_factory=list, description="交流电流通道")
-    igap: Igap = Field(default=Igap(), description="中性点电流通道号")
+    igap: Igap = Field(default_factory=Igap, description="中性点电流通道号")
 
     def __str__(self):
         """
@@ -93,10 +124,10 @@ class TransformerWinding(BaseModel):
             格式化的XML字符串，包含绕组及其所有子元素的完整表示
         """
         attrs = [
-            f'location={self.location.value}"',
+            f'location={self.trans_wind_location.value}"',
             f'srcRef={self.reference}"',
-            f'VRtg={self.v_rtg}"',
-            f'ARtg={self.a_rtg}"',
+            f'VRtg={self.rated_voltage}"',
+            f'ARtg={self.rated_current}"',
             f'bran_num={self.bran_num}"',
             f'bus_ID={self.bus_id}"',
             f'wG=""'
@@ -133,13 +164,13 @@ class TransformerWinding(BaseModel):
 
         # 查找 WG 元素（支持带/不带命名空间）
         wg_elem = element.find('scl:WG', ns) if 'scl' in ns else element.find('WG')
-        wg = WG(
+        wg = WindGroup(
             angle=parse_int(wg_elem.get('angle', 0)) if wg_elem else 0,
-            wgroup=WGFlag.from_value(wg_elem.get('wgroup', "") if wg_elem else "", default=WGFlag.Y)
+            wgroup=WindFlag.from_value(wg_elem.get('wgroup', "") if wg_elem else "", default=WindFlag.Y)
         )
         bus_id = parse_int(element.get('bus_ID', 0))
-        tfw = cls(location=location, reference=src_ref, v_rtg=v_rtg, a_rtg=a_rtg,
-                  bran_num=bran_num, wg=wg, bus_id=bus_id)
+        tfw = cls(trans_wind_location=location, reference=src_ref, rated_voltage=v_rtg, rated_current=a_rtg,
+                  bran_num=bran_num, wind_group=wg, bus_id=bus_id)
 
         # 查找 ACVChn 元素（支持带/不带命名空间）
         acv_chn_elem = element.find('scl:ACVChn', ns) if 'scl' in ns else element.find('ACVChn')
@@ -159,15 +190,19 @@ class TransformerWinding(BaseModel):
         # 查找 Igap 元素（支持带/不带命名空间）
         igap_elem = element.find('scl:Igap', ns) if 'scl' in ns else element.find('Igap')
         if igap_elem is not None:
-            tfw.igap = Igap(
-                zgap_idx=parse_int(igap_elem.get('zGap_idx', 0)),
-                zsgap_idx=parse_int(igap_elem.get('zSGap_idx', 0))
-            )
+            zgap_idx_val = parse_int(igap_elem.get('zGap_idx', 0))
+            zsgap_idx_val = parse_int(igap_elem.get('zSGap_idx', 0))
+            kwargs = {}
+            if zgap_idx_val and analog_channels:
+                kwargs["zgap_idx"] = analog_channels.get(zgap_idx_val, None)
+            if zsgap_idx_val and analog_channels:
+                kwargs["zsgap_idx"] = analog_channels.get(zsgap_idx_val, None)
+            tfw.igap = Igap(**kwargs)
 
         return tfw
 
 
-class Transformer(DmfBaseModelModel):
+class Transformer(DmfBaseModel):
     """
     变压器类
     

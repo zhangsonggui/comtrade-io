@@ -11,7 +11,7 @@ class TransWindLocation(BaseEnum):
     COMMON = ("common", "公共绕组")
 
 
-class WGFlag(BaseEnum):
+class WindFlag(BaseEnum):
     Y = ('y', "星形")
     YN = ('yn', "星形接地")
     D = ('d', "三角形")

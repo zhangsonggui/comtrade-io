@@ -5,11 +5,12 @@ DMF 模型单元测试
 """
 import xml.etree.ElementTree as ET
 
-from comtrade_io.dmf import (ACCBranch, ACVBranch, AnalogChannel, Bus, CG, ComtradeModel, Igap, Line, MR, RX,
-                                StatusChannel, Transformer, TransformerWinding)
+from comtrade_io.dmf import (ACCBranch, ACVBranch, AnalogChannel, Bus, Capacitance, ComtradeModel, Igap, Line,
+                             MutualInductancemr, Impedance,
+                             StatusChannel, Transformer, TransformerWinding)
 from comtrade_io.type import (AnalogChannelFlag, AnalogChannelType, Contact, CtDirection, DigitalChannelFlag,
-                                 DigitalChannelType, LineBranchNum, Phase, TranSide, TransWindLocation,
-                                 TvInstallSite, Unit, WGFlag)
+                              DigitalChannelType, LineBranchNum, Phase, TranSide, TransWindLocation,
+                              TvInstallSite, Unit, WindFlag)
 
 
 # ========================================
@@ -77,9 +78,9 @@ def test_bus_from_xml():
     assert bus.index == 1
     assert bus.name == "Bus1"
     assert bus.reference == "ref1"
-    assert bus.v_rtg == 110.0
-    assert bus.v_rtg_snd == 100.0
-    assert bus.v_rtg_snd_pos == TvInstallSite.BUS
+    assert bus.rated_primary_voltage == 110.0
+    assert bus.rated_secondary_voltage == 100.0
+    assert bus.tv_install_site == TvInstallSite.BUS
     assert bus.uuid == "uuid1"
     assert bus.voltage.ua_idx == 1
     assert bus.analog_chn == [1, 2]
@@ -109,13 +110,13 @@ def test_line_from_xml():
     assert line.index == 1
     assert line.name == "Line1"
     assert line.bus_index == 1
-    assert line.v_rtg == 110.0
-    assert line.a_rtg == 1000.0
-    assert line.lin_len == 10.5
+    assert line.rated_primary_voltage == 110.0
+    assert line.rated_primary_current == 1000.0
+    assert line.line_length == 10.5
     assert line.bran_num == LineBranchNum.B1
-    assert line.rx.r1 == 0.1
-    assert line.cg.c0 == 0.02
-    assert line.mr.idx == 1
+    assert line.impedance.r1 == 0.1
+    assert line.capacitance.c0 == 0.02
+    assert line.mutual_inductancemr.idx == 1
     assert len(line.currents) == 1
     assert line.ana_chn == [1]
     assert line.sta_chn == [2]
@@ -137,20 +138,31 @@ def test_transformer_winding_from_xml():
     '''
     element = ET.fromstring(xml)
     ns = {}
-    winding = TransformerWinding.from_xml(element, ns)
+    analog_channels = {
+        1: AnalogChannel(index=1, idx_org=1),
+        2: AnalogChannel(index=2, idx_org=2),
+        3: AnalogChannel(index=3, idx_org=3),
+        4: AnalogChannel(index=4, idx_org=4),
+        5: AnalogChannel(index=5, idx_org=5),
+        6: AnalogChannel(index=6, idx_org=6),
+        7: AnalogChannel(index=7, idx_org=7),
+        8: AnalogChannel(index=8, idx_org=8),
+        9: AnalogChannel(index=9, idx_org=9),
+    }
+    winding = TransformerWinding.from_xml(element, ns, analog_channels=analog_channels)
 
-    assert winding.location == TransWindLocation.HIGH
+    assert winding.trans_wind_location == TransWindLocation.HIGH
     assert winding.reference == "ref1"
-    assert winding.v_rtg == 110.0
-    assert winding.a_rtg == 1000.0
+    assert winding.rated_voltage == 110.0
+    assert winding.rated_current == 1000.0
     assert winding.bran_num == 2
     assert winding.bus_id == 1
-    assert winding.wg.wgroup == WGFlag.Y
-    assert winding.wg.angle == 0
-    assert winding.voltage.ua_idx == 1
+    assert winding.wind_group.wgroup == WindFlag.Y
+    assert winding.wind_group.angle == 0
+    assert winding.voltage.ua.index == 1
     assert len(winding.currents) == 1
-    assert winding.igap.zgap_idx == 8
-    assert winding.igap.zsgap_idx == 9
+    assert winding.igap.zgap.index == 8
+    assert winding.igap.zsgap.index == 9
 
 
 # ========================================
@@ -305,7 +317,7 @@ def test_data_model_fault_from_xml_no_namespace():
 # ========================================
 def test_rx():
     """测试 RX 类"""
-    rx = RX(r1=0.1, x1=0.2, r0=0.3, x0=0.4)
+    rx = Impedance(r1=0.1, x1=0.2, r0=0.3, x0=0.4)
     assert rx.r1 == 0.1
     assert rx.x1 == 0.2
     assert rx.r0 == 0.3
@@ -314,20 +326,46 @@ def test_rx():
 
 def test_cg():
     """测试 CG 类"""
-    cg = CG(c1=0.01, c0=0.02, g1=0.001, g0=0.002)
+    cg = Capacitance(c1=0.01, c0=0.02, g1=0.001, g0=0.002)
     assert cg.c1 == 0.01
     assert cg.c0 == 0.02
 
 
 def test_mr():
     """测试 MR 类"""
-    mr = MR(idx=1, mr0=0.5, mx0=0.6)
+    mr = MutualInductancemr(idx=1, mr0=0.5, mx0=0.6)
     assert mr.idx == 1
     assert mr.mr0 == 0.5
 
 
 def test_igap():
     """测试 Igap 类"""
-    igap = Igap(zgap_idx=1, zsgap_idx=2)
-    assert igap.zgap_idx == 1
-    assert igap.zsgap_idx == 2
+    zgap_ch = AnalogChannel(index=1, idx_org=1)
+    zsgap_ch = AnalogChannel(index=2, idx_org=2)
+    igap = Igap(zgap=zgap_ch, zsgap=zsgap_ch)
+    assert igap.zgap.index == 1
+    assert igap.zsgap.index == 2
+
+
+def test_igap_from_xml():
+    """测试 Igap.from_xml"""
+    xml = '''<Igap zGap_idx="8" zSGap_idx="9"/>'''
+    element = ET.fromstring(xml)
+    analog_channels = {
+        8: AnalogChannel(index=8, idx_org=1),
+        9: AnalogChannel(index=9, idx_org=2)
+    }
+    igap = Igap.from_xml(element, {}, analog_channels=analog_channels)
+
+    assert igap.zgap.index == 8
+    assert igap.zsgap.index == 9
+
+
+def test_igap_from_xml_without_analog_channels():
+    """测试 Igap.from_xml 不传入 analog_channels 的情况"""
+    xml = '''<Igap zGap_idx="8" zSGap_idx="9"/>'''
+    element = ET.fromstring(xml)
+    igap = Igap.from_xml(element, {})
+
+    assert igap.zgap is None
+    assert igap.zsgap is None

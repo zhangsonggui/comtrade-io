@@ -6,6 +6,6 @@ from comtrade_io.dmf.bus import Bus
 from comtrade_io.dmf.comtrade_model import ComtradeModel
 from comtrade_io.dmf.dmf_channel import DmfChannel
 from comtrade_io.dmf.line import Line
-from comtrade_io.dmf.line_param import CG, MR, RX
+from comtrade_io.dmf.line_param import Capacitance, MutualInductancemr, Impedance
 from comtrade_io.dmf.status_channel import StatusChannel
-from comtrade_io.dmf.transformer import Igap, Transformer, TransformerWinding, WG
+from comtrade_io.dmf.transformer import Igap, Transformer, TransformerWinding, WindGroup

@@ -9,7 +9,7 @@
 from pydantic import BaseModel, Field
 
 
-class RX(BaseModel):
+class Impedance(BaseModel):
     """
     线路阻抗参数类
     
@@ -44,7 +44,7 @@ class RX(BaseModel):
         return f'<scl:RX {" ".join(attrs)}/>'
 
 
-class CG(BaseModel):
+class Capacitance(BaseModel):
     """
     线路电容参数类
     
@@ -78,7 +78,7 @@ class CG(BaseModel):
         return f'<scl:CG {" ".join(attrs)}/>'
 
 
-class MR(BaseModel):
+class MutualInductancemr(BaseModel):
     """
     线路互感参数类
     

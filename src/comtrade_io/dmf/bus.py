@@ -8,15 +8,14 @@
 """
 from xml.etree.ElementTree import Element
 
-from pydantic import Field
-
 from comtrade_io.dmf.branch import ACVBranch
-from comtrade_io.dmf.dmf_base_model import DmfBaseModelModel
+from comtrade_io.dmf.dmf_base_model import DmfBaseModel
 from comtrade_io.type import TvInstallSite
 from comtrade_io.utils import parse_float, parse_int
+from pydantic import Field
 
 
-class Bus(DmfBaseModelModel):
+class Bus(DmfBaseModel):
     """
     母线类
     
@@ -24,17 +23,17 @@ class Bus(DmfBaseModelModel):
     母线用于汇集和分配电能，连接线路、变压器等设备。
     
     属性:
-        v_rtg: 一次额定电压，单位通常为kV
-        v_rtg_snd: 二次额定电压（用于保护装置的电压输入），单位通常为V
-        v_rtg_snd_pos: TV安装位置，标识电压互感器的安装位置
+        rated_primary_voltage: 一次额定电压，单位通常为kV
+        rated_secondary_voltage: 二次额定电压（用于保护装置的电压输入），单位通常为V
+        tv_install_site: 电压互感器安装位置
         voltage: 电压通道，包含该母线的电压通道索引信息
         anas: 模拟通道列表，继承自基类
         stas: 开关量通道列表，继承自基类
     """
-    v_rtg: float = Field(default=0.0, description="一次额定电压")
-    v_rtg_snd: float = Field(default=100.0, description="二次额定电压")
-    v_rtg_snd_pos: TvInstallSite = Field(default=TvInstallSite.BUS, description="TV安装位置")
-    voltage: ACVBranch = Field(default=ACVBranch(), description="电压通道")
+    rated_primary_voltage: float = Field(default=220.0, description="一次额定电压")
+    rated_secondary_voltage: float = Field(default=100.0, description="二次额定电压")
+    tv_install_site: TvInstallSite = Field(default=TvInstallSite.BUS, description="电压互感器安装位置")
+    voltage: ACVBranch = Field(default_factory=ACVBranch, description="电压通道")
 
     def __str__(self):
         """
@@ -47,9 +46,9 @@ class Bus(DmfBaseModelModel):
             f'idx"={self.index}"',
             f'bus_name="{self.name}"',
             f'srcRef="{self.reference}"',
-            f'VRtg="{self.v_rtg}"',
-            f'VRtgSnd="{self.v_rtg_snd}"',
-            f'VRtgSnd_Pos="{self.v_rtg_snd_pos}"',
+            f'VRtg="{self.rated_primary_voltage}"',
+            f'VRtgSnd="{self.rated_secondary_voltage}"',
+            f'VRtgSnd_Pos="{self.tv_install_site}"',
             f'bus_uuid="{self.uuid}"'
         ]
         attrs = [attr for attr in attrs if attr is not None]
@@ -64,8 +63,8 @@ class Bus(DmfBaseModelModel):
         parts = [
             f'【母线信息】',
             f'母线名称：{self.name},内部编号索引：{self.index}',
-            f'一次额定电压：{self.v_rtg}kV,二次额定电压：{self.v_rtg_snd}V',
-            f'TV安装位置：{self.v_rtg_snd_pos.description}',
+            f'一次额定电压：{self.rated_primary_voltage}kV,二次额定电压：{self.rated_secondary_voltage}V',
+            f'TV安装位置：{self.tv_install_site.description}',
             f'【电压通道情况】'
         ]
         for vp in (self.voltage.ua, self.voltage.ub, self.voltage.uc, self.voltage.ul, self.voltage.un):
@@ -97,8 +96,8 @@ class Bus(DmfBaseModelModel):
         v_rtg_snd_pos_str = element.get('VRtgSnd_Pos', "")
         v_rtg_snd_pos = TvInstallSite.from_value(v_rtg_snd_pos_str, default=TvInstallSite.BUS)
         bus_uuid = element.get('bus_uuid', "")
-        bus = cls(index=idx, name=bus_name, reference=src_ref, v_rtg=v_rtg, v_rtg_snd=v_rtg_snd,
-                  v_rtg_snd_pos=v_rtg_snd_pos, uuid=bus_uuid)
+        bus = cls(index=idx, name=bus_name, reference=src_ref, rated_primary_voltage=v_rtg, rated_secondary_voltage=v_rtg_snd,
+                  tv_install_site=v_rtg_snd_pos, uuid=bus_uuid)
 
         # 查找 ACVChn 元素（支持带/不带命名空间）
         acv_chn_elem = element.find('scl:ACVChn', ns) if 'scl' in ns else None

@@ -9,15 +9,14 @@ DMF基础模型模块
 from typing import List, Optional
 from xml.etree.ElementTree import Element
 
-from pydantic import Field
-
 from comtrade_io.base import IndexBaseModel, ReferenceBaseModel
 from comtrade_io.dmf.analog_channel import AnalogChannel
 from comtrade_io.dmf.status_channel import StatusChannel
 from comtrade_io.utils import parse_float, parse_int
+from pydantic import Field
 
 
-class DmfBaseModelModel(IndexBaseModel, ReferenceBaseModel):
+class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
     """
     数据模型基础类
     

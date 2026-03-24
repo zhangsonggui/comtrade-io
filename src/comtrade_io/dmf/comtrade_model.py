@@ -12,8 +12,6 @@ from pathlib import Path
 from typing import Optional
 from xml.etree.ElementTree import Element
 
-from pydantic import Field, model_serializer
-
 from comtrade_io.cfg import Configure
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.dmf.analog_channel import AnalogChannel
@@ -23,6 +21,7 @@ from comtrade_io.dmf.line import Line
 from comtrade_io.dmf.status_channel import StatusChannel
 from comtrade_io.dmf.transformer import Transformer
 from comtrade_io.utils import get_logger
+from pydantic import Field, model_serializer
 
 logging = get_logger(__name__)
 
@@ -276,7 +275,7 @@ class ComtradeModel(ComtradeBaseModel):
             if line.bus_index == 0:
                 # bus_index 为 0，查找 v_rtg 相同的 Bus
                 for bus in self.buses:
-                    if abs(bus.v_rtg - line.v_rtg) < 0.001:
+                    if abs(bus.rated_primary_voltage - line.rated_primary_voltage) < 0.001:
                         line.buses.append(bus)
             else:
                 # bus_index 不为 0，查找 index 相同的 Bus

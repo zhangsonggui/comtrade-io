@@ -5,7 +5,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from comtrade_io.dmf import ComtradeModel
 from comtrade_io.type import LineBranchNum, TvInstallSite
 
@@ -67,7 +66,7 @@ class TestDataModelFault:
         bus = dmf.get_bus_info("Bus1")
         assert bus is not None
         assert bus.name == "Bus1"
-        assert bus.v_rtg == 500.0
+        assert bus.rated_primary_voltage == 500.0
 
         bus = dmf.get_bus_info("NonExistent")
         assert bus is None
@@ -82,7 +81,7 @@ class TestDataModelFault:
         line = dmf.get_line_info("Line1")
         assert line is not None
         assert line.name == "Line1"
-        assert line.v_rtg == 500.0
+        assert line.rated_primary_voltage == 500.0
         assert line.bran_num == LineBranchNum.B1
 
         line = dmf.get_line_info("NonExistent")
@@ -181,7 +180,7 @@ class TestDataModelFault:
         line = dmf.lines[0]
 
         # 验证枚举值正确解析
-        assert bus.v_rtg_snd_pos == TvInstallSite.BUS
+        assert bus.tv_install_site == TvInstallSite.BUS
         assert line.bran_num == LineBranchNum.B1
 
     def test_large_file(self, temp_dir):
