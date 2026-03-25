@@ -45,8 +45,8 @@ def test_config_digital(config):
 
 def test_config_sampling(config):
     samp = config.sampling
-    assert len(samp.nrates) == 1
-    assert samp.nrates[0].end_point == 45600
+    assert len(samp.segments) == 1
+    assert samp.segments[0].end_point == 45600
 
 def test_config_time(config):
     assert config.start_time.time == datetime.datetime(year=2023,month=5,day=12,hour=19,minute=45,second=25,microsecond=600000)

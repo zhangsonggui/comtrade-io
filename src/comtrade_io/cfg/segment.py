@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from comtrade_io.utils.str_split import str_split
 
 
-class Nrate(BaseModel):
+class Segment(BaseModel):
     """采样点率模型
 
     描述单条采样段信息，包含采样点数和结束点。
@@ -33,7 +33,7 @@ class Nrate(BaseModel):
         return f"{self.samp},{self.end_point}"
 
     @classmethod
-    def from_str(cls, _str: str) -> 'Nrate|None':
+    def from_str(cls, _str: str) -> 'Segment|None':
         """从逗号分隔的字符串反序列化采样点率
 
         将配置文件中的采样段字符串解析为Nrate对象。
@@ -43,7 +43,7 @@ class Nrate(BaseModel):
             _str: 逗号分隔的采样点率字符串
 
         Returns:
-            Nrate: 解析后的采样点率对象；如果采样点或结束点为0则返回None
+            Segment: 解析后的采样点率对象；如果采样点或结束点为0则返回None
         """
         if not isinstance(_str, str):
             return None
@@ -55,7 +55,7 @@ class Nrate(BaseModel):
         return cls(samp=samp, end_point=end_point)
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Nrate':
+    def from_dict(cls, data: dict) -> 'Segment':
         """从字典反序列化采样点率
 
         将包含采样点率信息的字典解析为Nrate对象。
@@ -64,7 +64,7 @@ class Nrate(BaseModel):
             data: 包含samp和end_point字段的字典
 
         Returns:
-            Nrate: 解析后的采样点率对象
+            Segment: 解析后的采样点率对象
 
         异常:
             ValueError: 当缺少必填字段时抛出
@@ -74,6 +74,6 @@ class Nrate(BaseModel):
         return cls(**data)
 
     @classmethod
-    def from_json(cls, json_str: str) -> 'Nrate':
+    def from_json(cls, json_str: str) -> 'Segment':
         data = json.loads(json_str)
         return cls.from_dict(data)

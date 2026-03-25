@@ -104,7 +104,7 @@ class DataContent(BaseModel):
         """
         读取数据文件,返回数据对象(pandas.DataFrame)
         """
-        expected_rows = self.cfg.sampling.nrates[-1].end_point
+        expected_rows = self.cfg.sampling.segments[-1].end_point
         expected_cols = self.cfg.channel_num.total + 2
         if self.cfg.data_type == DataType.ASCII:
             content = self.from_ascii_file(expected_rows, expected_cols)

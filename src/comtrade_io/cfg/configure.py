@@ -9,10 +9,10 @@ from comtrade_io.cfg.analog import Analog
 from comtrade_io.cfg.channel_num import ChannelNum
 from comtrade_io.cfg.digital import Digital
 from comtrade_io.cfg.header import Header
-from comtrade_io.cfg.nrate import Nrate
 from comtrade_io.cfg.precision_time import PrecisionTime
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.sampling_time_quality import SamplingTimeQuality
+from comtrade_io.cfg.segment import Segment
 from comtrade_io.cfg.time_info import TimeInfo
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
@@ -105,15 +105,15 @@ class Configure(BaseModel):
         # 跳过通道信息,处理采样频率、采样段、采样时间、数据格式信息
         cursor_row = channel_num.total + 2
         sampling = Sampling(freq=float(parts[cursor_row]))
-        nrate_size = int(parts[cursor_row + 1])
-        for i in range(nrate_size):
-            nrate_str = parts[cursor_row + 2 + i]
-            if nrate_str:
-                nrate = Nrate.from_str(nrate_str)
-                if nrate is None:
+        segment_len = int(parts[cursor_row + 1])
+        for i in range(segment_len):
+            segment_str = parts[cursor_row + 2 + i]
+            if segment_str:
+                segment = Segment.from_str(segment_str)
+                if segment is None:
                     continue
-                sampling.add_nrate(nrate)
-        cursor_row += nrate_size + 2
+                sampling.add_segment(segment)
+        cursor_row += segment_len + 2
         start_time_str = parts[cursor_row]
         start_time = PrecisionTime.from_str(start_time_str)
         fault_time_str = parts[cursor_row + 1]
@@ -212,7 +212,7 @@ class Configure(BaseModel):
         """
         return self.digitals.get(index)
 
-    def get_sampling_nrate(self, index: int) -> Optional[Nrate]:
+    def get_sampling_segment(self, index: int) -> Optional[Segment]:
         """
         按采样段号获取该采样段的采样频率和结束采样点
         参数:
@@ -220,6 +220,6 @@ class Configure(BaseModel):
         返回:
             数字量通道对象，不存在返回None
         """
-        if 1 <= index <= len(self.sampling.nrates):
+        if 1 <= index <= len(self.sampling.segments):
             return None
-        return self.sampling.nrates[index - 1]
+        return self.sampling.segments[index - 1]
