@@ -9,11 +9,15 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 
 from comtrade_io.cfg import Configure
+from comtrade_io.cfg.sampling import Sampling
+from comtrade_io.cfg.segment import Segment
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger
 
 logging = get_logger()
+
+CYCLE_TIME_MS = 20.0
 
 
 class DataContent(BaseModel):
@@ -110,7 +114,7 @@ class DataContent(BaseModel):
             content = self.from_ascii_file(expected_rows, expected_cols)
         else:
             content = self.from_binary_file(expected_rows)
-        # type_mapping = {i + 2: "float64" for i in range(self.cfg.channel_num.analog)}
+        # 设置数据格式
         type_mapping = {i: "int32" for i in range(2)}
         type_mapping.update(
             {i + 2: "float64" for i in range(self.cfg.channel_num.analog)}
@@ -326,3 +330,39 @@ class DataContent(BaseModel):
                     f.write(struct.pack("<H", digital_word))
             logging.info(f"数据文件{output_file_path}写入成功")
         return True
+
+    def verify_and_recalculate_sampling(self) -> Sampling:
+        """
+        校验采样时间并重新计算采样频率
+        
+        1. 读取data文件中第二列的采样时间（微秒）
+        2. 与cfg中的timemult相乘得出真正的采样时间
+        3. 根据采样时间间隔重新计算采样频率，将相同采样频率的点放到一起
+        4. Segment中的samp是该段的采样频率，end_point是该段最后一个采样点索引
+        5. 周波默认20ms
+        
+        返回:
+            Sampling: 重新计算后的采样信息
+        """
+        if self.data is None or len(self.data) < 2:
+            return self.cfg.sampling
+
+        timestamps_us = self.data.iloc[:, 1].to_numpy() * self.cfg.timemult
+        time_diffs_us = np.diff(timestamps_us)
+
+        change_indices = np.where(np.diff(time_diffs_us) != 0)[0] + 1
+        segment_starts = np.concatenate([[0], change_indices])
+        segment_ends = np.concatenate([change_indices, [len(timestamps_us)]])
+
+        segments = [
+            Segment(samp=round(1_000_000.0 / time_diffs_us[start]), end_point=end)
+            for start, end in zip(segment_starts, segment_ends)
+            if time_diffs_us[start] > 0
+        ]
+
+        if not segments:
+            return self.cfg.sampling
+
+        self.cfg.sampling.segments = segments
+
+        return self.cfg.sampling
