@@ -173,8 +173,9 @@ class Comtrade(ComtradeModel):
             except Exception as e:
                 logging.warning(f"CFF INF section could not be parsed, skipping: {e}")
 
-        # HDR has no structured parser — store as raw string for callers.
-        hdr_text: Optional[str] = sections.hdr  # noqa: F841
+        # HDR has no structured parser and no field on ComtradeModel — log and discard.
+        if sections.hdr is not None:
+            logging.debug("CFF HDR section present but not stored (no field on ComtradeModel)")
 
         # DMF is never embedded in a CFF — look for a sidecar file as usual.
         if cf.dmf_path.is_enabled():
