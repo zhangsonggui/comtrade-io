@@ -28,7 +28,7 @@ dev-dependencies = [
 
 [[tool.uv.index]]
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"
-default = true
+default = false
 
 [build-system]
 requires = ["setuptools>=80.9.0", "wheel"]
