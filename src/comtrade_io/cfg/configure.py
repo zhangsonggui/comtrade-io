@@ -3,8 +3,6 @@
 from pathlib import Path
 from typing import Optional, cast
 
-from pydantic import BaseModel, Field, model_serializer
-
 from comtrade_io.cfg.analog import Analog
 from comtrade_io.cfg.channel_num import ChannelNum
 from comtrade_io.cfg.digital import Digital
@@ -17,6 +15,7 @@ from comtrade_io.cfg.time_info import TimeInfo
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger, parse_float, str_split
+from pydantic import BaseModel, Field, model_serializer
 
 logging = get_logger()
 
@@ -42,9 +41,9 @@ class Configure(BaseModel):
     channel_num: ChannelNum = Field(description="通道数量")
     analogs: dict[int, Analog] = Field(default_factory=dict, description="模拟量通道")
     digitals: dict[int, Digital] = Field(default_factory=dict, description="数字量通道")
-    sampling: Sampling = Field(default=Sampling(), description="采样信息")
-    start_time: PrecisionTime = Field(default=PrecisionTime(), description="故障文件开始时间")
-    fault_time: PrecisionTime = Field(default=PrecisionTime(), description="故障时间")
+    sampling: Sampling = Field(default_factory=Sampling, description="采样信息")
+    start_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障文件开始时间")
+    fault_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障时间")
     data_type: DataType = Field(default=DataType.BINARY, description="录波文件数据格式")
     timemult: float = Field(default=1.0, description="时标倍率因子")
     time_info: Optional[TimeInfo] = Field(default=None, description="时间信息及与UTC时间关系")
@@ -112,7 +111,7 @@ class Configure(BaseModel):
                 segment = Segment.from_str(segment_str)
                 if segment is None:
                     continue
-                sampling.add_segment(segment)
+                sampling.segments.append(segment)
         cursor_row += segment_len + 2
         start_time_str = parts[cursor_row]
         start_time = PrecisionTime.from_str(start_time_str)

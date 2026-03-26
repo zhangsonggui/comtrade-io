@@ -6,14 +6,13 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-from pydantic import BaseModel, ConfigDict, Field
-
 from comtrade_io.cfg import Configure
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.segment import Segment
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger
+from pydantic import BaseModel, ConfigDict, Field
 
 logging = get_logger()
 
@@ -44,6 +43,10 @@ class DataContent(BaseModel):
             return
         self.file_name = cf.dat_path.path
         self.data = self.read()
+        if self.data.shape[0] != self.cfg.sampling.segments[-1].end_point:
+            logging.warning(
+                f"实际读取数据点：{self.data.shape[0]}与配置文件数据点{self.cfg.sampling.segments[-1].end_point}不一致，根据采样点时间进行修正")
+            self.verify_and_recalculate_sampling()
 
     def get_data(
             self,
@@ -78,8 +81,8 @@ class DataContent(BaseModel):
         # 根据数据类型计算列索引
         # DataFrame列结构：第0列为索引，第1列为时间戳，第2列开始为模拟量，之后为开关量
         col_index_map = {
-            "point": 0,
-            "time": 1,
+            "point" : 0,
+            "time"  : 1,
             "analog": 2,
             "digital": self.cfg.channel_num.analog + 2
         }

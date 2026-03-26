@@ -6,10 +6,9 @@
 import json
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
-
 from comtrade_io.cfg.segment import Segment
 from comtrade_io.utils import get_logger
+from pydantic import BaseModel, Field
 
 logging = get_logger()
 
@@ -28,29 +27,11 @@ class Sampling(BaseModel):
             str: 多行字符串，第一行为频率，后续行为NRATE行
         """
         freq_str = f"{self.freq}"
-        segments_len= len(self.segments)
+        segments_len = len(self.segments)
         segment_str = '\n'.join([str(segment) for segment in self.segments])
         if segment_str:
             return f"{freq_str}\n{segments_len}\n{segment_str}"
         return freq_str
-
-    def add_segment(self, segment: Segment) -> None:
-        """向采样段列表添加一个segment
-
-        添加采样段并自动归一化端点以兼容相对/绝对端点的写法。
-        如果端点值小于等于前一个端点，则视为相对长度；否则视为绝对端点。
-
-        参数:
-            segment: 要添加的Segment对象
-
-        异常:
-            ValueError: 当segment不是Segment实例时抛出
-        """
-        if not isinstance(segment, Segment):
-            err_str = f"segment 必须是 Segment 实例"
-            logging.error(err_str)
-            raise ValueError(err_str)
-        self.segments.append(segment)
 
     @classmethod
     def from_str(cls, _str: str) -> 'Sampling':

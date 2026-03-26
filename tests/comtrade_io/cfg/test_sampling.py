@@ -74,11 +74,3 @@ def test_from_dict_invalid_item():
 def test_from_str_invalid_segments():
     with pytest.raises(ValueError):
         Sampling.from_str("60\\nnot_a_rate")
-
-
-def test_add_segment_with_absolute_end():
-    nr1 = Segment(samp=1920, end_point=1000)
-    s = Sampling(freq=60.0, segments=[nr1])
-    nr3 = Segment(samp=5760, end_point=3000)
-    s.add_segment(nr3)
-    assert s.segments[-1].end_point == 3000
