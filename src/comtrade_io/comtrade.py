@@ -6,6 +6,7 @@ from typing import Optional
 import pandas as pd
 from pydantic import Field
 
+from comtrade_io.cff import CffFile
 from comtrade_io.cfg import Configure
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.data import DataContent
@@ -190,9 +191,13 @@ class Comtrade(ComtradeModel):
         从文件名反序列化Comtrade对象
 
         参数:
-            file_name(str): 文件名称,可以是cfg、dat、inf及dmf任意文件名，后缀名不做要求
+            file_name(str): 文件名称,可以是cfg、dat、cff、inf及dmf任意文件名，后缀名不做要求
         """
         cf = ComtradeFile.from_path(file_name)
+
+        if cf.cff_path.is_enabled():
+            return cls._from_cff(cf)
+
         if not cf.cfg_path.is_enabled():
             return None
         configure = Configure.from_file(file_name=cf)
@@ -203,6 +208,38 @@ class Comtrade(ComtradeModel):
         if data_model_fault is None:
             data_model_fault = ComtradeModel.from_cfg(configure)
         data_content = DataContent(cfg=configure, file_name=cf)
+        result = cls(
+            file=cf,
+            cfg=configure,
+            dat=data_content,
+            station_name=data_model_fault.station_name,
+            version=data_model_fault.version,
+            rec_dev_name=data_model_fault.rec_dev_name,
+            buses=data_model_fault.buses,
+            lines=data_model_fault.lines,
+            transformers=data_model_fault.transformers,
+            analog_channels=data_model_fault.analog_channels,
+            status_channels=data_model_fault.status_channels,
+        )
+        return result
+
+    @classmethod
+    def _from_cff(cls, cf: ComtradeFile) -> "Comtrade|None":
+        """
+        从 CFF 单文件加载 Comtrade 对象
+
+        参数:
+            cf: ComtradeFile 对象
+        """
+        cff_file = CffFile.from_file(cf.cff_path.path)
+
+        configure = cff_file.to_configure_from_file()
+        if configure is None:
+            return None
+
+        data_model_fault = ComtradeModel.from_cfg(configure)
+        data_content = cff_file.to_data_content(configure)
+
         result = cls(
             file=cf,
             cfg=configure,

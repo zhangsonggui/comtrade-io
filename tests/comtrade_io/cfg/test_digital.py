@@ -6,9 +6,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-import pytest
 
-from comtrade_io.cfg.digital import Digital
+from comtrade_io.cfg.status import Status
 from comtrade_io.type import Contact, Phase
 
 
@@ -26,7 +25,7 @@ def test_digital_from_str_variants():
     for case in data.get('strings', []):
         s = case['input']
         expected = case['expected']
-        d = Digital.from_str(s)
+        d = Status.from_str(s)
         exp_phase = Phase.from_value(expected.get('phase',""))
         exp_contact = Contact.from_value(expected.get('contact',0))
         assert d.index == expected['index']
@@ -43,7 +42,7 @@ def test_digital_from_dict_variants():
     for case in data.get('dicts', []):
         d = case['input']
         exp = case['expected']
-        digital = Digital(
+        digital = Status(
             index=d['index'],
             name=d['name'],
             phase=Phase.from_value(d.get('phase'), Phase.NONE),

@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Optional
 from xml.etree.ElementTree import Element
 
+from pydantic import Field, model_serializer
+
 from comtrade_io.cfg import Configure
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.dmf.analog_channel import AnalogChannel
@@ -21,7 +23,6 @@ from comtrade_io.dmf.line import Line
 from comtrade_io.dmf.status_channel import StatusChannel
 from comtrade_io.dmf.transformer import Transformer
 from comtrade_io.utils import get_logger
-from pydantic import Field, model_serializer
 
 logging = get_logger(__name__)
 
@@ -257,7 +258,7 @@ class ComtradeModel(ComtradeBaseModel):
             digital = None
             if cfg is not None:
                 idx = int(el.get('idx_cfg', 1))
-                digital = cfg.digitals.get(idx)
+                digital = cfg.statuses.get(idx)
             obj = StatusChannel.from_xml(el, ns, digital)
             result[obj.index] = obj
         return result
@@ -333,7 +334,7 @@ class ComtradeModel(ComtradeBaseModel):
         for analog in cfg_obj.analogs.values():
             analog_channel = AnalogChannel.from_analog(analog)
             _dmf.analog_channels[analog_channel.index] = analog_channel
-        for digital in cfg_obj.digitals.values():
+        for digital in cfg_obj.statuses.values():
             digital_channel = StatusChannel.from_digital(digital)
             _dmf.status_channels[digital_channel.index] = digital_channel
         return _dmf

@@ -23,7 +23,7 @@ def test_config_header(config):
 
 def test_config_channel_num(config):
     assert config.channel_num.analog == 96
-    assert config.channel_num.digital == 192
+    assert config.channel_num.status == 192
     assert config.channel_num.total == 288
 
 
@@ -39,7 +39,7 @@ def test_config_analog(config):
     assert an.tran_side.value == "S"
 
 def test_config_digital(config):
-    dn = config.digitals.get(21)
+    dn = config.statuses.get(21)
     assert dn.name == "220kV母差保护一_I母差动动作"
     assert dn.contact.value == "0"
 

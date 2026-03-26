@@ -17,7 +17,7 @@ class ChannelNum(BaseModel):
     """
     total: int = Field(..., description="通道总数", ge=0)
     analog: int = Field(..., description="模拟量通道数", ge=0)
-    digital: int = Field(..., description="数字量通道数", ge=0)
+    status: int = Field(..., description="数字量通道数", ge=0)
 
     def __str__(self) -> str:
         """序列化为逗号分隔的字符串
@@ -27,7 +27,7 @@ class ChannelNum(BaseModel):
         Returns:
             str: 逗号分隔的字符串，格式为 "total,analogA,digitalD"
         """
-        return f"{self.total},{self.analog}A,{self.digital}D"
+        return f"{self.total},{self.analog}A,{self.status}D"
 
     @classmethod
     def _parse_count(cls, text: str) -> int:
@@ -69,10 +69,10 @@ class ChannelNum(BaseModel):
         parts = str_split(_str)
         total = int(parts[0])
         analog = cls._parse_count(parts[1])
-        digital = cls._parse_count(parts[2])
-        if total != analog + digital:
+        status = cls._parse_count(parts[2])
+        if total != analog + status:
             raise ValueError("总数不等于模拟量与数字量之和")
-        return cls(total=total, analog=analog, digital=digital)
+        return cls(total=total, analog=analog, status=status)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'ChannelNum':
@@ -91,10 +91,10 @@ class ChannelNum(BaseModel):
         """
         total = data.get("total")
         analog = data.get("analog")
-        digital = data.get("digital")
-        if total is None or analog is None or digital is None:
+        status = data.get("status")
+        if total is None or analog is None or status is None:
             raise ValueError("缺少必填字段")
-        return cls(total=total, analog=analog, digital=digital)
+        return cls(total=total, analog=analog, status=status)
 
     @classmethod
     def from_json(cls, json_str: str) -> 'ChannelNum':

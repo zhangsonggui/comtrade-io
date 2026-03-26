@@ -3,11 +3,11 @@
 from pydantic import Field
 
 from comtrade_io.cfg.cfg_channel_model import CfgChannelBaseModel
-from comtrade_io.type import Contact, Phase
+from comtrade_io.type import Contact
 from comtrade_io.utils import str_split
 
 
-class Digital(CfgChannelBaseModel):
+class Status(CfgChannelBaseModel):
     """
     数字量通道类
 
@@ -31,7 +31,7 @@ class Digital(CfgChannelBaseModel):
         return super().__str__() + f",{self.contact.value}"
 
     @classmethod
-    def from_str(cls, _str: str) -> 'Digital':
+    def from_str(cls, _str: str) -> 'Status':
         """从逗号分隔的字符串反序列化数字量通道
 
         将配置文件中的数字量通道字符串解析为Digital对象。
@@ -41,7 +41,7 @@ class Digital(CfgChannelBaseModel):
             _str: 逗号分隔的数字量通道字符串
 
         Returns:
-            Digital: 解析后的数字量通道对象
+            Status: 解析后的数字量通道对象
 
         异常:
             ValueError: 当字符串格式不正确时抛出

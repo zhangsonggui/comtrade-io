@@ -46,21 +46,23 @@ class FilePath(BaseModel):
 
 
 class ComtradeFile(BaseModel):
-    """COMTRADE 文件封装，包含 cfg, dat, dmf, hdr, inf 等文件信息"""
+    """COMTRADE 文件封装，包含 cfg, dat, cff, dmf, hdr, inf 等文件信息"""
     cfg_path: FilePath = Field(default_factory=FilePath, description="cfg文件信息")
     dat_path: FilePath = Field(default_factory=FilePath, description="dat文件信息")
+    cff_path: FilePath = Field(default_factory=FilePath, description="cff单文件信息")
     dmf_path: FilePath = Field(default_factory=FilePath, description="dmf文件信息")
     hdr_path: FilePath = Field(default_factory=FilePath, description="hdr文件信息")
     inf_path: FilePath = Field(default_factory=FilePath, description="inf文件信息")
 
     @classmethod
     def from_path(cls, file_path: Union[str, Path, 'ComtradeFile']) -> 'ComtradeFile':
-        """根据路径创建 ComtradeFile 对象，同时查找并验证 cfg, dat, dmf, hdr, inf 文件"""
+        """根据路径创建 ComtradeFile 对象，同时查找并验证 cfg, dat, cff, dmf, hdr, inf 文件"""
         if isinstance(file_path, ComtradeFile):
             return file_path
 
         ALLOWED_SUFFIXES = {'.cfg': "cfg_path",
                             '.dat': "dat_path",
+                            '.cff': "cff_path",
                             '.dmf': "dmf_path",
                             '.hdr': "hdr_path",
                             '.inf': "inf_path"}
@@ -77,10 +79,17 @@ class ComtradeFile(BaseModel):
         input_suffix_lower = input_suffix.lower()
         target_attr = ALLOWED_SUFFIXES.get(input_suffix_lower)
 
+        if input_suffix_lower == '.cff':
+            result = cls()
+            result.cff_path = FilePath(path=file_path)
+            return result
+
         is_upper = input_suffix[1:].isupper() if input_suffix else False
 
         result = cls()
         for allowed_suffix, attr_name in ALLOWED_SUFFIXES.items():
+            if allowed_suffix == '.cff':
+                continue
             if target_attr == attr_name:
                 related_path = file_path
             else:
@@ -92,5 +101,6 @@ class ComtradeFile(BaseModel):
         return result
 
     def __str__(self) -> str:
-        return (f"ComtradeFile(file_name={self.cfg_path.path}, file_name={self.dat_path.path}, "
-                f"file_name={self.dmf_path.path}, hdr_path={self.hdr_path.path}, inf_path={self.inf_path.path})")
+        return (f"ComtradeFile(cfg_path={self.cfg_path.path}, dat_path={self.dat_path.path}, "
+                f"cff_path={self.cff_path.path}, dmf_path={self.dmf_path.path}, "
+                f"hdr_path={self.hdr_path.path}, inf_path={self.inf_path.path})")

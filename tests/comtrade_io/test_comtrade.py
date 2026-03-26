@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
+
 from comtrade_io.comtrade import Comtrade
 
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -31,7 +32,7 @@ class TestComtradeInitialization:
         assert comtrade.file.cfg_path.path == CFG_FILE
         assert comtrade.cfg.header.station == "GHBZ"
         assert comtrade.cfg.channel_num.analog == 96
-        assert comtrade.cfg.channel_num.digital == 192
+        assert comtrade.cfg.channel_num.status == 192
         assert comtrade.cfg.data_type.value == "BINARY"
 
     def test_data_loaded(self, comtrade):
@@ -165,8 +166,8 @@ class TestGetTransformer:
         assert trans_h.voltage.ub.index == 2
         assert trans_h.voltage.uc.index == 3
         assert trans_h.voltage.un.index == 4
-        assert trans_h.igap.zgap == 0
-        assert trans_h.igap.zsgap == 0
+        assert trans_h.igap.zgap is None
+        assert trans_h.igap.zsgap is None
 
     def test_get_transformer_current_data(self, comtrade, expected_df):
         """测试变压器电流通道数据"""
@@ -250,7 +251,7 @@ class TestGetStatusChannel:
     def test_get_all_status_channels_data(self, comtrade, expected_df):
         """测试所有状态量通道数据"""
         analog_count = comtrade.cfg.channel_num.analog
-        digital_count = comtrade.cfg.channel_num.digital
+        digital_count = comtrade.cfg.channel_num.status
         for ch_idx in range(1, digital_count + 1):
             status = comtrade.get_status_channel(ch_idx)
             col_idx = analog_count + ch_idx + 1

@@ -6,13 +6,14 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel, ConfigDict, Field
+
 from comtrade_io.cfg import Configure
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.segment import Segment
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger
-from pydantic import BaseModel, ConfigDict, Field
 
 logging = get_logger()
 
@@ -62,11 +63,11 @@ class DataContent(BaseModel):
         - "point": 获取数据点索引列（第0列）
         - "time": 获取时间戳列（第1列）
         - "analog": 获取模拟量通道数据
-        - "digital": 获取开关量通道数据
+        - "status": 获取开关量通道数据
 
         参数:
             index: 通道索引（从0开始）
-            data_type: 数据类型，可选值为 "point"、"time"、"analog"、"digital"，默认为 "analog"
+            data_type: 数据类型，可选值为 "point"、"time"、"analog"、"status"，默认为 "analog"
             start_point: 起始列（保留参数，当前未使用）
             end_point: 结束列（保留参数，当前未使用）
 
@@ -84,13 +85,13 @@ class DataContent(BaseModel):
             "point" : 0,
             "time"  : 1,
             "analog": 2,
-            "digital": self.cfg.channel_num.analog + 2
+            "status": self.cfg.channel_num.analog + 2
         }
 
         base_col = col_index_map.get(data_type, 2)
 
         # 对于模拟量和开关量，需要加上通道索引
-        if data_type in ("analog", "digital"):
+        if data_type in ("analog", "status"):
             col_index = base_col + index
         else:
             col_index = base_col
@@ -125,7 +126,7 @@ class DataContent(BaseModel):
         type_mapping.update(
             {
                 self.cfg.channel_num.analog + 2 + i: "int32"
-                for i in range(self.cfg.channel_num.digital)
+                for i in range(self.cfg.channel_num.status)
             }
         )
         content = content.astype(type_mapping)
@@ -193,7 +194,7 @@ class DataContent(BaseModel):
                 content = content.iloc[:, : self.cfg.channel_num.analog + 2]
                 new_columns = [
                     self.cfg.channel_num.analog + 2 + i
-                    for i in range(self.cfg.channel_num.digital)
+                    for i in range(self.cfg.channel_num.status)
                 ]
                 new_data = pd.DataFrame(0, index=content.index, columns=new_columns)
                 content = pd.concat([content, new_data], axis=1)
@@ -206,7 +207,7 @@ class DataContent(BaseModel):
         # 文件大小
         file_size = self.file_name.stat().st_size
         # 数字量占用字节长度
-        digital_word_count = (self.cfg.channel_num.digital + 15) // 16
+        digital_word_count = (self.cfg.channel_num.status + 15) // 16
         # 单个模拟量占用字节长度
         INT32_TYPES = {DataType.BINARY32, DataType.FLOAT32}
         analog_dtype = np.int32 if self.cfg.data_type in INT32_TYPES else np.int16
@@ -216,7 +217,7 @@ class DataContent(BaseModel):
                 ("index", np.int32, 1),  # 数据点索引
                 ("timestamp", np.int32, 1),  # 相对时间
                 ("analog", analog_dtype, self.cfg.channel_num.analog),  # 模拟量
-                ("digital", np.uint16, digital_word_count),  # 开关量（以16位字为单位）
+                ("status", np.uint16, digital_word_count),  # 开关量（以16位字为单位）
             ]
         )
         # 当个采样点的字节长度
@@ -243,11 +244,11 @@ class DataContent(BaseModel):
         analog_data = samples["analog"].astype(np.float64)
 
         # 处理数字量：向量化展开比特位
-        if self.cfg.channel_num.digital > 0:
-            digital_data = samples["digital"].reshape(-1, digital_word_count)
+        if self.cfg.channel_num.status > 0:
+            digital_data = samples["status"].reshape(-1, digital_word_count)
             digital_bytes = digital_data.view(np.uint8).reshape(sample_count, -1)
             bits = np.unpackbits(digital_bytes, axis=1, bitorder="little")
-            digital_bits = bits[:, : self.cfg.channel_num.digital]
+            digital_bits = bits[:, : self.cfg.channel_num.status]
         else:
             digital_bits = np.zeros((sample_count, 0), dtype=np.int32)
 
@@ -295,7 +296,7 @@ class DataContent(BaseModel):
         analog_fmt = "<i" if analog_int32 else "<h"
 
         analog_count = self.cfg.channel_num.analog
-        digital_count = self.cfg.channel_num.digital
+        digital_count = self.cfg.channel_num.status
         digital_word_count = (digital_count + 15) // 16
 
         with open(str(output_file_path), "wb") as f:

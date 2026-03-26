@@ -12,7 +12,7 @@ from xml.etree.ElementTree import Element
 import numpy as np
 from pydantic import Field, field_serializer
 
-from comtrade_io.cfg import Digital
+from comtrade_io.cfg import Status
 from comtrade_io.dmf.dmf_channel import DmfChannel
 from comtrade_io.type import Contact, DigitalChannelFlag, DigitalChannelType
 from comtrade_io.utils import get_logger, parse_int
@@ -20,7 +20,7 @@ from comtrade_io.utils import get_logger, parse_int
 logging = get_logger()
 
 
-class StatusChannel(Digital, DmfChannel):
+class StatusChannel(Status, DmfChannel):
     """
     开关量通道类
     
@@ -60,7 +60,7 @@ class StatusChannel(Digital, DmfChannel):
         return f"\t<scl:StatusChannel {''.join(attrs)} />"
 
     @classmethod
-    def from_digital(cls, digital: Digital) -> "StatusChannel":
+    def from_digital(cls, digital: Status) -> "StatusChannel":
         """从Digital实例创建StatusChannel实例
 
         参数:
@@ -78,7 +78,7 @@ class StatusChannel(Digital, DmfChannel):
 
     @classmethod
     def from_xml(cls, element: Element, ns: Optional[dict] = None,
-                 digital: Optional[Digital] = None) -> "StatusChannel":
+                 digital: Optional[Status] = None) -> "StatusChannel":
         """从XML元素创建StatusChannel实例
 
         参数:

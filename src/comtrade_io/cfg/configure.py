@@ -3,19 +3,20 @@
 from pathlib import Path
 from typing import Optional, cast
 
+from pydantic import BaseModel, Field, model_serializer
+
 from comtrade_io.cfg.analog import Analog
 from comtrade_io.cfg.channel_num import ChannelNum
-from comtrade_io.cfg.digital import Digital
 from comtrade_io.cfg.header import Header
 from comtrade_io.cfg.precision_time import PrecisionTime
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.sampling_time_quality import SamplingTimeQuality
 from comtrade_io.cfg.segment import Segment
+from comtrade_io.cfg.status import Status
 from comtrade_io.cfg.time_info import TimeInfo
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger, parse_float, str_split
-from pydantic import BaseModel, Field, model_serializer
 
 logging = get_logger()
 
@@ -40,7 +41,7 @@ class Configure(BaseModel):
     header: Header = Field(description="配置文件头")
     channel_num: ChannelNum = Field(description="通道数量")
     analogs: dict[int, Analog] = Field(default_factory=dict, description="模拟量通道")
-    digitals: dict[int, Digital] = Field(default_factory=dict, description="数字量通道")
+    statuses: dict[int, Status] = Field(default_factory=dict, description="数字量通道")
     sampling: Sampling = Field(default_factory=Sampling, description="采样信息")
     start_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障文件开始时间")
     fault_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障时间")
@@ -53,7 +54,7 @@ class Configure(BaseModel):
     def serialize_model(self, handler):
         data = handler(self)
         data['analogs'] = list(self.analogs.values())
-        data['digitals'] = list(self.digitals.values())
+        data['statuses'] = list(self.statuses.values())
         return data
 
     def __str__(self):
@@ -71,8 +72,8 @@ class Configure(BaseModel):
         cfg_content += self.channel_num.__str__() + "\n"
         for analog in self.analogs.values():
             cfg_content += analog.__str__() + "\n"
-        for digital in self.digitals.values():
-            cfg_content += digital.__str__() + "\n"
+        for status in self.statuses.values():
+            cfg_content += status.__str__() + "\n"
         cfg_content += self.sampling.__str__() + "\n"
         cfg_content += self.start_time.__str__() + "\n"
         cfg_content += self.fault_time.__str__() + "\n"
@@ -137,9 +138,9 @@ class Configure(BaseModel):
             analog = Analog.from_str(parts[i + 2])
             configure.analogs[analog.index] = analog
         cursor_row = channel_num.analog + 2
-        for i in range(channel_num.digital):
-            digital = Digital.from_str(parts[i + cursor_row])
-            configure.digitals[digital.index] = digital
+        for i in range(channel_num.status):
+            status = Status.from_str(parts[i + cursor_row])
+            configure.statuses[status.index] = status
 
         return configure
 
@@ -201,7 +202,7 @@ class Configure(BaseModel):
         """
         return self.analogs.get(index)
 
-    def get_digital(self, index: int) -> Optional[Digital]:
+    def get_digital(self, index: int) -> Optional[Status]:
         """
         按通道的an(index)获取数字量通道
         参数:
@@ -209,7 +210,7 @@ class Configure(BaseModel):
         返回:
             数字量通道对象，不存在返回None
         """
-        return self.digitals.get(index)
+        return self.statuses.get(index)
 
     def get_sampling_segment(self, index: int) -> Optional[Segment]:
         """

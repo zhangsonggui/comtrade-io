@@ -99,7 +99,7 @@ class TestDigitalColumns:
     def test_digital_all_values(self, comtrade_data, expected_df, comtrade_cfg):
         """验证所有数字量列的值"""
         analog_count = comtrade_cfg.channel_num.analog
-        digital_count = comtrade_cfg.channel_num.digital
+        digital_count = comtrade_cfg.channel_num.status
         for col_idx in range(digital_count):
             actual = comtrade_data.data.iloc[:, 2 + analog_count + col_idx].values
             expected = expected_df.iloc[:, 2 + analog_count + col_idx].values
@@ -167,7 +167,7 @@ class TestGetDataMethod:
     def test_get_digital_data(self, comtrade_data, comtrade_cfg):
         """测试获取数字量数据"""
         analog_count = comtrade_cfg.channel_num.analog
-        digital_data = comtrade_data.get_data(0, data_type="digital")
+        digital_data = comtrade_data.get_data(0, data_type="status")
         assert digital_data is not None
         expected = comtrade_data.data.iloc[:, 2 + analog_count].values
         assert np.array_equal(digital_data, expected)
