@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import io
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -30,17 +31,19 @@ class InfInfo(BaseModel):
     # 额外字段，保留对未显式映射字段的兼容性
     extra: Dict[str, str] = Field(default_factory=dict, description="额外字段映射")
 
-    @classmethod
-    def from_file(cls, file_path: Path) -> 'InfInfo':
-        """从 INF 文件解析信息，返回 InfInfo 实例"""
-        if file_path is None:
-            raise FileNotFoundError("文件路径为空")
-        if not file_path.exists():
-            raise FileNotFoundError(f"文件 {file_path.absolute()} 不存在")
-        if not file_path.is_file():
-            raise IsADirectoryError(f"{file_path.absolute()} 是目录，不是文件")
+    # ------------------------------------------------------------------ #
+    # Shared parsing logic                                                 #
+    # ------------------------------------------------------------------ #
 
-        parsed: Dict[str, str] = {}
+    @classmethod
+    def _parse_lines(cls, lines: io.TextIOBase) -> 'InfInfo':
+        """
+        Core parser: reads key=value / key:value lines from any text stream
+        and returns a populated InfInfo instance.
+
+        Extracted from from_file() so that both from_file() and from_stream()
+        share identical behaviour — like two roads leading to the same factory.
+        """
         common_map = {
             'manufacturer'     : 'manufacturer',
             'vendor'           : 'manufacturer',
@@ -56,7 +59,7 @@ class InfInfo(BaseModel):
             'nominal_frequency': 'frequency',
             'sampling_rate'    : 'sampling_rate',
             'sample_rate'      : 'sampling_rate',
-            'samplingrate'     : 'sampling_rate',  # Added to handle SamplingRate without underscore
+            'samplingrate'     : 'sampling_rate',
             'time_base'        : 'time_base',
             'clock_source'     : 'clock_source',
             'software_version' : 'software_version',
@@ -65,30 +68,28 @@ class InfInfo(BaseModel):
             'time_reference'   : 'time_reference',
         }
 
-        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-            for raw in f:
-                line = raw.strip()
-                if not line or line.startswith('#') or line.startswith('!') or line.startswith(';'):
-                    continue
-                if '=' in line:
-                    k, v = line.split('=', 1)
-                elif ':' in line:
-                    k, v = line.split(':', 1)
-                else:
-                    continue
-                key = k.strip().lower().replace(' ', '_')
-                val = v.strip()
-                parsed[key] = val
+        parsed: Dict[str, str] = {}
+        for raw in lines:
+            line = raw.strip()
+            if not line or line.startswith('#') or line.startswith('!') or line.startswith(';'):
+                continue
+            if '=' in line:
+                k, v = line.split('=', 1)
+            elif ':' in line:
+                k, v = line.split(':', 1)
+            else:
+                continue
+            key = k.strip().lower().replace(' ', '_')
+            val = v.strip()
+            parsed[key] = val
 
         typed: Dict[str, object] = {}
         for key, val in parsed.items():
             if key in common_map:
                 field = common_map[key]
                 if field in {'frequency', 'sampling_rate'}:
-                    # 尝试将数值字段转换为数字，遇到非数字保留字符串
                     try:
                         if '/' in val:
-                            # 比如 '100/1' 这类比值直接保留为字符串
                             typed[field] = val
                         else:
                             typed[field] = float(val) if ('.' in val or 'e' in val.lower()) else int(val)
@@ -97,7 +98,7 @@ class InfInfo(BaseModel):
                 else:
                     typed[field] = val
 
-        info = cls(
+        return cls(
             data=parsed,
             manufacturer=typed.get('manufacturer'),
             model=typed.get('model'),
@@ -114,4 +115,30 @@ class InfInfo(BaseModel):
             time_reference=typed.get('time_reference'),
             extra={k: v for k, v in parsed.items() if k not in common_map}
         )
-        return info
+
+    # ------------------------------------------------------------------ #
+    # Public constructors                                                  #
+    # ------------------------------------------------------------------ #
+
+    @classmethod
+    def from_file(cls, file_path: Path) -> 'InfInfo':
+        """从 INF 文件解析信息，返回 InfInfo 实例"""
+        if file_path is None:
+            raise FileNotFoundError("文件路径为空")
+        if not file_path.exists():
+            raise FileNotFoundError(f"文件 {file_path.absolute()} 不存在")
+        if not file_path.is_file():
+            raise IsADirectoryError(f"{file_path.absolute()} 是目录，不是文件")
+
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            return cls._parse_lines(f)
+
+    @classmethod
+    def from_stream(cls, stream: io.StringIO) -> 'InfInfo':
+        """
+        从内存中的文本流解析 INF 内容，返回 InfInfo 实例。
+
+        Used when reading an INF section embedded inside a CFF file, where
+        the content is already in memory rather than on disk.
+        """
+        return cls._parse_lines(stream)

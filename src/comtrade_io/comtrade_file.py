@@ -46,7 +46,8 @@ class FilePath(BaseModel):
 
 
 class ComtradeFile(BaseModel):
-    """COMTRADE 文件封装，包含 cfg, dat, dmf, hdr, inf 等文件信息"""
+    """COMTRADE 文件封装，包含 cff, cfg, dat, dmf, hdr, inf 等文件信息"""
+    cff_path: FilePath = Field(default_factory=FilePath, description="cff文件信息")
     cfg_path: FilePath = Field(default_factory=FilePath, description="cfg文件信息")
     dat_path: FilePath = Field(default_factory=FilePath, description="dat文件信息")
     dmf_path: FilePath = Field(default_factory=FilePath, description="dmf文件信息")
@@ -55,11 +56,12 @@ class ComtradeFile(BaseModel):
 
     @classmethod
     def from_path(cls, file_path: Union[str, Path, 'ComtradeFile']) -> 'ComtradeFile':
-        """根据路径创建 ComtradeFile 对象，同时查找并验证 cfg, dat, dmf, hdr, inf 文件"""
+        """根据路径创建 ComtradeFile 对象，同时查找并验证 cff, cfg, dat, dmf, hdr, inf 文件"""
         if isinstance(file_path, ComtradeFile):
             return file_path
 
-        ALLOWED_SUFFIXES = {'.cfg': "cfg_path",
+        ALLOWED_SUFFIXES = {'.cff': "cff_path",
+                            '.cfg': "cfg_path",
                             '.dat': "dat_path",
                             '.dmf': "dmf_path",
                             '.hdr': "hdr_path",
@@ -92,5 +94,6 @@ class ComtradeFile(BaseModel):
         return result
 
     def __str__(self) -> str:
-        return (f"ComtradeFile(file_name={self.cfg_path.path}, file_name={self.dat_path.path}, "
-                f"file_name={self.dmf_path.path}, hdr_path={self.hdr_path.path}, inf_path={self.inf_path.path})")
+        return (f"ComtradeFile(cff_path={self.cff_path.path}, cfg_path={self.cfg_path.path}, "
+                f"dat_path={self.dat_path.path}, dmf_path={self.dmf_path.path}, "
+                f"hdr_path={self.hdr_path.path}, inf_path={self.inf_path.path})")
