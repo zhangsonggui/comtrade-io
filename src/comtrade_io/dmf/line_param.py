@@ -78,7 +78,7 @@ class Capacitance(BaseModel):
         return f'<scl:CG {" ".join(attrs)}/>'
 
 
-class MutualInductancemr(BaseModel):
+class MutualInductance(BaseModel):
     """
     线路互感参数类
     

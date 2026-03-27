@@ -74,6 +74,32 @@ class Analog(CfgChannelBaseModel):
                 + f",{self.tran_side.value}"
         )
 
+    def to_information(self):
+        """
+        返回对象的信息字符串表示形式
+        包括通道标识、通道名称、参引路径、单位、通道增益系数、通道偏移系数、通道延时、
+        最小值、最大值、一次变比系数、二次变比系数、数据标识。
+
+        Returns:
+            str: 模拟量通道信息字符串表示形式
+        """
+        attrs = [
+            f"[Public Analog_Channel_#{self.index}]",
+            f'Channel_ID="{self.name}"',
+            f'Phase_ID="{self.phase.value}"',
+            f'Monitored_Component=""',
+            f'Channel_Units="{self.unit.value}"',
+            f'Channel_Multiplier="{self.multiplier}"',
+            f'Channel_Offset="{self.offset}"',
+            f'Channel_Skew="{self.delay}"',
+            f'Range_Minimum_Limit_Value="{self.min_value}"',
+            f'Range_Maximum_Limit_Value="{self.max_value}"',
+            f'Channel_Ratio_Primary="{self.primary}"',
+            f'Channel_Ratio_Secondary="{self.secondary}"',
+            f'Data_Primary_Secondary="{self.tran_side.value}"'
+        ]
+        return "\n".join(attrs)
+
     @classmethod
     def from_str(cls, _str: str) -> 'Analog':
         """从逗号分隔的字符串反序列化模拟量对象

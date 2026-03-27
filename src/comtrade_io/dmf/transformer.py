@@ -9,12 +9,13 @@
 from typing import List, Optional
 from xml.etree.ElementTree import Element
 
+from pydantic import BaseModel, Field
+
 from comtrade_io.dmf.analog_channel import AnalogChannel
 from comtrade_io.dmf.branch import ACCBranch, ACVBranch
 from comtrade_io.dmf.dmf_base_model import DmfBaseModel
 from comtrade_io.type import TransWindLocation, WindFlag
 from comtrade_io.utils import parse_float, parse_int
-from pydantic import BaseModel, Field
 
 
 class WindGroup(BaseModel):
@@ -24,11 +25,21 @@ class WindGroup(BaseModel):
     表示变压器的绕组标识信息，用于标识不同的绕组及其相位关系。
     
     属性:
-        wgroup: 绕组标识符，如Y（星形）、D（三角形）等
+        wind_flag: 绕组标识符，如Y（星形）、D（三角形）等
         angle: 绕组角度，表示星形连接绕组的相角偏移
     """
-    wgroup: WindFlag = Field(default=WindFlag.Y, description="绕组标识符")
+    wind_flag: WindFlag = Field(default=WindFlag.Y, description="绕组接线方式")
     angle: int = Field(default=0, description="绕组角度")
+
+    # TODO 需要增加从字符串解析提取接线方式和角度
+    def __str__(self):
+        """
+        返回绕组标识符的字符串表示形式
+
+        返回:
+            格式化字符串，表示绕组标识符信息
+        """
+        return f"{self.wind_flag.value}{self.angle}"
 
 
 class Igap(BaseModel):
@@ -79,9 +90,9 @@ class Igap(BaseModel):
             return cls()
         kwargs = {}
         if zgap_idx_val:
-            kwargs["zgap_idx"] = analog_channels.get(zgap_idx_val, None)
+            kwargs["zgap"] = analog_channels.get(zgap_idx_val, None)
         if zsgap_idx_val:
-            kwargs["zsgap_idx"] = analog_channels.get(zsgap_idx_val, None)
+            kwargs["zsgap"] = analog_channels.get(zsgap_idx_val, None)
 
         return cls(**kwargs)
 
@@ -95,12 +106,12 @@ class TransformerWinding(BaseModel):
     
     属性:
         bus_id: 母线索引号，表示该绕组连接的母线
-        location: 绕组位置，标识绕组是高压侧还是低压侧
+        trans_wind_location: 绕组位置，标识绕组是高压侧还是低压侧
         reference: IEC61850参引，用于关联到IEC61850数据模型
-        v_rtg: 额定电压，单位通常为kV
-        a_rtg: 一次额定电流，单位通常为A
+        rated_voltage: 额定电压，单位通常为kV
+        rated_current: 一次额定电流，单位通常为A
         bran_num: 分路数，表示绕组的分支数量
-        wg: 绕组标识符，包含绕组类型和角度信息
+        wind_group: 绕组标识符，包含绕组类型和角度信息
         voltage: 交流电压通道，包含该绕组的电压通道索引
         currents: 交流电流通道列表，包含该绕组的电流分支信息
         igap: 中性点电流信息，包含接地电流的通道号
@@ -163,10 +174,11 @@ class TransformerWinding(BaseModel):
         bran_num = parse_int(element.get('bran_num', 0))
 
         # 查找 WG 元素（支持带/不带命名空间）
-        wg_elem = element.find('scl:WG', ns) if 'scl' in ns else element.find('WG')
+        # todo 绕组接线方式和角度待完善
+        wg_elem = element.find('scl:wG', ns) if 'scl' in ns else element.find('wG')
         wg = WindGroup(
             angle=parse_int(wg_elem.get('angle', 0)) if wg_elem else 0,
-            wgroup=WindFlag.from_value(wg_elem.get('wgroup', "") if wg_elem else "", default=WindFlag.Y)
+            wind_flag=WindFlag.from_value(wg_elem.get('wgroup', "") if wg_elem else "", default=WindFlag.Y)
         )
         bus_id = parse_int(element.get('bus_ID', 0))
         tfw = cls(trans_wind_location=location, reference=src_ref, rated_voltage=v_rtg, rated_current=a_rtg,
@@ -210,13 +222,13 @@ class Transformer(DmfBaseModel):
     变压器是连接不同电压等级电网的关键设备。
     
     属性:
-        pwr_rtg: 变压器额定功率，单位通常为MVA
+        capacity: 变压器额定功率，单位通常为MVA
         transWinds: 变压器绕组列表，包含该变压器的所有绕组
         transformer_uuid: 变压器唯一标识符
         anas: 模拟通道列表，继承自基类
         stas: 开关量通道列表，继承自基类
     """
-    pwr_rtg: float = Field(default=0.0, description="变压器额定功率")
+    capacity: float = Field(default=0.0, description="变压器额定功率")
     transWinds: List[TransformerWinding] = Field(default_factory=list, description="变压器绕组")
     transformer_uuid: str = Field(default="", description="变压器标识")
 
@@ -231,7 +243,7 @@ class Transformer(DmfBaseModel):
             f'idx="{self.index}"',
             f'trm_name="{self.name}"',
             f'srcRef="{self.reference}"',
-            f'pwrRtg="{self.pwr_rtg}"',
+            f'pwrRtg="{self.capacity}"',
             f'transformer_uuid="{self.uuid}"'
         ]
         attrs = [attr for attr in attrs if attr is not None]
@@ -268,7 +280,7 @@ class Transformer(DmfBaseModel):
             index=idx,
             name=tran_name,
             reference=src_ref,
-            pwr_rtg=pwr_rtg,
+            capacity=pwr_rtg,
             uuid=uuid
         )
 

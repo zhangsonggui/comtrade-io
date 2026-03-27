@@ -9,13 +9,14 @@
 from typing import List
 from xml.etree.ElementTree import Element
 
+from pydantic import Field
+
 from comtrade_io.dmf import Bus
 from comtrade_io.dmf.branch import ACCBranch
 from comtrade_io.dmf.dmf_base_model import DmfBaseModel
-from comtrade_io.dmf.line_param import Capacitance, MutualInductancemr, Impedance
+from comtrade_io.dmf.line_param import Capacitance, Impedance, MutualInductance
 from comtrade_io.type import LineBranchNum
 from comtrade_io.utils import parse_float, parse_int
-from pydantic import Field
 
 
 class Line(DmfBaseModel):
@@ -42,12 +43,12 @@ class Line(DmfBaseModel):
     bus_index: int = Field(..., description="母线索引号")
     rated_primary_voltage: float = Field(default=220.0, description="一次额定电压")
     rated_primary_current: float = Field(default=1.0, description="一次额定电流")
-    rated_secondry_current: float = Field(default=1.0, description="二次额定电流")
+    rated_secondary_current: float = Field(default=1.0, description="二次额定电流")
     line_length: float = Field(default=0.0, description="线路长度")
     bran_num: LineBranchNum = Field(default=LineBranchNum.B1, description="线路分段数")
     impedance: Impedance = Field(default_factory=Impedance, description="线路阻抗")
     capacitance: Capacitance = Field(default_factory=Capacitance, description="线路电容")
-    mutual_inductancemr: MutualInductancemr = Field(default_factory=MutualInductancemr, description="线路互感")
+    mutual_inductance: MutualInductance = Field(default_factory=MutualInductance, description="线路互感")
     currents: List[ACCBranch] = Field(default_factory=list, description="交流电流通道")
     buses: List[Bus] = Field(default_factory=list, description="关联的母线列表")
 
@@ -65,7 +66,7 @@ class Line(DmfBaseModel):
             f'srcRef="{self.reference}"',
             f'VRtg="{self.rated_primary_voltage}"',
             f'ARtg="{self.rated_primary_current}"',
-            f'ARtgSnd="{self.rated_secondry_current}"',
+            f'ARtgSnd="{self.rated_secondary_current}"',
             f'LinLen="{self.line_length}"',
             f'bran_num="{self.bran_num.value}"',
             f'line_uuid="{self.uuid}"'
@@ -74,7 +75,7 @@ class Line(DmfBaseModel):
         xml = f"\t<scl:Line {' '.join(attrs)} />"
         xml += "\n\t\t" + str(self.impedance)
         xml += "\n\t\t" + str(self.capacitance)
-        xml += "\n\t\t" + str(self.mutual_inductancemr)
+        xml += "\n\t\t" + str(self.mutual_inductance)
         for acc_branch in self.currents:
             xml += "\n\t\t" + str(acc_branch)
         xml += self.get_ana_chn_xml()
@@ -115,7 +116,7 @@ class Line(DmfBaseModel):
             reference=src_ref,
             rated_primary_voltage=v_rtg,
             rated_primary_current=a_rtg,
-            rated_secondry_current=a_rtg_snd,
+            rated_secondary_current=a_rtg_snd,
             line_length=line_len,
             bran_num=bran_num,
             uuid=line_uuid
@@ -142,7 +143,7 @@ class Line(DmfBaseModel):
 
         mr_elem = element.find('scl:MR', ns) if 'scl' in ns else element.find('MR')
         if mr_elem is not None:
-            line.mutual_inductancemr = MutualInductancemr(
+            line.mutual_inductance = MutualInductance(
                 idx=parse_int(mr_elem.get('idx', 0)),
                 mr0=parse_float(mr_elem.get('mr0', 0.0)),
                 mx0=parse_float(mr_elem.get('mx0', 0.0))

@@ -5,9 +5,8 @@ DMF 模型单元测试
 """
 import xml.etree.ElementTree as ET
 
-from comtrade_io.dmf import (ACCBranch, ACVBranch, AnalogChannel, Bus, Capacitance, ComtradeModel, Igap, Line,
-                             MutualInductancemr, Impedance,
-                             StatusChannel, Transformer, TransformerWinding)
+from comtrade_io.dmf import (ACCBranch, ACVBranch, AnalogChannel, Bus, Capacitance, ComtradeModel, Igap, Impedance,
+                             Line, MutualInductance, StatusChannel, Transformer, TransformerWinding)
 from comtrade_io.type import (AnalogChannelFlag, AnalogChannelType, Contact, CtDirection, DigitalChannelFlag,
                               DigitalChannelType, LineBranchNum, Phase, TranSide, TransWindLocation,
                               TvInstallSite, Unit, WindFlag)
@@ -116,7 +115,7 @@ def test_line_from_xml():
     assert line.bran_num == LineBranchNum.B1
     assert line.impedance.r1 == 0.1
     assert line.capacitance.c0 == 0.02
-    assert line.mutual_inductancemr.idx == 1
+    assert line.mutual_inductance.idx == 1
     assert len(line.currents) == 1
     assert line.ana_chn == [1]
     assert line.sta_chn == [2]
@@ -157,7 +156,7 @@ def test_transformer_winding_from_xml():
     assert winding.rated_current == 1000.0
     assert winding.bran_num == 2
     assert winding.bus_id == 1
-    assert winding.wind_group.wgroup == WindFlag.Y
+    assert winding.wind_group.wind_flag == WindFlag.Y
     assert winding.wind_group.angle == 0
     assert winding.voltage.ua.index == 1
     assert len(winding.currents) == 1
@@ -188,7 +187,7 @@ def test_transformer_from_xml():
 
     assert transformer.index == 1
     assert transformer.name == "Transformer1"
-    assert transformer.pwr_rtg == 100.0
+    assert transformer.capacity == 100.0
     assert len(transformer.transWinds) == 1
     assert transformer.ana_chn == [1]
     assert transformer.sta_chn == [2]
@@ -333,7 +332,7 @@ def test_cg():
 
 def test_mr():
     """测试 MR 类"""
-    mr = MutualInductancemr(idx=1, mr0=0.5, mx0=0.6)
+    mr = MutualInductance(idx=1, mr0=0.5, mx0=0.6)
     assert mr.idx == 1
     assert mr.mr0 == 0.5
 

@@ -162,12 +162,15 @@ class Configure(BaseModel):
         if not cf.cfg_path.is_enabled():
             return None
         cfg_path = cf.cfg_path.path
-        # TODO 文件编码存在不准确性,强制使用GBK编码读取配置文件
-        # enc = detect_file_encoding(file_name)
-        # if not enc:
-        #     return None
-        logging.debug(f"正在解析{cfg_path}")
-        cfg_content = cfg_path.read_text(encoding="GBK", errors='replace')
+        try:
+            cfg_content = cfg_path.read_text(encoding="GBK")
+        except UnicodeDecodeError:
+            logging.warning(f"配置文件{cfg_path}编码不是GBK编码，尝试使用UTF8解析")
+            try:
+                cfg_content = cfg_path.read_text(encoding="utf-8", errors='replace')
+            except UnicodeDecodeError:
+                logging.error(f"配置文件{cfg_path}编码不是UTF8编码，请检查文件编码")
+                raise
         try:
             return Configure.from_str(cfg_content)
         except IndexError as e:

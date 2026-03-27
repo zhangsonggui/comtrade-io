@@ -12,6 +12,7 @@ class TransWindLocation(BaseEnum):
 
 
 class WindFlag(BaseEnum):
-    Y = ('y', "星形")
+    Y = ('y', "星形连接")
     YN = ('yn', "星形接地")
-    D = ('d', "三角形")
+    D = ('d', "三角形连接")
+    Z = ('z', "曲折型连接")

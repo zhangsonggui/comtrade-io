@@ -30,6 +30,23 @@ class Status(CfgChannelBaseModel):
         """
         return super().__str__() + f",{self.contact.value}"
 
+    def to_information(self):
+        """
+        返回对象的信息字符串表示形式
+        包括通道标识、通道名称、参引路径、初始状态。
+
+        Returns:
+            str: 模拟量通道信息字符串表示形式
+        """
+        attrs = [
+            f"[Public Status_Channel_#{self.index}]",
+            f'Channel_ID="{self.name}"',
+            f'Phase_ID="{self.phase.value}"',
+            f'Monitored_Component=""',
+            f'Normal_State="{self.contact.value}"',
+        ]
+        return "\n".join(attrs)
+
     @classmethod
     def from_str(cls, _str: str) -> 'Status':
         """从逗号分隔的字符串反序列化数字量通道
