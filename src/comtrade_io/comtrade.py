@@ -193,9 +193,9 @@ class Comtrade(ComtradeModel):
         1.判断是否是单文件cff，如果是单文件直接解析单文件逻辑
         2.解析cfg文件，获取Configure对象，如果该文件不存在直接返回空
         3.解析dmf文件，获取ComtradeModel对象，如果dmf文件为空，进入第4步，如果不为空进入第7步
-        4.解析inf文件，获取Information对象，如果inf文件为空进入第5步，如果不为空进入第6步
-        5.根据Configure对象按照规则生成ComtradeModel
-        6.根据Information对象内容，更新ComtradeModel中一次设备和录波通道关联关系
+        4.根据Configure对象按照规则生成ComtradeModel中的模拟量和开关量通道列表
+        5.解析inf文件，获取Information对象，更新ComtradeModel中的母线、线路、主变信息，如果inf文件为空进入第6步，如果不为空进入第7步
+        6.对Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
         7.解析dat文件，获取DataContent对象
         8.合并后形成Comtrade对象
 

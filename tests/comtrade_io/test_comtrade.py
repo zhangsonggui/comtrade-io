@@ -136,7 +136,7 @@ class TestGetTransformer:
         trans = comtrade.get_transformer("1号主变")
         assert trans.index == 1
         assert trans.name == "1号主变"
-        assert trans.pwr_rtg == 0
+        assert trans.capacity == 0
         assert len(trans.transWinds) == 2
 
     def test_get_transformer_winding(self, comtrade):

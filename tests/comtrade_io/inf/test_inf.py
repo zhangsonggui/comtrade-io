@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from comtrade_io.inf import InfInfo
+from comtrade_io.inf import Information
 
 
 def test_parse_inf_basic():
@@ -11,53 +11,117 @@ def test_parse_inf_basic():
         p = Path(tmp) / "sample.inf"
         p.write_text(
             """
-# Sample INF
-Manufacturer=ACME Corp
-Model=PowerMeter 3000
-Serial_Number=SN12345
-CT_Ratio=100/1
-PT_Ratio=110/1
-Frequency=60
-SamplingRate=2048
-Software_Version=1.2.3
-""".strip(),
+[Public Record_Information]
+Source=Test Source
+Record_Information=
+Location=Test Location
+
+[Public File_Description]
+Station_Name=Test Station
+Recording_Device_ID=Device1
+Revision_Year=1999
+Total_Channel_Count=10
+Analog_Channel_Count=5
+Status_Channel_Count=5
+Line_Frequency=50
+Sample_Rate_Count=1
+Sample_Rate_#1=4000
+End_Sample_Rate_#1=4000
+File_Start_Time=01/01/2024,00:00:00.000000
+Trigger_Time=01/01/2024,00:00:01.000000
+File_Type=BINARY
+Time_Multiplier=1
+            """.strip(),
             encoding="utf-8"
         )
-        inf = InfInfo.from_file(p)
-        assert inf.manufacturer is not None
-        assert inf.manufacturer == "ACME Corp"
-        assert inf.model == "PowerMeter 3000"
-        assert inf.serial_number == "SN12345"
-        assert inf.ct_ratio == "100/1"
-        assert inf.pt_ratio == "110/1"
-        assert inf.frequency == 60
-        assert inf.sampling_rate == 2048
-        assert inf.software_version == "1.2.3"
+        inf = Information.from_file(p)
+        assert inf.get_record_information() is not None
+        assert inf.get_file_description() is not None
+        assert inf.get_record_information().Source == "Test Source"
+        assert inf.get_file_description().Station_Name == "Test Station"
 
 
-def test_missing_fields():
+def test_analog_channels():
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
-        p.write_text("Manufacturer=ACME", encoding="utf-8")
-        inf = InfInfo.from_file(p)
-        assert inf.manufacturer == "ACME"
-        assert inf.model is None
+        p.write_text(
+            """
+[Public Analog_Channel_#1]
+Channel_ID=1
+Phase_ID=A
+Monitored_Component=TCTR$MX$Amp$
+Channel_Units=A
+Channel_Multiplier=1.0
+
+[Public Analog_Channel_#2]
+Channel_ID=2
+Phase_ID=B
+            """.strip(),
+            encoding="utf-8"
+        )
+        inf = Information.from_file(p)
+        channels = inf.get_analog_channels()
+        assert len(channels) == 2
+        assert channels[0].Channel_ID == "1"
+        assert channels[0].Phase_ID == "A"
+        assert channels[1].Channel_ID == "2"
+
+
+def test_zyhd_sections():
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "sample.inf"
+        p.write_text(
+            """
+[ZYHD Bus_#1]
+Name=Bus1
+
+[ZYHD Line_#1]
+Name=Line1
+
+[ZYHD Transformer_#1]
+Name=Transformer1
+            """.strip(),
+            encoding="utf-8"
+        )
+        inf = Information.from_file(p)
+        buses = inf.get_buses()
+        lines = inf.get_lines()
+        transformers = inf.get_transformers()
+        assert len(buses) == 1
+        assert len(lines) == 1
+        assert len(transformers) == 1
+
+
+def test_serialization():
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "sample.inf"
+        p.write_text(
+            """
+[Public Record_Information]
+Source=Test
+
+[Public Analog_Channel_#1]
+Channel_ID=1
+            """.strip(),
+            encoding="utf-8"
+        )
+        inf1 = Information.from_file(p)
+        output = inf1.to_string()
+
+        inf2 = Information()
+        inf2.parse(output)
+
+        assert len(inf1.sections) == len(inf2.sections)
 
 
 def test_file_not_found():
     with pytest.raises(FileNotFoundError):
-        InfInfo.from_file(Path("no_such.inf"))
+        Information.from_file(Path("no_such.inf"))
 
 
-def test_comments_and_spaces():
+def test_empty_file():
     with tempfile.TemporaryDirectory() as tmp:
-        p = Path(tmp) / "sample.inf"
-        p.write_text("""
-# comment line
-Manufacturer = ACME
-; another comment
-Model: Meter X
-""".strip(), encoding="utf-8")
-        inf = InfInfo.from_file(p)
-        assert inf.manufacturer == "ACME"
-        assert inf.model == "Meter X"
+        p = Path(tmp) / "empty.inf"
+        p.write_text("", encoding="utf-8")
+        inf = Information.from_file(p)
+        assert len(inf.sections) == 0
