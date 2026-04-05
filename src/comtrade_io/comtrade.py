@@ -195,10 +195,11 @@ class Comtrade(ComtradeModel):
         2.解析cfg文件，获取Configure对象，如果该文件不存在直接返回空
         3.解析dmf文件，获取ComtradeModel对象，如果dmf文件为空，进入第4步，如果不为空进入第7步
         4.根据Configure对象按照规则生成ComtradeModel中的模拟量和开关量通道列表
-        5.解析inf文件，获取Information对象，更新ComtradeModel中的母线、线路、主变信息，如果inf文件为空进入第6步，如果不为空进入第7步
-        6.对Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
-        7.解析dat文件，获取DataContent对象
-        8.合并后形成Comtrade对象
+        5.解析inf文件，获取Information对象，更新ComtradeModel中的母线、线路、主变信息，如果inf文件不为空进入第6步，如果不为空进入第7步
+        6.根据Information对象更新ComtradeModel中的母线、线路、主变信息
+        7.根据Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
+        8.解析dat文件，获取DataContent对象
+        9.合并后形成Comtrade对象
 
         参数:
             file_name(str): 文件名称,可以是cfg、dat、cff、inf及dmf任意文件名，后缀名不做要求
@@ -218,13 +219,19 @@ class Comtrade(ComtradeModel):
         cm = ComtradeModel.from_file(file_name=cf, cfg=configure)
         # 当dmf对象不存在
         if cm is None:
-            # 4.解析inf文件，如果inf文件不存在，根据configure生成ComtradeModel
+            # 4.根据Configure对象按照规则生成包含模拟量和开关量通道列表的ComtradeModel对象
             cm = ComtradeModel.from_cfg(configure)
+            # 5. 解析inf文件，获取Information对象
             inf = Information.from_file(file_name=cf)
-            cm.from_inf(inf)
-            # todo 增加修改关系
-            # 5.如果information对象存在，就更新一二次设备和录波通道关联关系
 
+            if inf:
+                # 6.根据Information对象更新ComtradeModel中的母线、线路、主变信息
+                cm.from_inf(inf)
+            else:
+                # 7.根据Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
+                # todo 待完善
+                pass
+        # 8.解析dat文件
         data_content = DataContent(cfg=configure, file_name=cf)
         result = cls(
             file=cf,
