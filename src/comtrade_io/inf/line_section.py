@@ -4,7 +4,7 @@ import re
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.dmf import Capacitance, Impedance, MutualInductance
+from comtrade_io.dmf.line_param import Capacitance, Impedance, MutualInductance
 
 line_dict = {'CG'         : '0(μf/km), 0(S/km), 0(μf/km), 0(S/km)',
              'DEV_ID'     : '14,220kV 602大晃线第一套合并单元电流',
