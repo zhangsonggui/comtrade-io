@@ -134,6 +134,8 @@ class ACVBranch(BaseModel):
         }
 
         for channel in analog_channels:
+            if channel is None:
+                continue
             if channel.phase in phase_map:
                 attr_name = phase_map[channel.phase]
                 kwargs[attr_name] = channel

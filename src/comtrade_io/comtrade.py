@@ -14,6 +14,7 @@ from comtrade_io.dmf import AnalogChannel, ComtradeModel, StatusChannel
 from comtrade_io.dmf.bus import Bus
 from comtrade_io.dmf.line import Line
 from comtrade_io.dmf.transformer import Transformer
+from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
 
 logging = get_logger()
@@ -219,6 +220,8 @@ class Comtrade(ComtradeModel):
         if cm is None:
             # 4.解析inf文件，如果inf文件不存在，根据configure生成ComtradeModel
             cm = ComtradeModel.from_cfg(configure)
+            inf = Information.from_file(file_name=cf)
+            cm.from_inf(inf)
             # todo 增加修改关系
             # 5.如果information对象存在，就更新一二次设备和录波通道关联关系
 

@@ -22,6 +22,7 @@ from comtrade_io.dmf.dmf_base_model import ComtradeBaseModel
 from comtrade_io.dmf.line import Line
 from comtrade_io.dmf.status_channel import StatusChannel
 from comtrade_io.dmf.transformer import Transformer
+from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
 
 logging = get_logger(__name__)
@@ -108,6 +109,35 @@ class ComtradeModel(ComtradeBaseModel):
             模拟量通道，未找到返回 None
         """
         return self.analog_channels.get(index)
+
+    def get_ac_branch_by_ids(self, channel_ids: list[int]):
+        """
+        根据 index列表获取电压分组或电流分组
+
+        参数:
+            channel_ids(List[int])： 通道索引列表
+
+        返回:
+            模拟量通道分组，未找到返回 None
+        """
+        from comtrade_io.dmf.branch import ACVBranch, ACCBranch
+        from comtrade_io.type import AnalogChannelFlag
+
+        channel_ids = set(channel_ids)
+        voltages = []
+        currents = []
+        for channel_id in channel_ids:
+            channel = self.analog_channels.get(channel_id)
+            if channel is None:
+                continue
+            if channel.flag == AnalogChannelFlag.ACC:
+                currents.append(channel)
+            elif channel.flag == AnalogChannelFlag.ACV:
+                voltages.append(channel)
+
+        if currents:
+            return ACCBranch.from_analog_channels(currents)
+        return ACVBranch.from_analog_channels(voltages) if voltages else ACVBranch()
 
     def get_status_channel_info(self, index: int) -> Optional[StatusChannel]:
         """
@@ -338,6 +368,36 @@ class ComtradeModel(ComtradeBaseModel):
             digital_channel = StatusChannel.from_digital(digital)
             _dmf.status_channels[digital_channel.index] = digital_channel
         return _dmf
+
+    def from_inf(self, inf_obj: Information):
+
+        for bus in inf_obj.bus_sections:
+            bus = Bus.from_bus_section(bus, self.analog_channels, self.status_channels)
+            for _bus in self.buses:
+                if _bus.__eq__(bus):
+                    _bus.update(bus)
+                    break
+            else:
+                self.buses.append(bus)
+        for line in inf_obj.line_sections:
+            pass
+        for transformer in inf_obj.transformer_sections:
+            pass
+
+    def _edit_buses(self, bus: Bus):
+        """
+        添加母线对象到数据模型
+
+        参数:
+            bus: 母线对象
+        """
+        if self.buses is None:
+            self.buses = [bus]
+        else:
+            for _bus in self.buses:
+                if not _bus.__eq__(bus):
+                    self.buses.append(bus)
+                self.buses.append(bus)
 
     def write_file(self, output_file_path: ComtradeFile | Path | str):
         """

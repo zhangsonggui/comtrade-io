@@ -8,11 +8,13 @@
 """
 from xml.etree.ElementTree import Element
 
+from pydantic import Field
+
 from comtrade_io.dmf.branch import ACVBranch
 from comtrade_io.dmf.dmf_base_model import DmfBaseModel
+from comtrade_io.inf.bus_section import BusSection
 from comtrade_io.type import TvInstallSite
 from comtrade_io.utils import parse_float, parse_int
-from pydantic import Field
 
 
 class Bus(DmfBaseModel):
@@ -96,7 +98,8 @@ class Bus(DmfBaseModel):
         v_rtg_snd_pos_str = element.get('VRtgSnd_Pos', "")
         v_rtg_snd_pos = TvInstallSite.from_value(v_rtg_snd_pos_str, default=TvInstallSite.BUS)
         bus_uuid = element.get('bus_uuid', "")
-        bus = cls(index=idx, name=bus_name, reference=src_ref, rated_primary_voltage=v_rtg, rated_secondary_voltage=v_rtg_snd,
+        bus = cls(index=idx, name=bus_name, reference=src_ref, rated_primary_voltage=v_rtg,
+                  rated_secondary_voltage=v_rtg_snd,
                   tv_install_site=v_rtg_snd_pos, uuid=bus_uuid)
 
         # 查找 ACVChn 元素（支持带/不带命名空间）
@@ -115,3 +118,37 @@ class Bus(DmfBaseModel):
             bus.stas = cls.parse_sts_from_xml(element, ns, status_channels=status_channels, use_scl_prefix=False)
 
         return bus
+
+    @classmethod
+    def from_bus_section(cls, bus_section: BusSection, analog_channels: dict = None, status_channels: dict = None):
+        index = bus_section.index
+        name = bus_section.name
+        rated_primary_voltage = bus_section.rated_primary_voltage
+        rated_secondary_voltage = bus_section.rated_secondary_voltage
+        tv_install_site = bus_section.tv_install_site
+        ans = [analog_channels.get(vi) for vi in bus_section.voltage_indexes if
+               vi is not None and analog_channels.get(vi) is not None]
+        voltage = ACVBranch.from_analog_channels(ans)
+        return cls(index=index,
+                   name=name,
+                   rated_primary_voltage=rated_primary_voltage,
+                   rated_secondary_voltage=rated_secondary_voltage,
+                   tv_install_site=tv_install_site,
+                   voltage=voltage,
+                   anas=ans)
+
+    def __eq__(self, other):
+        return self.index == other.index and self.name == other.name
+
+    def update(self, other: 'Bus'):
+        if self.rated_primary_voltage != other.rated_primary_voltage:
+            self.rated_primary_voltage = other.rated_primary_voltage
+        if self.rated_secondary_voltage != other.rated_secondary_voltage:
+            self.rated_secondary_voltage = other.rated_secondary_voltage
+        if self.tv_install_site != other.tv_install_site:
+            self.tv_install_site = other.tv_install_site
+        if self.voltage != other.voltage:
+            self.voltage = other.voltage
+        if self.anas != other.anas:
+            self.anas = other.anas
+        return self
