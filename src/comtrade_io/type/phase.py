@@ -9,4 +9,5 @@ class Phase(BaseEnum):
     PHASE_B = ("B", "B相")
     PHASE_C = ("C", "C相")
     PHASE_N = ("N", "N相")
+    PHASE_L = ("L", "L相")
     NONE = ("", "无")
