@@ -13,7 +13,7 @@ from xml.etree.ElementTree import Element
 from pydantic import BaseModel, Field
 
 from comtrade_io.dmf.analog_channel import AnalogChannel
-from comtrade_io.type import CtDirection
+from comtrade_io.type import CtDirection, Phase
 from comtrade_io.utils import parse_int
 
 
@@ -68,7 +68,7 @@ class ACVBranch(BaseModel):
 
     @classmethod
     def from_xml(
-        cls, element: Element, ns: dict = None, analog_channels: dict = None
+            cls, element: Element, ns: dict = None, analog_channels: dict = None
     ) -> "ACVBranch":
         """
         从XML元素中解析交流电压分支
@@ -100,6 +100,43 @@ class ACVBranch(BaseModel):
             kwargs["ul"] = analog_channels.get(ul_idx, None)
         if un_idx:
             kwargs["un"] = analog_channels.get(un_idx, None)
+
+        return cls(**kwargs)
+
+    @classmethod
+    def from_analog_channels(
+            cls, analog_channels: list[AnalogChannel]
+    ) -> "ACVBranch":
+        """
+        根据模拟通道列表自动生成ACVBranch实例
+
+        该方法根据analog_channels中各通道的相别(phase)属性，
+        自动将通道分配到对应的属性:
+        - A相 -> ua
+        - B相 -> ub
+        - C相 -> uc
+        - N相 -> un
+        - L相 -> ul
+
+        参数:
+            analog_channels: 模拟通道列表
+
+        返回:
+            ACVBranch: 交流电压分支实例
+        """
+        kwargs = {}
+        phase_map = {
+            Phase.PHASE_A: "ua",
+            Phase.PHASE_B: "ub",
+            Phase.PHASE_C: "uc",
+            Phase.PHASE_N: "un",
+            Phase.PHASE_L: "ul",
+        }
+
+        for channel in analog_channels:
+            if channel.phase in phase_map:
+                attr_name = phase_map[channel.phase]
+                kwargs[attr_name] = channel
 
         return cls(**kwargs)
 
@@ -159,7 +196,7 @@ class ACCBranch(BaseModel):
 
     @classmethod
     def from_xml(
-        cls, element: Element, ns: dict = None, analog_channels: dict = None
+            cls, element: Element, ns: dict = None, analog_channels: dict = None
     ) -> "ACCBranch":
         """
         从XML元素中解析交流电流分支
@@ -192,5 +229,40 @@ class ACCBranch(BaseModel):
             kwargs["ic"] = analog_channels.get(ic_idx, None)
         if in_idx:
             kwargs["i0"] = analog_channels.get(in_idx, None)
+
+        return cls(**kwargs)
+
+    @classmethod
+    def from_analog_channels(
+            cls, analog_channels: list[AnalogChannel]
+    ) -> "ACCBranch":
+        """
+        根据模拟通道列表自动生成ACCBranch实例
+
+        该方法根据analog_channels中各通道的相别(phase)属性，
+        自动将通道分配到对应的属性:
+        - A相 -> ia
+        - B相 -> ib
+        - C相 -> ic
+        - N相 -> i0
+
+        参数:
+            analog_channels: 模拟通道列表
+
+        返回:
+            ACCBranch: 交流电流分支实例
+        """
+        kwargs = {}
+        phase_map = {
+            Phase.PHASE_A: "ia",
+            Phase.PHASE_B: "ib",
+            Phase.PHASE_C: "ic",
+            Phase.PHASE_N: "i0",
+        }
+
+        for channel in analog_channels:
+            if channel.phase in phase_map:
+                attr_name = phase_map[channel.phase]
+                kwargs[attr_name] = channel
 
         return cls(**kwargs)
