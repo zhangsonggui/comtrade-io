@@ -13,7 +13,16 @@ class SectionBaseModel(BaseModel):
 
     @staticmethod
     def parse_indexes(s: str) -> list[int]:
-        return [int(i.strip()) for i in s.split(',') if i.strip()]
+        indexes = [int(i.strip()) for i in s.split(',') if i.strip()]
+        result = []
+        prev = None
+        for i in indexes:
+            if prev is None or i >= prev:
+                result.append(i)
+                prev = i
+            else:
+                break
+        return result
 
     @classmethod
     def from_dict(cls, data: dict):

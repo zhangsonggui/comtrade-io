@@ -57,10 +57,10 @@ class TransformerWindingSection(BaseModel):
         rated_primary_voltage = float(match.group()) if match else 0.0
         bran_num = int(parts[2]) if len(parts) > 2 else 1
         tv_chns = data.get('H_TV_CHNS', '')
-        voltage_indexes = [int(i.strip()) for i in tv_chns.split(',') if i.strip()]
-        current_indexes = [[int(i.strip()) for i in ci1.split(',') if i.strip()]]
+        voltage_indexes = SectionBaseModel.parse_indexes(tv_chns)
+        current_indexes = [SectionBaseModel.parse_indexes(ci1)]
         if ci2 != '':
-            current_indexes.append([int(i.strip()) for i in ci2.split(',') if i.strip()])
+            current_indexes.append(SectionBaseModel.parse_indexes(ci2))
         return cls(trans_wind_location=twl,
                    wind_flag=wind_flag,
                    rated_primary_voltage=rated_primary_voltage,
@@ -83,16 +83,6 @@ class TransformerSection(SectionBaseModel):
         def parse_number_with_unit(s: str) -> float:
             match = re.search(r'\d+\.?\d*', s)
             return float(match.group()) if match else 0.0
-
-        def parse_param(s: str) -> tuple[str, float, int]:
-            parts = [p.strip() for p in s.split(',')]
-            wind_flag = parts[0] if len(parts) > 0 else 'Y'
-            voltage = parse_number_with_unit(parts[1]) if len(parts) > 1 else 0.0
-            bran_num = int(parts[2]) if len(parts) > 2 else 1
-            return wind_flag, voltage, bran_num
-
-        def parse_indexes(s: str) -> list[int]:
-            return [int(i.strip()) for i in s.split(',') if i.strip()]
 
         # 解析额定容量
         ts.capacity = parse_number_with_unit(data.get('CAPACITY', '0'))
