@@ -15,6 +15,7 @@ from comtrade_io.dmf import Bus
 from comtrade_io.dmf.branch import ACCBranch
 from comtrade_io.dmf.dmf_base_model import DmfBaseModel
 from comtrade_io.dmf.line_param import Capacitance, Impedance, MutualInductance
+from comtrade_io.inf.line_section import LineSection
 from comtrade_io.type import LineBranchNum
 from comtrade_io.utils import parse_float, parse_int
 
@@ -78,8 +79,8 @@ class Line(DmfBaseModel):
         xml += "\n\t\t" + str(self.mutual_inductance)
         for acc_branch in self.currents:
             xml += "\n\t\t" + str(acc_branch)
-        xml += self.get_ana_chn_xml()
-        xml += self.get_sta_chn_xml()
+        xml += self._get_ana_chn_xml()
+        xml += self._get_sta_chn_xml()
         xml += "\n\t</scl:Line>"
         return xml
 
@@ -166,3 +167,28 @@ class Line(DmfBaseModel):
         ]
 
         return line
+
+    @classmethod
+    def from_line_section(cls, line_section: LineSection, analog_channels: dict = None, status_channels: dict = None):
+        index = line_section.index
+        name = line_section.name
+        rated_primary_voltage = 220.0
+        line_length = line_section.line_length
+        anas = [analog_channels.get(ci) for ci in line_section.current_indexes if
+                ci is not None and analog_channels.get(ci) is not None]
+        stas = [status_channels.get(ci) for ci in line_section.status_indexes if
+                ci is not None and status_channels.get(ci) is not None]
+        line_obj = cls(index=index,
+                       name=name,
+                       bus_index=0,
+                       rated_primary_voltage=rated_primary_voltage,
+                       line_length=line_length,
+                       impedance=line_section.impedance,
+                       capacitance=line_section.capacitance,
+                       mutual_inductance=line_section.mutual_inductance,
+                       anas=anas,
+                       stas=stas)
+        bran_num, currents = line_obj.handle_current_branches()
+        line_obj.bran_num = bran_num
+        line_obj.currents = currents
+        return line_obj

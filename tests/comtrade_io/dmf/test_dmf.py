@@ -188,7 +188,7 @@ def test_transformer_from_xml():
     assert transformer.index == 1
     assert transformer.name == "Transformer1"
     assert transformer.capacity == 100.0
-    assert len(transformer.transWinds) == 1
+    assert len(transformer.trans_winds) == 1
     assert transformer.ana_chn == [1]
     assert transformer.sta_chn == [2]
 

@@ -74,6 +74,59 @@ class ComtradeModel(ComtradeBaseModel):
         """
         return next((bus for bus in self.buses if bus.name == name), None)
 
+    def get_bus_info_by_channel_id(self, channel_id: int) -> Bus | None:
+        """
+        根据 id 获取母线信息
+
+        参数:
+            channel_id: 母线 id
+
+        返回:
+            母线对象，如果未找到则返回None
+        """
+        for bus in self.buses:
+            for chn in (bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.ul, bus.voltage.un):
+                if chn is not None and chn.index == channel_id:
+                    return bus
+        return None
+
+    def get_bus_info_by_channel_ids(self, channel_ids: list[int]):
+        """
+        根据 通道id列表获取母线信息
+
+        参数:
+            channel_ids: 通道id列表
+
+        返回:
+            母线对象，如果未找到则返回空列表
+        """
+        buses: list[Bus] = []
+        for bus in self.buses:
+            for chn in (bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.ul, bus.voltage.un):
+                if chn is not None and chn.index in channel_ids and bus not in buses:
+                    buses.append(bus)
+
+        if len(buses) == 1:
+            return buses[0].index, buses
+
+        return 0, set(buses)
+
+    def get_bus_info_by_voltage(self, voltage: int) -> list[Bus]:
+        """
+        根据电压等级获取母线信息
+
+        参数:
+            voltage: 电压等级
+
+        返回:
+            母线对象，如果未找到则返回None
+        """
+        buses = []
+        for bus in self.buses:
+            if bus.rated_primary_voltage == voltage:
+                buses.append(bus)
+        return buses
+
     def get_line_info(self, name: str) -> Line | None:
         """
         根据名称获取线路信息
@@ -354,7 +407,7 @@ class ComtradeModel(ComtradeBaseModel):
         将配置对象中的模拟量和数字量通道转换为DMF格式的通道对象。
         
         参数:
-            cfg_obj: 配置对象，包含analogs和digitals通道信息
+            cfg_obj: 配置对象，包含analogs和status通道信息
             
         返回:
             ComtradeModel: 数据模型实例，仅包含通道信息
@@ -370,34 +423,35 @@ class ComtradeModel(ComtradeBaseModel):
         return _dmf
 
     def from_inf(self, inf_obj: Information):
-
-        for bus in inf_obj.bus_sections:
-            bus = Bus.from_bus_section(bus, self.analog_channels, self.status_channels)
+        for bs in inf_obj.bus_sections:
+            bus = Bus.from_bus_section(bs, self.analog_channels, self.status_channels)
             for _bus in self.buses:
                 if _bus.__eq__(bus):
                     _bus.update(bus)
                     break
             else:
                 self.buses.append(bus)
-        for line in inf_obj.line_sections:
-            pass
-        for transformer in inf_obj.transformer_sections:
-            pass
+        for ls in inf_obj.line_sections:
+            vi = ls.voltage_indexes
+            bus_id, buses = self.get_bus_info_by_channel_ids(vi)
+            line = Line.from_line_section(ls, self.analog_channels, self.status_channels)
+            line.bus_index = bus_id
+            line.buses = buses
 
-    def _edit_buses(self, bus: Bus):
-        """
-        添加母线对象到数据模型
-
-        参数:
-            bus: 母线对象
-        """
-        if self.buses is None:
-            self.buses = [bus]
-        else:
-            for _bus in self.buses:
-                if not _bus.__eq__(bus):
-                    self.buses.append(bus)
-                self.buses.append(bus)
+            for _line in self.lines:
+                if _line.__eq__(line):
+                    _line.update(line)
+                    break
+            else:
+                self.lines.append(line)
+        for ts in inf_obj.transformer_sections:
+            transformer = Transformer.from_transformer_section(ts, self.analog_channels, self.status_channels)
+            for _transformer in self.transformers:
+                if _transformer.__eq__(transformer):
+                    _transformer.update(transformer)
+                    break
+            else:
+                self.transformers.append(transformer)
 
     def write_file(self, output_file_path: ComtradeFile | Path | str):
         """
@@ -413,9 +467,3 @@ class ComtradeModel(ComtradeBaseModel):
             f.write(self.__str__())
         logging.info(f"数据模型文件{output_file_path}写入成功")
         return True
-
-
-if __name__ == '__main__':
-    dmf_file = r"D:\codeArea\comtrade\comtrade-io\data\hjz.dmf"
-    dmf = ComtradeModel.from_file(dmf_file)
-    print(dmf)

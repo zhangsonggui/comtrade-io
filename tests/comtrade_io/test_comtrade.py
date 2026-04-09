@@ -137,12 +137,12 @@ class TestGetTransformer:
         assert trans.index == 1
         assert trans.name == "1号主变"
         assert trans.capacity == 0
-        assert len(trans.transWinds) == 2
+        assert len(trans.trans_winds) == 2
 
     def test_get_transformer_winding(self, comtrade):
         """测试变压器绕组信息"""
         trans = comtrade.get_transformer("1号主变")
-        trans_h = trans.transWinds[0]
+        trans_h = trans.trans_winds[0]
         assert trans_h.trans_wind_location.value == "high"
         assert trans_h.rated_voltage == 0
         assert trans_h.bran_num == len(trans_h.currents)
@@ -152,7 +152,7 @@ class TestGetTransformer:
     def test_get_transformer_currents(self, comtrade):
         """测试变压器电流通道"""
         trans = comtrade.get_transformer("1号主变")
-        trans_h = trans.transWinds[0]
+        trans_h = trans.trans_winds[0]
         assert trans_h.currents[0].ia.index == 21
         assert trans_h.currents[0].ib.index == 22
         assert trans_h.currents[0].ic.index == 23
@@ -161,7 +161,7 @@ class TestGetTransformer:
     def test_get_transformer_voltages(self, comtrade):
         """测试变压器电压通道"""
         trans = comtrade.get_transformer("1号主变")
-        trans_h = trans.transWinds[0]
+        trans_h = trans.trans_winds[0]
         assert trans_h.voltage.ua.index == 1
         assert trans_h.voltage.ub.index == 2
         assert trans_h.voltage.uc.index == 3
@@ -172,7 +172,7 @@ class TestGetTransformer:
     def test_get_transformer_current_data(self, comtrade, expected_df):
         """测试变压器电流通道数据"""
         trans = comtrade.get_transformer("1号主变")
-        for winding in trans.transWinds:
+        for winding in trans.trans_winds:
             for current in winding.currents:
                 for ch in [current.ia, current.ib, current.ic, current.i0]:
                     if ch.index is not None:
@@ -185,7 +185,7 @@ class TestGetTransformer:
     def test_get_transformer_voltage_data(self, comtrade, expected_df):
         """测试变压器电压通道数据"""
         trans = comtrade.get_transformer("1号主变")
-        for winding in trans.transWinds:
+        for winding in trans.trans_winds:
             for ch in [winding.voltage.ua, winding.voltage.ub, winding.voltage.uc, winding.voltage.un]:
                 if ch.index is not None:
                     col_idx = ch.index + 2
@@ -289,7 +289,7 @@ class TestDataConsistency:
         for trans in comtrade.transformers:
             loaded_trans = comtrade.get_transformer(trans.name)
             assert loaded_trans is not None
-            for winding in loaded_trans.transWinds:
+            for winding in loaded_trans.trans_winds:
                 for current in winding.currents:
                     for ch in [current.ia, current.ib, current.ic, current.i0]:
                         if ch.index is not None:

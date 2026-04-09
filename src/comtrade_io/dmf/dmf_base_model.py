@@ -9,11 +9,14 @@ DMF基础模型模块
 from typing import List, Optional
 from xml.etree.ElementTree import Element
 
+from pydantic import Field
+
 from comtrade_io.base import IndexBaseModel, ReferenceBaseModel
+from comtrade_io.dmf import ACCBranch
 from comtrade_io.dmf.analog_channel import AnalogChannel
 from comtrade_io.dmf.status_channel import StatusChannel
+from comtrade_io.type import LineBranchNum
 from comtrade_io.utils import parse_float, parse_int
-from pydantic import Field
 
 
 class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
@@ -34,7 +37,7 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
     anas: List[AnalogChannel] = Field(default_factory=list, description="模拟通道列表")
     stas: List[StatusChannel] = Field(default_factory=list, description="开关量通道列表")
 
-    def get_ana_chn_xml(self) -> str:
+    def _get_ana_chn_xml(self) -> str:
         """
         获取模拟通道的XML字符串表示
         
@@ -47,7 +50,7 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
                 xml += "\n\t\t" + f'<scl:AnaChn idx_cfg="{ana_chn.index}" />'
         return xml
 
-    def get_sta_chn_xml(self) -> str:
+    def _get_sta_chn_xml(self) -> str:
         """
         获取开关量通道的XML字符串表示
         
@@ -61,7 +64,8 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
         return xml
 
     @classmethod
-    def parse_ans_from_xml(cls, element: Element, ns: dict, analog_channels: dict = None, use_scl_prefix: bool = True) -> List[AnalogChannel]:
+    def parse_ans_from_xml(cls, element: Element, ns: dict, analog_channels: dict = None,
+                           use_scl_prefix: bool = True) -> List[AnalogChannel]:
         """
         从XML元素解析模拟通道列表
         
@@ -78,7 +82,7 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
             ana_elems = element.findall('scl:AnaChn', ns)
         else:
             ana_elems = element.findall('AnaChn')
-        
+
         result = []
         for chn in ana_elems:
             idx_cfg = chn.get('idx_cfg')
@@ -89,7 +93,8 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
         return result
 
     @classmethod
-    def parse_sts_from_xml(cls, element: Element, ns: dict, status_channels: dict = None, use_scl_prefix: bool = True) -> List[StatusChannel]:
+    def parse_sts_from_xml(cls, element: Element, ns: dict, status_channels: dict = None,
+                           use_scl_prefix: bool = True) -> List[StatusChannel]:
         """
         从XML元素解析开关量通道列表
         
@@ -106,7 +111,7 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
             sta_elems = element.findall('scl:StaChn', ns)
         else:
             sta_elems = element.findall('StaChn')
-        
+
         result = []
         for chn in sta_elems:
             idx_cfg = chn.get('idx_cfg')
@@ -115,6 +120,43 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
                 if idx in status_channels:
                     result.append(status_channels[idx])
         return result
+
+    def handle_current_branches(self):
+        """
+        处理电流分支问题
+        """
+        if len(self.anas) <= 4:
+            return LineBranchNum.B1, [ACCBranch.from_analog_channels(self.anas)]
+        mid = len(self.anas) // 2
+        b1 = ACCBranch.from_analog_channels(self.anas[:mid])
+        b2 = ACCBranch.from_analog_channels(self.anas[mid:])
+        return LineBranchNum.B2, [b1, b2]
+
+    def __eq__(self, other):
+        return self.index == other.index and self.name == other.name
+
+    def update(self, other):
+        """
+        从另一个对象更新属性
+
+        参数:
+            other: 源对象，其非默认值将用于更新当前对象
+
+        注意:
+            - index和name作为标识字段不会被更新
+            - 只有当other的属性与当前对象不同时才更新
+        """
+        if self.index != other.index or self.name != other.name:
+            raise ValueError(
+                f"无法更新Bus对象：标识字段不匹配 "
+                f"(当前: idx={self.index}, name={self.name}; "
+                f"其他: idx={other.index}, name={other.name})"
+            )
+        for field_name in ['rated_primary_voltage', 'rated_secondary_voltage',
+                           'tv_install_site', 'voltage']:
+            other_value = getattr(other, field_name)
+            if getattr(self, field_name) != other_value:
+                setattr(self, field_name, other_value)
 
 
 class ComtradeBaseModel(ReferenceBaseModel):

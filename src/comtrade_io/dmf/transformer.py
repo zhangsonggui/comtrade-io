@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 from comtrade_io.dmf.analog_channel import AnalogChannel
 from comtrade_io.dmf.branch import ACCBranch, ACVBranch
 from comtrade_io.dmf.dmf_base_model import DmfBaseModel
+from comtrade_io.inf.transformer_section import TransformerSection, TransformerWindingSection
 from comtrade_io.type import TransWindLocation, WindFlag
 from comtrade_io.utils import parse_float, parse_int
 
@@ -31,6 +32,14 @@ class WindGroup(BaseModel):
     wind_flag: WindFlag = Field(default=WindFlag.Y, description="绕组接线方式")
     angle: int = Field(default=0, description="绕组角度")
 
+    @classmethod
+    def from_str(cls, _str: str):
+        angle = "".join(filter(str.isdigit, _str))
+        angle = 30 if angle == "11" else 0
+        wind_flag = "".join(filter(str.isalpha, _str))
+        wind_flag = WindFlag.from_value(wind_flag)
+        return cls(wind_flag=wind_flag, angle=angle)
+
     # TODO 需要增加从字符串解析提取接线方式和角度
     def __str__(self):
         """
@@ -39,7 +48,7 @@ class WindGroup(BaseModel):
         返回:
             格式化字符串，表示绕组标识符信息
         """
-        return f"{self.wind_flag.value}{self.angle}"
+        return f"{self.wind_flag.value}{12 if self.angle == 0 else 11}"
 
 
 class Igap(BaseModel):
@@ -153,6 +162,35 @@ class TransformerWinding(BaseModel):
         return xml
 
     @classmethod
+    def from_transformer_winding_section(cls, tws: TransformerWindingSection,
+                                         analog_channels: dict = None) -> 'TransformerWinding':
+        """
+        将变压器绕组信息从TransformerWindingSection对象中复制到当前对象中
+
+        参数:
+            tws: TransformerWindingSection对象，包含变压器绕组信息
+        """
+        trans_wind_location = tws.trans_wind_location
+        bran_num = tws.bran_num
+        rated_voltage = tws.rated_primary_voltage
+        wind_group = WindGroup.from_str(tws.wind_flag)
+        bran = []
+        for ci in tws.current_indexes:
+            b = [analog_channels.get(c) for c in ci if
+                 c is not None and analog_channels.get(c) is not None]
+            bran.append(ACCBranch.from_analog_channels(b))
+
+        acvs = [analog_channels.get(ci) for ci in tws.voltage_indexes if
+                ci is not None and analog_channels.get(ci) is not None]
+
+        return cls(trans_wind_location=trans_wind_location,
+                   rated_voltage=rated_voltage,
+                   bran_num=bran_num,
+                   wind_group=wind_group,
+                   currents=bran,
+                   voltage=ACVBranch.from_analog_channels(acvs))
+
+    @classmethod
     def from_xml(cls, element: Element, ns: dict, analog_channels: dict = None) -> 'TransformerWinding':
         """
         从XML元素中解析变压器绕组
@@ -229,7 +267,7 @@ class Transformer(DmfBaseModel):
         stas: 开关量通道列表，继承自基类
     """
     capacity: float = Field(default=0.0, description="变压器额定功率")
-    transWinds: List[TransformerWinding] = Field(default_factory=list, description="变压器绕组")
+    trans_winds: List[TransformerWinding] = Field(default_factory=list, description="变压器绕组")
     transformer_uuid: str = Field(default="", description="变压器标识")
 
     def __str__(self):
@@ -249,15 +287,16 @@ class Transformer(DmfBaseModel):
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"\t<scl:Transformer {' '.join(attrs)} />"
 
-        for trans_wind in self.transWinds:
+        for trans_wind in self.trans_winds:
             xml += "\n\t\t" + str(trans_wind)
-        xml += self.get_ana_chn_xml()
-        xml += self.get_sta_chn_xml()
+        xml += self._get_ana_chn_xml()
+        xml += self._get_sta_chn_xml()
         xml += "\n\t</scl:Transformer>"
         return xml
 
     @classmethod
-    def from_xml(cls, element: Element, ns: dict, analog_channels: dict = None, status_channels: dict = None) -> 'Transformer':
+    def from_xml(cls, element: Element, ns: dict, analog_channels: dict = None,
+                 status_channels: dict = None) -> 'Transformer':
         """
         从XML元素中解析变压器模型
 
@@ -286,18 +325,32 @@ class Transformer(DmfBaseModel):
 
         # 解析变压器绕组（支持带/不带命名空间）
         if 'scl' in ns:
-            tran.transWinds = [
+            tran.trans_winds = [
                 TransformerWinding.from_xml(tw, ns, analog_channels=analog_channels)
                 for tw in element.findall('scl:TransformerWinding', ns)
             ]
             tran.anas = cls.parse_ans_from_xml(element, ns, analog_channels=analog_channels, use_scl_prefix=True)
             tran.stas = cls.parse_sts_from_xml(element, ns, status_channels=status_channels, use_scl_prefix=True)
         else:
-            tran.transWinds = [
+            tran.trans_winds = [
                 TransformerWinding.from_xml(tw, ns, analog_channels=analog_channels)
                 for tw in element.findall('TransformerWinding')
             ]
             tran.anas = cls.parse_ans_from_xml(element, ns, analog_channels=analog_channels, use_scl_prefix=False)
             tran.stas = cls.parse_sts_from_xml(element, ns, status_channels=status_channels, use_scl_prefix=False)
+
+        return tran
+
+    @classmethod
+    def from_transformer_section(cls, transformer_section: TransformerSection, analog_channels: dict = None,
+                                 status_channels: dict = None):
+        index = transformer_section.index
+        name = transformer_section.name
+        capacity = transformer_section.capacity
+        stas = [status_channels.get(ci) for ci in transformer_section.status_indexes if
+                ci is not None and status_channels.get(ci) is not None]
+        tran = cls(index=index, name=name, capacity=capacity, stas=stas)
+        for tw in transformer_section.trans_winds:
+            tran.trans_winds.append(TransformerWinding.from_transformer_winding_section(tw, analog_channels))
 
         return tran

@@ -56,25 +56,10 @@ class Bus(DmfBaseModel):
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"\t<scl:Bus {' '.join(attrs)}/>"
         xml += "\n\t\t" + str(self.voltage)
-        xml += self.get_ana_chn_xml()
-        xml += self.get_sta_chn_xml()
+        xml += self._get_ana_chn_xml()
+        xml += self._get_sta_chn_xml()
         xml += "\n\t</scl:Bus>"
         return xml
-
-    def info(self):
-        parts = [
-            f'【母线信息】',
-            f'母线名称：{self.name},内部编号索引：{self.index}',
-            f'一次额定电压：{self.rated_primary_voltage}kV,二次额定电压：{self.rated_secondary_voltage}V',
-            f'TV安装位置：{self.tv_install_site.description}',
-            f'【电压通道情况】'
-        ]
-        for vp in (self.voltage.ua, self.voltage.ub, self.voltage.uc, self.voltage.ul, self.voltage.un):
-            if not vp:
-                continue
-            chn = f'通道索引号：{vp.index}，通道名称：{vp.name},{vp.phase.value}相{vp.type.description}{vp.flag.description}'
-            parts.append(chn)
-        return "\n".join(parts)
 
     @classmethod
     def from_xml(cls, element: Element, ns: dict, analog_channels: dict = None, status_channels: dict = None) -> 'Bus':
@@ -136,19 +121,3 @@ class Bus(DmfBaseModel):
                    tv_install_site=tv_install_site,
                    voltage=voltage,
                    anas=ans)
-
-    def __eq__(self, other):
-        return self.index == other.index and self.name == other.name
-
-    def update(self, other: 'Bus'):
-        if self.rated_primary_voltage != other.rated_primary_voltage:
-            self.rated_primary_voltage = other.rated_primary_voltage
-        if self.rated_secondary_voltage != other.rated_secondary_voltage:
-            self.rated_secondary_voltage = other.rated_secondary_voltage
-        if self.tv_install_site != other.tv_install_site:
-            self.tv_install_site = other.tv_install_site
-        if self.voltage != other.voltage:
-            self.voltage = other.voltage
-        if self.anas != other.anas:
-            self.anas = other.anas
-        return self

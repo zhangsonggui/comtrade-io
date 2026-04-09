@@ -173,7 +173,7 @@ class Comtrade(ComtradeModel):
             return transformer
 
         # 加载各绕组的电压和电流通道数据
-        for winding in transformer.transWinds:
+        for winding in transformer.trans_winds:
             self._load_analog_channels(
                 (winding.voltage.ua, winding.voltage.ub, winding.voltage.uc, winding.voltage.ul, winding.voltage.un),
                 data)
@@ -231,6 +231,7 @@ class Comtrade(ComtradeModel):
                 # 7.根据Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
                 # todo 待完善
                 pass
+
         # 8.解析dat文件
         data_content = DataContent(cfg=configure, file_name=cf)
         result = cls(

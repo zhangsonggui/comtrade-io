@@ -28,6 +28,7 @@ trans_dict = {'CAPACITY'   : '180(MVA)',
 
 
 class TransformerWindingSection(BaseModel):
+    """变压器绕组部件模型"""
     trans_wind_location: TransWindLocation = Field(default=TransWindLocation.HIGH, description="绕组位置")
     wind_flag: str = Field(default="Y", description="绕组接线")
     rated_primary_voltage: float = Field(default=220.0, description="一次额定电压")
@@ -89,6 +90,8 @@ class TransformerSection(SectionBaseModel):
 
         # 解析绕组数量
         ts.winding_num = int(data.get('WINDING_NUM', '3'))
+
+        ts.status_indexes = SectionBaseModel.parse_indexes(data.get('STATUS_CHNS', ''))
 
         # 解析高压侧
         high_wind = TransformerWindingSection.from_dict(data, 'H_')
