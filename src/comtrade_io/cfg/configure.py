@@ -6,14 +6,16 @@ from typing import Optional, cast
 from pydantic import BaseModel, Field, model_serializer
 
 from comtrade_io.base.precision_time import PrecisionTime
-from comtrade_io.cfg.analog import Analog
+from comtrade_io.cfg.analog_dispose import AnalogDispose
 from comtrade_io.cfg.channel_num import ChannelNum
 from comtrade_io.cfg.header import Header
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.sampling_time_quality import SamplingTimeQuality
 from comtrade_io.cfg.segment import Segment
-from comtrade_io.cfg.status import Status
+from comtrade_io.cfg.status_dispose import StatusDispose
 from comtrade_io.cfg.time_info import TimeInfo
+from comtrade_io.channel.analog import Analog
+from comtrade_io.channel.status import Status
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger, parse_float, str_split
@@ -135,11 +137,11 @@ class Configure(BaseModel):
             configure.sampling_time_quality = SamplingTimeQuality.from_str(parts[cursor_row + 2])
         # 处理模拟量、数字量通道
         for i in range(channel_num.analog):
-            analog = Analog.from_str(parts[i + 2])
+            analog = AnalogDispose.from_string(parts[i + 2])
             configure.analogs[analog.index] = analog
         cursor_row = channel_num.analog + 2
         for i in range(channel_num.status):
-            status = Status.from_str(parts[i + cursor_row])
+            status = StatusDispose.from_string(parts[i + cursor_row])
             configure.statuses[status.index] = status
 
         return configure
