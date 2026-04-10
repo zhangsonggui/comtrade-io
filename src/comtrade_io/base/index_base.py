@@ -14,6 +14,6 @@ class IndexBaseModel(BaseModel):
 
 class ReferenceBaseModel(BaseModel):
     """
-    参考基类
+    参引基类
     """
     reference: Optional[str] = Field(default="", description="IEC61850参考")

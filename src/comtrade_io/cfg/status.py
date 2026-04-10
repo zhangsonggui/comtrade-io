@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 from pydantic import Field
 
-from comtrade_io.cfg.cfg_channel_model import CfgChannelBaseModel
+from comtrade_io.cfg.channel_cfg import ChannelCfgBaseModel
 from comtrade_io.type import Contact
 from comtrade_io.utils import str_split
 
 
-class Status(CfgChannelBaseModel):
+class Status(ChannelCfgBaseModel):
     """
     数字量通道类
 
@@ -49,7 +49,8 @@ class Status(CfgChannelBaseModel):
 
     @classmethod
     def from_str(cls, _str: str) -> 'Status':
-        """从逗号分隔的字符串反序列化数字量通道
+        """
+        从逗号分隔的字符串反序列化数字量通道
 
         将配置文件中的数字量通道字符串解析为Digital对象。
         支持带相别和设备信息的完整格式，以及简化格式。
@@ -70,5 +71,5 @@ class Status(CfgChannelBaseModel):
         # 如果有第5个元素,用于contact;否则使用默认值
         if len(str_arr) >= 5:
             digital_dict['contact'] = Contact.from_value(
-                str_arr[4], Contact.NormallyOpen)
+                    str_arr[4], Contact.NormallyOpen)
         return cls(**digital_dict)

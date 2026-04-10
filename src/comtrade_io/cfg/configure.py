@@ -5,10 +5,10 @@ from typing import Optional, cast
 
 from pydantic import BaseModel, Field, model_serializer
 
+from comtrade_io.base.precision_time import PrecisionTime
 from comtrade_io.cfg.analog import Analog
 from comtrade_io.cfg.channel_num import ChannelNum
 from comtrade_io.cfg.header import Header
-from comtrade_io.cfg.precision_time import PrecisionTime
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.sampling_time_quality import SamplingTimeQuality
 from comtrade_io.cfg.segment import Segment

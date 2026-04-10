@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from comtrade_io.cfg.precision_time import PrecisionTime
+from comtrade_io.base.precision_time import PrecisionTime
 
 
 def test_str_format_consistency():

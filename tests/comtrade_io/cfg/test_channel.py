@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from comtrade_io.cfg.cfg_channel_model import CfgChannelBaseModel
+from comtrade_io.cfg.channel_cfg import ChannelCfgBaseModel
 from comtrade_io.type import Phase
 
 
@@ -27,7 +27,7 @@ def channel_test_data():
 def test_str_case(channel_test_data):
     """测试正常情况下__str__方法的返回值"""
     # 创建Channel实例
-    channel = CfgChannelBaseModel(
+    channel = ChannelCfgBaseModel(
         index=channel_test_data["index_ok"],
         name=channel_test_data["name_str"],
         phase=Phase.from_value(channel_test_data["phase_str_upper"]),
@@ -48,7 +48,7 @@ def test_from_dict_case_param4(channel_test_data):
         "phase": channel_test_data["phase_str_upper"],
         "equip": channel_test_data["equip_str"]
     }
-    channel = CfgChannelBaseModel.from_dict(channel_dict)
+    channel = ChannelCfgBaseModel.from_dict(channel_dict)
     assert channel.index == channel_test_data[
         "index_ok"], f"期望得到'{channel_test_data['index_ok']}'，实际得到'{channel.index}'"
     assert channel.name == channel_test_data[
@@ -65,7 +65,7 @@ def test_from_dict_case_param2(channel_test_data):
         "index": channel_test_data["index_ok"],
         "name" : channel_test_data["name_str"]
     }
-    channel = CfgChannelBaseModel.from_dict(channel_dict)
+    channel = ChannelCfgBaseModel.from_dict(channel_dict)
     assert channel.index == channel_test_data[
         "index_ok"], f"期望得到'{channel_test_data['index_ok']}'，实际得到'{channel.index}'"
     assert channel.name == channel_test_data[
@@ -82,7 +82,7 @@ def test_from_dict_case_index_float(channel_test_data):
         "phase": channel_test_data["phase_str_upper"],
         "equip": channel_test_data["equip_str"]
     }
-    channel = CfgChannelBaseModel.from_dict(channel_dict)
+    channel = ChannelCfgBaseModel.from_dict(channel_dict)
     assert channel.index == int(
         channel_test_data["index_float"]), f"期望得到'{channel_test_data['index_ok']}'，实际得到'{channel.index}'"
 
@@ -93,7 +93,7 @@ def test_from_dict_case_name_null(channel_test_data):
         "index": channel_test_data["index_float"]
     }
     with pytest.raises(ValueError):
-        CfgChannelBaseModel.from_dict(channel_dict)
+        ChannelCfgBaseModel.from_dict(channel_dict)
 
 
 def test_from_dict_case_phase_error(channel_test_data):
@@ -105,7 +105,7 @@ def test_from_dict_case_phase_error(channel_test_data):
         "equip": channel_test_data["equip_str"]
     }
     with pytest.raises(ValueError):
-        CfgChannelBaseModel.from_dict(channel_dict)
+        ChannelCfgBaseModel.from_dict(channel_dict)
 
 
 def test_from_json_case_param4(channel_test_data):
@@ -116,7 +116,7 @@ def test_from_json_case_param4(channel_test_data):
         "phase": "A",
         "equip": "模拟量"
     }"""
-    channel = CfgChannelBaseModel.from_json(json_str)
+    channel = ChannelCfgBaseModel.from_json(json_str)
     assert channel.index == 1, f"期望得到'1'，实际得到'{channel.index}'"
     assert channel.name == "模拟量1", f"期望得到'模拟量1'，实际得到'{channel.name}'"
     assert channel.phase.value == "A", f"期望得到'A'，实际得到'{channel.phase}'"
@@ -129,7 +129,7 @@ def test_from_json_case_param2(channel_test_data):
                 "index": 1,
                 "name" : "模拟量1"
             }"""
-    channel = CfgChannelBaseModel.from_json(json_str)
+    channel = ChannelCfgBaseModel.from_json(json_str)
     assert channel.index == 1, f"期望得到'1'，实际得到'{channel.index}'"
     assert channel.name == "模拟量1", f"期望得到'模拟量1'，实际得到'{channel.name}'"
     assert channel.phase.value == "", f"期望得到'A'，实际得到'{channel.phase}'"
@@ -139,7 +139,7 @@ def test_from_json_case_param2(channel_test_data):
 def test_from_str_case_ok(channel_test_data):
     """测试从逗号分隔的字符串中生成对象"""
     _str = f"{channel_test_data['index_ok']},{channel_test_data['name_str']},{channel_test_data['phase_str_upper']},{channel_test_data['equip_str']}"
-    channel = CfgChannelBaseModel.from_str(_str)
+    channel = ChannelCfgBaseModel.from_str(_str)
     assert channel.index == channel_test_data["index_ok"], f"期望得到'1'，实际得到'{channel.index}'"
 
 
@@ -147,13 +147,13 @@ def test_from_str_case_index_error(channel_test_data):
     """测试从逗号分隔的字符串中生成(index错误)"""
     _str = f"{channel_test_data['index_str']},{channel_test_data['name_str']},{channel_test_data['phase_str_upper']},{channel_test_data['equip_str']}"
     with pytest.raises(ValueError):
-        CfgChannelBaseModel.from_str(_str)
+        ChannelCfgBaseModel.from_str(_str)
 
 
 def test_from_str_case_param2(channel_test_data):
     """测试从逗号分隔的字符串中生成对象(仅必填参数)"""
     _str = f"{channel_test_data['index_ok']},{channel_test_data['name_str']}"
-    channel = CfgChannelBaseModel.from_str(_str)
+    channel = ChannelCfgBaseModel.from_str(_str)
     assert channel.index == channel_test_data[
         "index_ok"], f"期望得到'{channel_test_data['index_ok']}'，实际得到'{channel.index}'"
     assert channel.name == channel_test_data[
@@ -165,7 +165,7 @@ def test_from_str_case_param2(channel_test_data):
 def test_from_str_case_param3(channel_test_data):
     """测试从逗号分隔的字符串中生成对象(3参数)"""
     _str = f"{channel_test_data['index_ok']},{channel_test_data['name_str']},{channel_test_data['phase_str_upper']}"
-    channel = CfgChannelBaseModel.from_str(_str)
+    channel = ChannelCfgBaseModel.from_str(_str)
     assert channel.index == channel_test_data["index_ok"]
     assert channel.name == channel_test_data["name_str"]
     assert channel.phase.value == channel_test_data["phase_str_upper"]
@@ -175,7 +175,7 @@ def test_from_str_case_param3(channel_test_data):
 def test_from_str_case_phase_lower(channel_test_data):
     """测试从逗号分隔的字符串中生成(phase小写)"""
     _str = f"{channel_test_data['index_ok']},{channel_test_data['name_str']},{channel_test_data['phase_str_lower']},{channel_test_data['equip_str']}"
-    channel = CfgChannelBaseModel.from_str(_str)
+    channel = ChannelCfgBaseModel.from_str(_str)
     assert channel.phase.value == channel_test_data[
         "phase_str_upper"], f"期望得到'{channel_test_data['phase_str_upper']}'，实际得到'{channel.phase.value}'"
 
@@ -183,26 +183,26 @@ def test_from_str_case_phase_lower(channel_test_data):
 def test_from_str_case_phase_none(channel_test_data):
     """测试从逗号分隔的字符串中生成(phase为空)"""
     _str = f"{channel_test_data['index_ok']},{channel_test_data['name_str']},{channel_test_data['phase_null']},{channel_test_data['equip_str']}"
-    channel = CfgChannelBaseModel.from_str(_str)
+    channel = ChannelCfgBaseModel.from_str(_str)
     assert channel.phase == Phase.NONE, f"期望得到Phase.NONE，实际得到'{channel.phase}'"
 
 
 def test_from_str_case_empty_string(channel_test_data):
     """测试空字符串"""
     with pytest.raises(ValueError):
-        CfgChannelBaseModel.from_str("")
+        ChannelCfgBaseModel.from_str("")
 
 
 def test_from_str_case_no_comma(channel_test_data):
     """测试无逗号字符串"""
     with pytest.raises(ValueError):
-        CfgChannelBaseModel.from_str("test")
+        ChannelCfgBaseModel.from_str("test")
 
 
 def test_from_str_case_too_few_fields(channel_test_data):
     """测试字段过少"""
     with pytest.raises(ValueError):
-        CfgChannelBaseModel.from_str("1")
+        ChannelCfgBaseModel.from_str("1")
 
 
 def test_from_dict_case_phase_lowercase(channel_test_data):
@@ -213,7 +213,7 @@ def test_from_dict_case_phase_lowercase(channel_test_data):
         "phase": channel_test_data["phase_str_lower"],
         "equip": channel_test_data["equip_str"]
     }
-    channel = CfgChannelBaseModel.from_dict(channel_dict)
+    channel = ChannelCfgBaseModel.from_dict(channel_dict)
     assert channel.phase.value == channel_test_data["phase_str_upper"]
 
 
@@ -225,7 +225,7 @@ def test_from_dict_case_phase_none_string(channel_test_data):
         "phase": channel_test_data["phase_null"],
         "equip": channel_test_data["equip_str"]
     }
-    channel = CfgChannelBaseModel.from_dict(channel_dict)
+    channel = ChannelCfgBaseModel.from_dict(channel_dict)
     assert channel.phase == Phase.NONE
 
 
@@ -233,7 +233,7 @@ def test_from_json_case_invalid_json(channel_test_data):
     """测试无效的JSON字符串"""
     json_str = "{ invalid json }"
     with pytest.raises(json.JSONDecodeError):
-        CfgChannelBaseModel.from_json(json_str)
+        ChannelCfgBaseModel.from_json(json_str)
 
 
 def test_phase_enum_all_values(channel_test_data):

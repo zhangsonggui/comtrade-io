@@ -5,12 +5,12 @@ from typing import Optional
 
 from pydantic import Field
 
-from comtrade_io.base import IndexBaseModel
+from comtrade_io.base.channel import ChannelBaseModel
 from comtrade_io.type.phase import Phase
 from comtrade_io.utils.str_split import str_split
 
 
-class CfgChannelBaseModel(IndexBaseModel):
+class ChannelCfgBaseModel(ChannelBaseModel):
     """
     Cfg通道基类
 
@@ -22,8 +22,6 @@ class CfgChannelBaseModel(IndexBaseModel):
     返回:
         Channel对象
     """
-    name: Optional[str] = Field(default=None, description="通道标识")
-    phase: Optional[Phase] = Field(default=Phase.NONE, description="通道相别标识")
     equip: Optional[str] = Field(default='', description="被监视的电路元件")
 
     def __str__(self) -> str:
@@ -34,11 +32,10 @@ class CfgChannelBaseModel(IndexBaseModel):
         Returns:
             str: 逗号分隔的字符串，格式为 "index,name,phase,equip"
         """
-        phase_value = self.phase.value if self.phase else ""
-        return f"{self.index},{self.name},{phase_value},{self.equip}"
+        return f"{super().__str__()},{self.equip}"
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'CfgChannelBaseModel':
+    def from_dict(cls, data: dict) -> 'ChannelCfgBaseModel':
         """从字典反序列化"""
         name = data.get("name", None)
         if not name:
@@ -49,13 +46,13 @@ class CfgChannelBaseModel(IndexBaseModel):
         return cls(**data)
 
     @classmethod
-    def from_json(cls, json_str: str) -> 'CfgChannelBaseModel':
+    def from_json(cls, json_str: str) -> 'ChannelCfgBaseModel':
         """从JSON字符串反序列化"""
         data = json.loads(json_str)
         return cls.from_dict(data)
 
     @classmethod
-    def from_str(cls, _str: str) -> 'CfgChannelBaseModel':
+    def from_str(cls, _str: str) -> 'ChannelCfgBaseModel':
         """从逗号分隔的字符串反序列化通道对象
 
         将配置文件中的通道信息字符串解析为CfgChannelBaseModel对象。
@@ -65,7 +62,7 @@ class CfgChannelBaseModel(IndexBaseModel):
             _str: 逗号分隔的通道字符串
 
         Returns:
-            CfgChannelBaseModel: 解析后的通道对象
+            ChannelCfgBaseModel: 解析后的通道对象
 
         异常:
             ValueError: 当字符串格式不正确或缺少必填字段时抛出
