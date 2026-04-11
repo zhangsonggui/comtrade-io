@@ -54,6 +54,9 @@ class Configure(BaseModel):
 
     @model_serializer(mode='wrap')
     def serialize_model(self, handler):
+        """
+        在序列化时将字典转换成列表
+        """
         data = handler(self)
         data['analogs'] = list(self.analogs.values())
         data['statuses'] = list(self.statuses.values())
