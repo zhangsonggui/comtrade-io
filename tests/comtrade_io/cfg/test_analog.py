@@ -6,9 +6,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-import pytest
 
-from comtrade_io.cfg.analog import Analog
+from comtrade_io.channel.analog import Analog
 from comtrade_io.type import Phase, Unit
 from comtrade_io.type.tran_side import TranSide
 

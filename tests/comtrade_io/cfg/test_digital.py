@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from comtrade_io.cfg.status import Status
+from comtrade_io.channel.status import Status
 from comtrade_io.type import Contact, Phase
 
 
