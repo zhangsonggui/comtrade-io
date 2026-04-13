@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 from comtrade_io.channel.analog import Analog
 from comtrade_io.equipment.branch import ACCBranch, ACVBranch
-from comtrade_io.type import TransWindLocation, WindFlag
+from comtrade_io.type import CurrentBranchNum, TransWindLocation, WindFlag
 
 
 class WindGroup(BaseModel):
@@ -30,6 +30,14 @@ class WindGroup(BaseModel):
             格式化字符串，表示绕组标识符信息
         """
         return f"{self.wind_flag.value}{12 if self.angle == 0 else 11}"
+
+    @classmethod
+    def from_str(cls, _str: str):
+        angle = "".join(filter(str.isdigit, _str))
+        angle = 30 if angle == "11" else 0
+        wind_flag = "".join(filter(str.isalpha, _str))
+        wind_flag = WindFlag.from_value(wind_flag)
+        return cls(wind_flag=wind_flag, angle=angle)
 
 
 class Igap(BaseModel):
@@ -85,7 +93,7 @@ class TransformerWinding(BaseModel):
     reference: Optional[str] = Field(default="", description="IEC61850参引")
     rated_voltage: float = Field(default=0.0, description="额定电压")
     rated_current: float = Field(default=0.0, description="一次额定电流")
-    bran_num: int = Field(default=0, description="分路数")
+    bran_num: CurrentBranchNum = Field(default=CurrentBranchNum.B1, description="分路数")
     wind_group: WindGroup = Field(default_factory=WindGroup, description="绕组标识符")
     voltage: ACVBranch = Field(default_factory=ACVBranch, description="交流电压通道")
     currents: list[ACCBranch] = Field(default_factory=list, description="交流电流通道")

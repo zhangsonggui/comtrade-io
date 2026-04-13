@@ -2,40 +2,37 @@
 # -*- coding: utf-8 -*-
 import re
 
-from pydantic import Field
-
-from comtrade_io.inf.section_base_model import SectionBaseModel
+from comtrade_io.channel import Analog, Status
+from comtrade_io.equipment import Bus
+from comtrade_io.inf.equipment_section import EquipmentSection
 from comtrade_io.type import TvInstallSite
 
-bus_dict = {'DEV_ID'     : '7,220kV 602大晃线第一套合并单元电压',
-            'RATED_VALUE': '220000V',
-            'SYS_ID'     : '',
-            'TV_CHNS'    : '46,47,48,0',
-            'TV_POS'     : 'Line',
-            'TV_RATIO'   : '220kV/100V',
-            'area'       : 'ZYHD',
-            'index'      : 1,
-            'type'       : 'Bus'}
 
-
-class BusSection(SectionBaseModel):
-    """母线部件模型"""
-    rated_primary_voltage: float = Field(default=220.0, description="一次额定电压（kV）")
-    rated_secondary_voltage: float = Field(default=100.0, description="二次额定电压（V）")
-    tv_install_site: TvInstallSite = Field(default=TvInstallSite.BUS, description="电压互感器安装位置")
-
+class BusSection(EquipmentSection):
+    """母线部件处理"""
 
     @classmethod
-    def from_dict(cls, data: dict):
-        bs = super().from_dict(data)
-        _tv_ratio = data.get('TV_RATIO', "220kV/100V")
-        _tv_pos = data.get('TV_POS', "BUS")
+    def from_dict(cls,
+                  data: dict,
+                  analog_channels: dict[int, Analog],
+                  status_channels: dict[int, Status]) -> Bus:
+        """从字典生成母线模型"""
+        equipment = super().from_dict(data, analog_channels, status_channels)
+        bus = Bus(index=equipment.index,
+                  uuid=equipment.uuid,
+                  name=equipment.name,
+                  stas=equipment.stas,
+                  acvs=equipment.acvs,
+                  accs=equipment.accs)
+        tv_ratio = data.get('TV_RATIO', "220kV/100V")
+        tv_pos = data.get('TV_POS', "BUS")
+        bus.tv_install_site = TvInstallSite.BUS if tv_pos == 'BUS' else TvInstallSite.LINE
 
         primary_voltage = 220.0
         secondary_voltage = 100.0
 
-        if '/' in _tv_ratio:
-            parts = _tv_ratio.split('/')
+        if '/' in tv_ratio:
+            parts = tv_ratio.split('/')
             first_part = parts[0]
             second_part = parts[1] if len(parts) > 1 else ''
 
@@ -54,7 +51,7 @@ class BusSection(SectionBaseModel):
             # 解析二次电压
             secondary_match = re.search(r'\d+\.?\d*', second_part)
             secondary_voltage = float(secondary_match.group()) if secondary_match else 100.0
-        bs.rated_primary_voltage = primary_voltage
-        bs.rated_secondary_voltage = secondary_voltage
-        bs.tv_install_site = TvInstallSite.BUS if _tv_pos == 'BUS' else TvInstallSite.LINE
-        return bs
+        bus.rated_primary_voltage = primary_voltage
+        bus.rated_secondary_voltage = secondary_voltage
+
+        return bus

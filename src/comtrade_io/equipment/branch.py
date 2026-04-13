@@ -12,7 +12,7 @@ from xml.etree.ElementTree import Element
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.dmf.analog_channel import AnalogChannel
+from comtrade_io.channel import Analog
 from comtrade_io.type import CtDirection, Phase
 from comtrade_io.utils import parse_int
 
@@ -35,11 +35,11 @@ class ACVBranch(BaseModel):
         ul: L相电压通道（线电压）
     """
 
-    ua: Optional[AnalogChannel] = Field(default=None, description="A相电压通道")
-    ub: Optional[AnalogChannel] = Field(default=None, description="B相电压通道")
-    uc: Optional[AnalogChannel] = Field(default=None, description="C相电压通道")
-    un: Optional[AnalogChannel] = Field(default=None, description="N相电压通道")
-    ul: Optional[AnalogChannel] = Field(default=None, description="L相电压通道")
+    ua: Optional[Analog] = Field(default=None, description="A相电压通道")
+    ub: Optional[Analog] = Field(default=None, description="B相电压通道")
+    uc: Optional[Analog] = Field(default=None, description="C相电压通道")
+    un: Optional[Analog] = Field(default=None, description="N相电压通道")
+    ul: Optional[Analog] = Field(default=None, description="L相电压通道")
 
     def __str__(self):
         """
@@ -105,7 +105,7 @@ class ACVBranch(BaseModel):
 
     @classmethod
     def from_analog_channels(
-            cls, analog_channels: list[AnalogChannel]
+            cls, analog_channels: list[Analog]
     ) -> "ACVBranch":
         """
         根据模拟通道列表自动生成ACVBranch实例
@@ -163,10 +163,10 @@ class ACCBranch(BaseModel):
     """
 
     idx: int = Field(default=None, description="分支序号")
-    ia: Optional[AnalogChannel] = Field(default=None, description="A相电流通道")
-    ib: Optional[AnalogChannel] = Field(default=None, description="B相电流通道")
-    ic: Optional[AnalogChannel] = Field(default=None, description="C相电流通道")
-    i0: Optional[AnalogChannel] = Field(default=None, description="N相电流通道")
+    ia: Optional[Analog] = Field(default=None, description="A相电流通道")
+    ib: Optional[Analog] = Field(default=None, description="B相电流通道")
+    ic: Optional[Analog] = Field(default=None, description="C相电流通道")
+    i0: Optional[Analog] = Field(default=None, description="N相电流通道")
     dir: CtDirection = Field(default=CtDirection.POS, description="电流方向")
 
     def __str__(self):
@@ -236,8 +236,8 @@ class ACCBranch(BaseModel):
 
     @classmethod
     def from_analog_channels(
-            cls, analog_channels: list[AnalogChannel]
-    ) -> "ACCBranch":
+            cls, channels: list[Analog]
+    ) -> list['ACCBranch']:
         """
         根据模拟通道列表自动生成ACCBranch实例
 
@@ -249,22 +249,39 @@ class ACCBranch(BaseModel):
         - N相 -> i0
 
         参数:
-            analog_channels: 模拟通道列表
+            channels: 模拟通道列表
 
         返回:
             ACCBranch: 交流电流分支实例
         """
-        kwargs = {}
-        phase_map = {
-            Phase.PHASE_A: "ia",
-            Phase.PHASE_B: "ib",
-            Phase.PHASE_C: "ic",
-            Phase.PHASE_N: "i0",
+        current_phase_map = {
+            Phase.PHASE_A: 'ia',
+            Phase.PHASE_B: 'ib',
+            Phase.PHASE_C: 'ic',
+            Phase.PHASE_N: 'i0'
         }
 
-        for channel in analog_channels:
-            if channel.phase in phase_map:
-                attr_name = phase_map[channel.phase]
-                kwargs[attr_name] = channel
+        current_channels = []
+        for channel in channels:
+            if channel.phase in current_phase_map:
+                current_channels.append(channel)
 
-        return cls(**kwargs)
+        acc_branches = []
+        branch_size = 4
+        num_branches = (len(current_channels) + branch_size - 1) // branch_size
+
+        for i in range(num_branches):
+            start_idx = i * branch_size
+            end_idx = min(start_idx + branch_size, len(current_channels))
+            branch_channels = current_channels[start_idx:end_idx]
+
+            kwargs = {'idx': i + 1}
+            for channel in branch_channels:
+                if channel.phase in current_phase_map:
+                    attr_name = current_phase_map[channel.phase]
+                    kwargs[attr_name] = channel
+
+            acc_branch = cls(**kwargs)
+            acc_branches.append(acc_branch)
+
+        return acc_branches

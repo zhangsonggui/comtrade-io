@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from comtrade_io.cff import CffFile
 from comtrade_io.cfg import Configure
@@ -20,10 +20,13 @@ from comtrade_io.utils import get_logger
 logging = get_logger()
 
 
-class Comtrade(ComtradeModel):
+class Comtrade(BaseModel):
     file: ComtradeFile = Field(default_factory=ComtradeFile, description="文件路径")
     cfg: Configure = Field(..., description="参数配置文件")
     dat: Optional[DataContent] = Field(default=None, description="故障数据")
+    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线")
+    lines: Optional[list[Line]] = Field(default_factory=list, description="线路")
+    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器")
 
     def model_dump_json(self, *, indent: int | None = None, **kwargs) -> str:
         """

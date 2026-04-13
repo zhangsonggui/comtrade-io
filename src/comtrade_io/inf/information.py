@@ -8,9 +8,15 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from comtrade_io.channel import Analog, Status
 from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.comtrade_model import ComtradeModel
+from comtrade_io.equipment import Bus, Line, Transformer
+from comtrade_io.equipment.branch import ACVBranch
+from comtrade_io.inf.analog_section import AnalogSection
 from comtrade_io.inf.bus_section import BusSection
 from comtrade_io.inf.line_section import LineSection
+from comtrade_io.inf.status_section import StatusSection
 from comtrade_io.inf.transformer_section import TransformerSection
 from comtrade_io.utils import get_logger
 
@@ -48,13 +54,45 @@ def parse_section_header(header_str: str):
 
 class Information(BaseModel):
     """INF文件解析和序列化主类"""
-    bus_sections: Optional[list[BusSection]] = Field(default_factory=list, description="母线")
-    line_sections: Optional[list[LineSection]] = Field(default_factory=list, description="线路")
-    transformer_sections: Optional[list[TransformerSection]] = Field(default_factory=list, description="变压器")
+    record_info: Optional[list] = Field(default_factory=list, description="录波记录信息")
+    file_description: Optional[list] = Field(default_factory=list, description="文件描述信息")
+    analog_channels: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道信息")
+    status_channels: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道信息")
+    analog_channel_parameters: Optional[list] = Field(default_factory=list, description="模拟通道参数信息")
+    status_channel_parameters: Optional[list] = Field(default_factory=list, description="状态量通道参数信息")
+    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线信息")
+    lines: Optional[list[Line]] = Field(default_factory=list, description="线路信息")
+    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器信息")
+    channels_group: Optional[list] = Field(default_factory=list, description="通道组信息")
+
+    def _get_voltage_from_channel(self, channels: list[Analog]) -> tuple[int, list[Bus]]:
+        """
+        根据模拟量通道列表找到对应的母线对象
+
+        Args:
+            channels: 模拟量通道列表
+
+        Returns:
+            匹配的母线对象列表
+        """
+        matched_buses = []
+
+        for channel in channels:
+            for bus in self.buses:
+                voltage_ids = [chn.index for chn in bus.acvs]
+                if channel.index in voltage_ids:
+                    if bus not in matched_buses:
+                        matched_buses.append(bus)
+                    break
+        bus_id = 0
+        if len(matched_buses) == 1:
+            bus_id = matched_buses[0].index
+
+        return bus_id, matched_buses
 
     @classmethod
-    def from_file(cls, file_name: str | Path | ComtradeFile) -> 'Information|None':
-        """从文件名中解析INF文件"""
+    def from_file(cls, file_name: str | Path):
+        """返回 ComtradeModel 实例：从INF内容解析并映射为模型对象"""
         cf = ComtradeFile.from_path(file_name)
         if not cf.inf_path.is_enabled():
             return None
@@ -69,42 +107,95 @@ class Information(BaseModel):
             except UnicodeDecodeError:
                 logging.error(f"无法解析INF文件: {inf_path}")
                 return None
-        return Information.from_str(inf_content)
+        # 解析并构造 ComtradeModel
+        inst = cls()
+        inst.split_sections(inf_content)
+        _model = ComtradeModel()
 
-    @classmethod
-    def from_str(cls, content: str) -> 'Information|None':
-        """从字符串解析INF内容"""
-        _inf = cls()
-        _current_section = {}
-        for line in content.split('\n'):
-            line = line.strip()
-            # 跳过空行和注释行
-            if not line or line.startswith(';'):
-                continue
-            # 检查是否是节标题 [xxx]
-            if line.startswith('[') and ']' in line:
-                # 保存前一个节
-                if _current_section:
-                    _type = _current_section.get('type')
-                    if _type.upper() == 'BUS':
-                        _inf.bus_sections.append(BusSection.from_dict(_current_section))
-                    elif _type.upper() == 'LINE':
-                        _inf.line_sections.append(LineSection.from_dict(_current_section))
-                    elif _type.upper() == 'TRANSFORMER':
-                        _inf.transformer_sections.append(TransformerSection.from_dict(_current_section))
-                    _current_section = {}
-                _current_section = parse_section_header(line)
-                # 仅处理母线、线路、变压器
-                if _current_section.get('type').upper() not in ['BUS', 'LINE', 'TRANSFORMER']:
-                    _current_section = {}
-                    continue
-            elif _current_section and '=' in line:
-                key, value = line.split('=', 1)
-                _current_section[key.strip()] = value.strip()
-        return _inf
+        # 解析模拟通道（Analogs）直接使用已有对象
+        _model.analogs = inst.analog_channels if hasattr(inst, 'analog_channels') else []
+        # 状态通道
+        _model.statuses = inst.status_channels if hasattr(inst, 'status_channels') else []
+        _model.buses = inst.buses if hasattr(inst, 'buses') else []
+        _model.lines = inst.lines if hasattr(inst, 'lines') else []
+        _model.transformers = inst.transformers if hasattr(inst, 'transformers') else []
+
+        return _model
+
+    def split_sections(self, content: str):
+        """将INF内容按节分割并将信息映射到对象字段"""
+        current_section: list[str] = []
+
+        def _process_section(section_lines: list[str]):
+            """处理一个完整的节数据"""
+            if not section_lines:
+                return
+
+            _header = section_lines[0]
+            _parsed = parse_section_header(_header)
+            if not _parsed:
+                return
+
+            sec_type = _parsed.get('type', '').upper()
+            data = {k: v for k, v in _kv_pairs(section_lines).items()}
+
+            # 添加index信息（如果存在）
+            if 'index' in _parsed:
+                data['index'] = _parsed['index']
+
+            # 根据节类型分发到对应的列表
+            if sec_type in ['RECORD_INFO', 'RECORD_INFORMATION']:
+                self.record_info.append(data)
+            elif sec_type in ['FILE_DESCRIPTION']:
+                self.file_description.append(data)
+            elif sec_type in ['ANALOG_CHANNEL', 'ANALOG_CHANNELS']:
+                ana = AnalogSection.from_dict(data)
+                self.analog_channels[ana.index] = ana
+            elif sec_type in ['STATUS_CHANNEL', 'STATUS_CHANNELS']:
+                sta = StatusSection.from_dict(data)
+                self.status_channels[sta.index] = sta
+            elif sec_type == 'BUS':
+                _bus = BusSection.from_dict(data, self.analog_channels, self.status_channels)
+                _bus.voltage = ACVBranch.from_analog_channels(_bus.acvs)
+                self.buses.append(_bus)
+            elif sec_type == 'LINE':
+                _line = LineSection.from_dict(data, self.analog_channels, self.status_channels)
+                _line.bus_index, _line.buses = self._get_voltage_from_channel(_line.acvs)
+                self.lines.append(_line)
+            elif sec_type == 'TRANSFORMER':
+                self.transformers.append(
+                        TransformerSection.from_dict(data, self.analog_channels, self.status_channels))
+
+        for line in content.splitlines():
+            stripped_line = line.strip()
+            # 新节头：保存上一个节的数据并重置
+            if stripped_line.startswith('[') and stripped_line.endswith(']'):
+                # 处理前一个节
+                _process_section(current_section)
+                # 开始新的节
+                current_section = [stripped_line]
+            else:
+                current_section.append(stripped_line)
+
+        # 处理最后一个节
+        _process_section(current_section)
+
+
+# 内部小工具：将区块文本行转为键值对字典
+def _kv_pairs(lines: list[str]) -> dict:
+    result: dict = {}
+    for ln in lines:
+        if '=' in ln:
+            k, v = ln.split('=', 1)
+            result[k.strip()] = v.strip()
+    return result
 
 
 if __name__ == '__main__':
     inf_file = r"D:\codeArea\Git_Work\comtrade\comtrade-io\example\data\20190413-023734.#0006BC1A.inf"
-    inf = Information.from_file(inf_file)
-    print(inf.model_dump())
+    model = Information.from_file(file_name=inf_file)
+    try:
+        # ComtradeModel 使用 dict 风格输出
+        print(model.model_dump(indent=4))  # type: ignore[arg-type]
+    except Exception:
+        print(model)  # fallback

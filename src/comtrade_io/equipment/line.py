@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 from pydantic import Field
 
-from comtrade_io.dmf import Capacitance, Impedance, MutualInductance
 from comtrade_io.equipment.branch import ACCBranch
 from comtrade_io.equipment.bus import Bus
 from comtrade_io.equipment.equipment import Equipment
+from comtrade_io.equipment.line_param import Capacitance, Impedance, MutualInductance
 from comtrade_io.type import CurrentBranchNum
 
 
