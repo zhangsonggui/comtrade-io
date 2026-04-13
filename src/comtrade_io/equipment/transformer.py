@@ -39,8 +39,7 @@ class Transformer(Equipment):
             f'pwrRtg="{self.capacity}"',
             f'transformer_uuid="{self.uuid}"'
         ]
-        attrs = [attr for attr in attrs if attr is not None]
-        xml = f"\t<scl:Transformer {' '.join(attrs)} />"
+        xml = f"\t<scl:Transformer {' '.join(attrs)}>"
 
         for trans_wind in self.trans_winds:
             xml += "\n\t\t" + str(trans_wind)

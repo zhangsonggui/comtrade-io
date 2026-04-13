@@ -45,7 +45,7 @@ class TransformerWindingSection(BaseModel):
             currents.extend(ACCBranch.from_analog_channels(current_1))
         if current_2:
             currents.extend(ACCBranch.from_analog_channels(current_2))
-        bran_num = CurrentBranchNum.B1 if len(currents) > 1 else CurrentBranchNum.B1
+        bran_num = CurrentBranchNum.B2 if len(currents) > 1 else CurrentBranchNum.B1
 
         return TransformerWinding(trans_wind_location=twl,
                                   wind_group=wind_group,

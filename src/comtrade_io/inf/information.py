@@ -91,8 +91,8 @@ class Information(BaseModel):
         return bus_id, matched_buses
 
     @classmethod
-    def from_file(cls, file_name: str | Path):
-        """返回 ComtradeModel 实例：从INF内容解析并映射为模型对象"""
+    def from_file(cls, file_name: str | Path) -> 'ComtradeModel | None':
+        """从文件读取并解析INF内容，返回 ComtradeModel 实例"""
         cf = ComtradeFile.from_path(file_name)
         if not cf.inf_path.is_enabled():
             return None
@@ -107,15 +107,19 @@ class Information(BaseModel):
             except UnicodeDecodeError:
                 logging.error(f"无法解析INF文件: {inf_path}")
                 return None
-        # 解析并构造 ComtradeModel
+        return cls.from_str(inf_content)
+
+    @classmethod
+    def from_str(cls, content: str) -> 'ComtradeModel':
+        """从字符串解析INF内容，返回 ComtradeModel 实例"""
         inst = cls()
-        inst.split_sections(inf_content)
+        inst.split_sections(content)
         _model = ComtradeModel()
 
         # 解析模拟通道（Analogs）直接使用已有对象
-        _model.analogs = inst.analog_channels if hasattr(inst, 'analog_channels') else []
+        _model.analogs = inst.analog_channels if hasattr(inst, 'analog_channels') else {}
         # 状态通道
-        _model.statuses = inst.status_channels if hasattr(inst, 'status_channels') else []
+        _model.statuses = inst.status_channels if hasattr(inst, 'status_channels') else {}
         _model.buses = inst.buses if hasattr(inst, 'buses') else []
         _model.lines = inst.lines if hasattr(inst, 'lines') else []
         _model.transformers = inst.transformers if hasattr(inst, 'transformers') else []

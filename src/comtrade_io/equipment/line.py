@@ -26,15 +26,17 @@ class Line(Equipment):
     def line2section(self) -> str:
         """将线路部件转换为线路部件模型"""
         sta_chn_str = ",".join(str(chn.index) for chn in self.stas)
-        ta_chn_str = ""
-        for idx, current in enumerate(self.currents):
-            ta_chn_str += ",".join(str(chn.index) for chn in (current.ia, current.ib, current.ic, current.i0))
-            ta_chn_str += "," if idx == 0 else ta_chn_str
-        tv_chn_str = ""
-        for idx, bus in enumerate(self.buses):
-            tv_chn_str += ",".join(str(chn.index) for chn in
-                                   (bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.u0, bus.voltage.ul))
-            tv_chn_str += "," if idx == 0 else ta_chn_str
+        ta_chn_parts = []
+        for current in self.currents:
+            channels = [current.ia, current.ib, current.ic, current.i0]
+            ta_chn_parts.extend(str(chn.index) for chn in channels if chn is not None)
+        ta_chn_str = ",".join(ta_chn_parts)
+
+        tv_chn_parts = []
+        for bus in self.buses:
+            channels = [bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.un, bus.voltage.ul]
+            tv_chn_parts.extend(str(chn.index) for chn in channels if chn is not None)
+        tv_chn_str = ",".join(tv_chn_parts)
         attrs = [
             f"[PRIVATELY Line_#{self.index}]",
             f"DEV_ID={self.name}",

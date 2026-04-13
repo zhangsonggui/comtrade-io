@@ -35,7 +35,6 @@ class ChannelBaseModel(ChannelType):
         name(str): 通道标识（ch_id）
         phase(Phase): 通道相别标识（ph）
         equip(str): 被监视的电路元件
-        equip(str): 被监视的电路元件
     返回:
         基础通道对象ChannelBaseModel
     """

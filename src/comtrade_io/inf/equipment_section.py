@@ -6,19 +6,6 @@ from comtrade_io.channel import Analog, Status
 from comtrade_io.equipment.equipment import Equipment
 
 
-def parse_indexes(s: str) -> list[int]:
-    indexes = [int(i.strip()) for i in s.split(',') if i.strip()]
-    result = []
-    prev = None
-    for i in indexes:
-        if prev is None or i >= prev:
-            result.append(i)
-            prev = i
-        else:
-            break
-    return result
-
-
 def parse_number_with_unit(s: str) -> float:
     match = re.search(r'\d+\.?\d*', s)
     return float(match.group()) if match else 0.0
@@ -81,9 +68,14 @@ class EquipmentSection:
                   analog_channels: dict[int, Analog],
                   status_channels: dict[int, Status]) -> Equipment:
         index = data.get("index", None)
-        uuid = data.get("SYS_ID", None)
-        name_str = data.get('DEV_ID')
-        _, name = name_str.split(',')
+        uuid = data.get("SYS_ID", "")
+        name_str = data.get('DEV_ID', data.get('Name', ''))
+        if ',' in name_str:
+            _, name = name_str.split(',', 1)
+        else:
+            name = name_str
+        if not name:
+            name = f"Equipment_{index if index else 0}"
         voltages = str2channel(data.get("TV_CHNS", ""), analog_channels)
         currents = str2channel(data.get("TA_CHNS", ""), analog_channels)
         stas = str2channel(data.get("STATUS_CHNS", ""), status_channels)

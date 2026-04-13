@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from pydantic import Field
 
+from comtrade_io.base import ReferenceBaseModel
 from comtrade_io.channel.channel import ChannelBaseModel
 from comtrade_io.type import TranSide, Unit
 from comtrade_io.utils import get_logger
@@ -9,7 +10,7 @@ from comtrade_io.utils import get_logger
 logging = get_logger()
 
 
-class Analog(ChannelBaseModel):
+class Analog(ChannelBaseModel, ReferenceBaseModel):
     """
     模拟量通道类
 
@@ -94,4 +95,33 @@ class Analog(ChannelBaseModel):
         Returns:
             str: 转换后的DMF格式字符串
         """
-        pass
+        attrs = []
+        if self.index is not None:
+            attrs.append(f'idx="{self.index}"')
+        if self.name:
+            attrs.append(f'ch_id="{self.name}"')
+        if self.phase and self.phase.value:
+            attrs.append(f'ph="{self.phase.value}"')
+        if self.equip:
+            attrs.append(f'ccbm="{self.equip}"')
+        if self.unit and self.unit.value:
+            attrs.append(f'unit="{self.unit.value}"')
+        attrs.append(f'a="{self.multiplier}"')
+        attrs.append(f'b="{self.offset}"')
+        attrs.append(f'skew="{self.delay}"')
+        attrs.append(f'min="{self.min_value}"')
+        attrs.append(f'max="{self.max_value}"')
+        attrs.append(f'primary="{self.primary}"')
+        attrs.append(f'secondary="{self.secondary}"')
+        if self.tran_side:
+            attrs.append(f'ps="{self.tran_side.value}"')
+        if self.idx_org:
+            attrs.append(f'idx_org="{self.idx_org}"')
+        if self.type:
+            attrs.append(f'type="{self.type.value}"')
+        if self.flag:
+            attrs.append(f'flag="{self.flag.value}"')
+        if self.reference:
+            attrs.append(f'reference="{self.reference}"')
+
+        return f'<scl:Analog {" ".join(attrs)} />'
