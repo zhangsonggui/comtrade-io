@@ -57,19 +57,35 @@ class DmfElement(DmfRootModel):
         analog_channels = cls._find_channels(element, ns, "AnalogChannel")
         status_channels = cls._find_channels(element, ns, "StatusChannel")
 
-        # Helper function to find elements with fallback
         def find_elements(tag_name: str, element_class) -> list:
             """查找并解析指定类型的元素"""
-            _uri = ns.get('scl')
-            elements = element.findall(f'scl:{tag_name}', ns)
-            if not elements and _uri:
-                elements = element.findall(f'.//{{{_uri}}}{tag_name}')
+            elements = []
+            # 尝试多种方式查找元素
+            if 'scl' in ns:
+                elements = element.findall(f'scl:{tag_name}', ns)
+            if not elements and 'ns' in ns:
+                elements = element.findall(f'ns:{tag_name}', ns)
+            if not elements:
+                # 尝试使用命名空间URI直接查找
+                for prefix, uri in ns.items():
+                    if uri:
+                        elements = element.findall(f'.//{{{uri}}}{tag_name}')
+                        if elements:
+                            break
+            if not elements:
+                # 尝试不带前缀
+                elements = element.findall(f'.//{tag_name}')
 
             if not hasattr(element_class, 'from_xml'):
                 return []
 
-            # 使用section类解析XML元素
-            return [element_class.from_xml(el, ns, analog_channels, status_channels) for el in elements]
+            # 使用element类解析XML元素
+            els = []
+            for el in elements:
+                el = element_class.from_xml(el, ns, analog_channels, status_channels)
+                els.append(el)
+            return els
+            # return [element_class.from_xml(el, ns, analog_channels, status_channels) for el in elements]
 
         # 先解析根元素属性，再解析设备列表
         base_model = DmfRootModel.from_xml(element, ns)
@@ -97,10 +113,22 @@ class DmfElement(DmfRootModel):
     @classmethod
     def _find_channels(cls, element: Element, ns: dict, channel_type: str = "AnalogChannel") -> dict:
         """查找并解析通道为字典"""
-        _uri = ns.get('scl')
-        elements = element.findall(f'scl:{channel_type}', ns)
-        if not elements and _uri:
-            elements = element.findall(f'.//{{{_uri}}}AnalogChannel')
+        elements = []
+        # 尝试多种方式查找元素
+        if 'scl' in ns:
+            elements = element.findall(f'scl:{channel_type}', ns)
+        if not elements and 'ns' in ns:
+            elements = element.findall(f'ns:{channel_type}', ns)
+        if not elements:
+            # 尝试使用命名空间URI直接查找
+            for prefix, uri in ns.items():
+                if uri:
+                    elements = element.findall(f'.//{{{uri}}}{channel_type}')
+                    if elements:
+                        break
+        if not elements:
+            # 尝试不带前缀
+            elements = element.findall(f'.//{channel_type}')
 
         result = {}
         for el in elements:
@@ -151,7 +179,7 @@ class DmfElement(DmfRootModel):
         dmf_path = cf.dmf_path.path
 
         ns = {
-            "ns": "http://www.iec.ch/61850/2003/SCL"
+            "scl": "http://www.iec.ch/61850/2003/SCL"
         }
         logging.debug(f"正在解析{dmf_path}")
         try:
