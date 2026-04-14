@@ -14,37 +14,31 @@ class Bus(Equipment):
     tv_install_site: TvInstallSite = Field(default=TvInstallSite.BUS, description="电压互感器安装位置")
     voltage: ACVBranch = Field(default_factory=ACVBranch, description="电压通道")
 
-    def bus2element(self) -> str:
+    def to_dmf(self) -> str:
         """
         将母线部件对象转换为DMF格式XML字符串
 
         Returns:
             str: 转换后的DMF格式XML字符串
         """
-        attrs = []
-        if self.index is not None:
-            attrs.append(f'idx="{self.index}"')
-        if self.name:
-            attrs.append(f'name="{self.name}"')
-        if self.uuid:
-            attrs.append(f'uuid="{self.uuid}"')
-        attrs.append(f'rated_primary_voltage="{self.rated_primary_voltage}"')
-        attrs.append(f'rated_secondary_voltage="{self.rated_secondary_voltage}"')
-        if self.tv_install_site:
-            attrs.append(f'tv_install_site="{self.tv_install_site.value}"')
-
-        xml = f'\t<scl:Bus {" ".join(attrs)}>'
+        attrs = [
+            f'idx"={self.index}"',
+            f'bus_name="{self.name}"',
+            f'srcRef="{self.reference}"',
+            f'VRtg="{self.rated_primary_voltage}"',
+            f'VRtgSnd="{self.rated_secondary_voltage}"',
+            f'VRtgSnd_Pos="{self.tv_install_site.value}"',
+            f'bus_uuid="{self.uuid}"'
+        ]
+        attrs = [attr for attr in attrs if attr is not None]
+        xml = f"\t<scl:Bus {' '.join(attrs)}/>"
         xml += "\n\t\t" + str(self.voltage)
-
-        for ana in self.acvs:
-            xml += f'\n\t\t<scl:AnalogRef idx="{ana.index}" />'
-        for sta in self.stas:
-            xml += f'\n\t\t<scl:StatusRef idx="{sta.index}" />'
-
+        xml += self._get_ana_chn_xml()
+        xml += self._get_sta_chn_xml()
         xml += "\n\t</scl:Bus>"
         return xml
 
-    def bus2section(self) -> str:
+    def to_inf(self) -> str:
         """
         将母线部件对象转换为部件模型
 

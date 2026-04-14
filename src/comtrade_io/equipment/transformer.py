@@ -25,7 +25,7 @@ class Transformer(Equipment):
     winding_num: int = Field(default=3, description="绕组数量")
     trans_winds: list[TransformerWinding] = Field(default_factory=list, description="变压器绕组")
 
-    def transformer2element(self):
+    def to_dmf(self):
         """
         返回变压器的XML字符串表示形式
 
@@ -39,6 +39,7 @@ class Transformer(Equipment):
             f'pwrRtg="{self.capacity}"',
             f'transformer_uuid="{self.uuid}"'
         ]
+        attrs = [attr for attr in attrs if attr is not None]
         xml = f"\t<scl:Transformer {' '.join(attrs)}>"
 
         for trans_wind in self.trans_winds:
@@ -47,3 +48,18 @@ class Transformer(Equipment):
         xml += self._get_sta_chn_xml()
         xml += "\n\t</scl:Transformer>"
         return xml
+
+    def to_inf(self) -> str:
+        """
+        将变压器对象转换为部件模型
+
+        Returns:
+            str: 变压器部件模型字符串
+        """
+        attrs = [
+            f"[PRIVATELY Transformer_#{self.index}]",
+            f"DEV_ID={self.name}",
+            f"SYS_ID={self.uuid}",
+            f"RATED_POWER={self.capacity}MVA"
+        ]
+        return "\n".join(attrs)

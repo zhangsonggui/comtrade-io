@@ -23,7 +23,33 @@ class Line(Equipment):
     currents: list[ACCBranch] = Field(default_factory=list, description="交流电流通道")
     buses: list[Bus] = Field(default_factory=list, description="关联的母线列表")
 
-    def line2section(self) -> str:
+    def to_dmf(self) -> str:
+        """将线路部件转换为DMF格式XML字符串"""
+        attrs = [
+            f"idx={self.index}",
+            f"line_name={self.name}",
+            f"bus_ID={self.bus_index}",
+            f'srcRef="{self.reference}"',
+            f'VRtg="{self.rated_primary_voltage}"',
+            f'ARtg="{self.rated_primary_current}"',
+            f'ARtgSnd="{self.rated_secondary_current}"',
+            f'LinLen="{self.line_length}"',
+            f'bran_num="{self.current_bran_num.value}"',
+            f'line_uuid="{self.uuid}"'
+        ]
+        attrs = [attr for attr in attrs if attr is not None]
+        xml = f"\t<scl:Line {' '.join(attrs)} />"
+        xml += "\n\t\t" + str(self.impedance)
+        xml += "\n\t\t" + str(self.capacitance)
+        xml += "\n\t\t" + str(self.mutual_inductance)
+        for acc_branch in self.currents:
+            xml += "\n\t\t" + str(acc_branch)
+        xml += self._get_ana_chn_xml()
+        xml += self._get_sta_chn_xml()
+        xml += "\n\t</scl:Line>"
+        return xml
+
+    def to_inf(self) -> str:
         """将线路部件转换为线路部件模型"""
         sta_chn_str = ",".join(str(chn.index) for chn in self.stas)
         ta_chn_parts = []

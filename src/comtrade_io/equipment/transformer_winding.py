@@ -56,7 +56,7 @@ class Igap(BaseModel):
     zgap: Optional[Analog] = Field(default=None, description="中性点直接接地电流的通道")
     zsgap: Optional[Analog] = Field(default=None, description="中性点经间隙接地电流的通道")
 
-    def __str__(self):
+    def to_dmf(self):
         """
         返回中性点电流的XML字符串表示形式
 
@@ -99,7 +99,7 @@ class TransformerWinding(BaseModel):
     currents: list[ACCBranch] = Field(default_factory=list, description="交流电流通道")
     igap: Igap = Field(default_factory=Igap, description="中性点电流通道号")
 
-    def __str__(self):
+    def to_dmf(self):
         """
         返回变压器绕组的XML字符串表示形式
 
@@ -113,13 +113,16 @@ class TransformerWinding(BaseModel):
             f'ARtg={self.rated_current}"',
             f'bran_num={self.bran_num}"',
             f'bus_ID={self.bus_id}"',
-            f'wG=""'
+            f'wG="{str(self.wind_group)}"'
         ]
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"<scl:TransformerWinding {' '.join(attrs)}>"
         xml += "\n\t\t\t" + str(self.voltage)
         for acc_bran in self.currents:
             xml += "\n\t\t\t" + str(acc_bran)
-        xml += "\n\t\t\t" + str(self.igap)
+        xml += "\n\t\t\t" + self.igap.to_dmf()
         xml += "\n\t\t</scl:TransformerWinding>"
         return xml
+
+    def to_info(self):
+        pass

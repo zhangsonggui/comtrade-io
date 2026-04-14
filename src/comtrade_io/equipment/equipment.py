@@ -34,7 +34,7 @@ class Equipment(IndexBaseModel, ReferenceBaseModel):
             all_analogs.extend(self.accs)
         for ana in all_analogs:
             if ana:
-                xml_parts.append(f'\n\t\t<scl:AnalogRef idx="{ana.index}" />')
+                xml_parts.append(f'\n\t\t<scl:AnaChn idx_cfg="{ana.index}" />')
         return "".join(xml_parts)
 
     def _get_sta_chn_xml(self) -> str:
@@ -47,5 +47,5 @@ class Equipment(IndexBaseModel, ReferenceBaseModel):
         xml_parts = []
         for sta in self.stas:
             if sta:
-                xml_parts.append(f'\n\t\t<scl:StatusRef idx="{sta.index}" />')
+                xml_parts.append(f'\n\t\t<scl:StaChn idx_cfg="{sta.index}" />')
         return "".join(xml_parts)
