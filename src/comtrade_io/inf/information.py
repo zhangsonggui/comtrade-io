@@ -8,6 +8,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from comtrade_io.base.description import Description
 from comtrade_io.channel import Analog, Status
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.comtrade_model import ComtradeModel
@@ -15,6 +16,7 @@ from comtrade_io.equipment import Bus, Line, Transformer
 from comtrade_io.equipment.branch import ACVBranch
 from comtrade_io.inf.analog_section import AnalogSection
 from comtrade_io.inf.bus_section import BusSection
+from comtrade_io.inf.description_section import DescriptionSection
 from comtrade_io.inf.line_section import LineSection
 from comtrade_io.inf.status_section import StatusSection
 from comtrade_io.inf.transformer_section import TransformerSection
@@ -55,7 +57,7 @@ def parse_section_header(header_str: str):
 class Information(BaseModel):
     """INF文件解析和序列化主类"""
     record_info: Optional[list] = Field(default_factory=list, description="录波记录信息")
-    file_description: Optional[list] = Field(default_factory=list, description="文件描述信息")
+    file_description: Optional[Description] = Field(default_factory=Description, description="文件描述信息")
     analog_channels: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道信息")
     status_channels: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道信息")
     analog_channel_parameters: Optional[list] = Field(default_factory=list, description="模拟通道参数信息")
@@ -117,6 +119,7 @@ class Information(BaseModel):
         _model = ComtradeModel()
 
         # 解析模拟通道（Analogs）直接使用已有对象
+        _model.description = inst.file_description if hasattr(inst, 'file_description') else Description()
         _model.analogs = inst.analog_channels if hasattr(inst, 'analog_channels') else {}
         # 状态通道
         _model.statuses = inst.status_channels if hasattr(inst, 'status_channels') else {}
@@ -151,7 +154,7 @@ class Information(BaseModel):
             if sec_type in ['RECORD_INFO', 'RECORD_INFORMATION']:
                 self.record_info.append(data)
             elif sec_type in ['FILE_DESCRIPTION']:
-                self.file_description.append(data)
+                self.file_description = DescriptionSection.from_dict(data)
             elif sec_type in ['ANALOG_CHANNEL', 'ANALOG_CHANNELS']:
                 ana = AnalogSection.from_dict(data)
                 self.analog_channels[ana.index] = ana

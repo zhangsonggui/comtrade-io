@@ -8,16 +8,18 @@ from comtrade_io.type import Contact
 
 
 class Status(ChannelBaseModel, ReferenceBaseModel):
-    """
-    数字量通道类
+    """数字量通道类
 
-    参数：
-       index(int): 通道索引（模拟通道是An，数字通道是Dn，统一用index表示）
-       name(str): 通道标识（ch_id）
-       phase(Phase): 通道相别标识（ph）
-       equip(str): 被监视的电路元件（ccbm）
-       contact(Contact): 状态通道正常状态(y),默认为开放
-       reference(str): IEC61850参引
+    表示COMTRADE配置文件中的数字量（状态量）通道信息。
+
+    属性:
+        index: 通道索引（模拟通道是An，数字通道是Dn，统一用index表示）
+        name: 通道标识（ch_id）
+        phase: 通道相别标识（ph）
+        equip: 被监视的电路元件（ccbm）
+        reference: IEC61850参引
+        contact: 状态通道正常状态，默认为常开
+        data: 通道数据，一维数组
     """
     contact: Contact = Field(default=Contact.NormallyOpen, description="状态通道正常状态")
 
@@ -26,13 +28,17 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
 
         将数字量通道对象转换为COMTRADE配置文件格式的字符串。
 
-        Returns:
+        返回:
             str: 逗号分隔的通道信息字符串
         """
         return super().__str__() + f",{self.contact.value}"
 
     def to_dmf(self):
-        """将数字量通道对象转换为DMF模型对象"""
+        """将数字量通道对象转换为DMF格式字符串
+
+        返回:
+            str: DMF格式的XML字符串
+        """
         attrs = [
             f'idx_cfg="{self.index}"',
             f'idx_org="{self.idx_org}"',
@@ -44,12 +50,10 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         return f"\t<scl:StatusChannel {''.join(attrs)} />"
 
     def to_info(self):
-        """将数字量通道对象转换为模拟部件模型对象
+        """将数字量通道对象转换为INF格式字符串
 
-        将数字量通道对象转换为模拟部件模型对象。
-
-        Returns:
-            StatusSection: 模拟部件模型对象
+        返回:
+            str: INF格式的字符串
         """
         attrs = [
             f"[Public Status_Channel_#{self.index}]",

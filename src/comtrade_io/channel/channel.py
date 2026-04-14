@@ -11,12 +11,13 @@ from comtrade_io.utils import str_split
 
 
 class ChannelType(IdxOrgBaseModel):
-    """
-    DMF通道基类
+    """DMF通道基类
 
     定义模拟量和开关量通道的通用属性，包括端子排号、通道类型和通道标志。
 
     属性:
+        index: 索引号
+        reference: IEC61850参考
         idx_org: 端子排号，表示通道在端子排上的原始位置
         type: 通道类型，可以是模拟通道类型或数字通道类型
         flag: 通道标志，用于标识通道的具体用途
@@ -26,18 +27,20 @@ class ChannelType(IdxOrgBaseModel):
 
 
 class ChannelBaseModel(ChannelType):
-    """
-    通道基类
-    参数:
-        index(int): 通道索引（模拟通道是An，数字通道是Dn，统一用index表示）
+    """通道基类
+
+    定义所有通道的通用属性和方法，是模拟量通道和数字量通道的基础类。
+
+    属性:
+        index: 通道索引（模拟通道是An，数字通道是Dn，统一用index表示）
+        reference: IEC61850参考
         idx_org: 端子排号，表示通道在端子排上的原始位置
         type: 通道类型，可以是模拟通道类型或数字通道类型
         flag: 通道标志，用于标识通道的具体用途
-        name(str): 通道标识（ch_id）
-        phase(Phase): 通道相别标识（ph）
-        equip(str): 被监视的电路元件
-    返回:
-        基础通道对象ChannelBaseModel
+        name: 通道标识（ch_id）
+        phase: 通道相别标识（ph）
+        equip: 被监视的电路元件
+        data: 通道数据，一维数组
     """
     name: Optional[str] = Field(default=None, description="通道标识")
     phase: Optional[Phase] = Field(default=Phase.NONE, description="通道相别标识")
@@ -46,6 +49,16 @@ class ChannelBaseModel(ChannelType):
 
     @field_serializer('data')
     def serialize_data(self, data: Any) -> Optional[list]:
+        """序列化通道数据
+
+        将numpy数组转换为列表以便序列化。
+
+        参数:
+            data: 通道数据，可以是None、numpy数组或其他类型
+
+        返回:
+            Optional[list]: 序列化后的数据列表，或None
+        """
         if data is None:
             return None
         if isinstance(data, np.ndarray):
@@ -53,7 +66,13 @@ class ChannelBaseModel(ChannelType):
         return data
 
     def __str__(self) -> str:
-        """序列化为逗号分隔的通道字符串"""
+        """序列化为逗号分隔的通道字符串
+
+        将通道对象转换为COMTRADE配置文件格式的字符串。
+
+        返回:
+            str: 逗号分隔的通道信息字符串
+        """
         phase_value = self.phase.value if self.phase else ""
         return f"{self.index},{self.name},{phase_value},{self.equip}"
 
@@ -61,13 +80,13 @@ class ChannelBaseModel(ChannelType):
     def from_str(cls, _str: str) -> 'ChannelBaseModel':
         """从逗号分隔的字符串反序列化通道对象
 
-        将配置文件中的通道信息字符串解析为CfgChannelBaseModel对象。
+        将配置文件中的通道信息字符串解析为ChannelBaseModel对象。
         字符串格式为: "index,name,phase,equip"
 
         参数:
             _str: 逗号分隔的通道字符串
 
-        Returns:
+        返回:
             ChannelBaseModel: 解析后的通道对象
 
         异常:
@@ -82,3 +101,17 @@ class ChannelBaseModel(ChannelType):
         if arr_len >= 4:
             channel.equip = str_arr[3]
         return channel
+
+    def sync_from(self, other) -> bool:
+        """从另一个通道对象同步差异的属性
+
+        参数:
+            other: 要同步的源通道对象
+        """
+        if self.index != other.index:
+            return False
+        for field_name in other.model_fields:
+            field_value = getattr(other, field_name)
+            if getattr(self, field_name) != field_value and field_value is not None:
+                setattr(self, field_name, field_value)
+        return True

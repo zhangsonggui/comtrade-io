@@ -12,14 +12,15 @@ from pathlib import Path
 from typing import Optional
 from xml.etree.ElementTree import Element
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
+from comtrade_io.base.description import Description
 from comtrade_io.channel import Analog, Status
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.comtrade_model import ComtradeModel
 from comtrade_io.dmf.analog_element import AnalogElement
 from comtrade_io.dmf.bus_element import BusElement
-from comtrade_io.dmf.dmf_base_model import DmfRootModel
+from comtrade_io.dmf.description_element import DescriptionElement
 from comtrade_io.dmf.line_element import LineElement
 from comtrade_io.dmf.status_element import StatusElement
 from comtrade_io.dmf.transformer_element import TransformerElement
@@ -29,7 +30,8 @@ from comtrade_io.utils import get_logger
 logging = get_logger(__name__)
 
 
-class DmfElement(DmfRootModel):
+class DmfElement(BaseModel):
+    description: Description = Field(default_factory=Description, description="描述文件")
     buses: Optional[list[Bus]] = Field(default_factory=list, description="母线")
     lines: Optional[list[Line]] = Field(default_factory=list, description="线路")
     transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器")
@@ -59,45 +61,14 @@ class DmfElement(DmfRootModel):
 
         def find_elements(tag_name: str, element_class) -> list:
             """查找并解析指定类型的元素"""
-            elements = []
-            # 尝试多种方式查找元素
-            if 'scl' in ns:
-                elements = element.findall(f'scl:{tag_name}', ns)
-            if not elements and 'ns' in ns:
-                elements = element.findall(f'ns:{tag_name}', ns)
-            if not elements:
-                # 尝试使用命名空间URI直接查找
-                for prefix, uri in ns.items():
-                    if uri:
-                        elements = element.findall(f'.//{{{uri}}}{tag_name}')
-                        if elements:
-                            break
-            if not elements:
-                # 尝试不带前缀
-                elements = element.findall(f'.//{tag_name}')
-
+            elements = cls._find_all_elements(element, ns, tag_name)
             if not hasattr(element_class, 'from_xml'):
                 return []
-
             # 使用element类解析XML元素
-            els = []
-            for el in elements:
-                el = element_class.from_xml(el, ns, analog_channels, status_channels)
-                els.append(el)
-            return els
-            # return [element_class.from_xml(el, ns, analog_channels, status_channels) for el in elements]
-
-        # 先解析根元素属性，再解析设备列表
-        base_model = DmfRootModel.from_xml(element, ns)
+            return [element_class.from_xml(el, ns, analog_channels, status_channels) for el in elements]
 
         dmf_element = cls(
-                station_name=base_model.station_name,
-                version=base_model.version,
-                rec_dev_name=base_model.rec_dev_name,
-                xmlns_scl=base_model.xmlns_scl,
-                xmlns_xsi=base_model.xmlns_xsi,
-                xsi_schema_location=base_model.xsi_schema_location,
-                reference=base_model.reference,
+                description=DescriptionElement.from_xml(element, ns),
                 buses=find_elements('Bus', BusElement),
                 lines=find_elements('Line', LineElement),
                 transformers=find_elements('Transformer', TransformerElement),
@@ -106,30 +77,44 @@ class DmfElement(DmfRootModel):
         )
 
         # 关联线路和母线
-        cls()._link_lines_to_buses()
+        dmf_element._link_lines_to_buses()
 
         return dmf_element
 
     @classmethod
-    def _find_channels(cls, element: Element, ns: dict, channel_type: str = "AnalogChannel") -> dict:
-        """查找并解析通道为字典"""
+    def _find_all_elements(cls, parent: Element, ns: dict, tag_name: str) -> list:
+        """
+        使用多种方式查找XML元素
+
+        参数:
+            parent: 父XML元素
+            ns: 命名空间映射
+            tag_name: 标签名称
+        返回:
+            找到的XML元素列表
+        """
         elements = []
         # 尝试多种方式查找元素
         if 'scl' in ns:
-            elements = element.findall(f'scl:{channel_type}', ns)
+            elements = parent.findall(f'scl:{tag_name}', ns)
         if not elements and 'ns' in ns:
-            elements = element.findall(f'ns:{channel_type}', ns)
+            elements = parent.findall(f'ns:{tag_name}', ns)
         if not elements:
             # 尝试使用命名空间URI直接查找
             for prefix, uri in ns.items():
                 if uri:
-                    elements = element.findall(f'.//{{{uri}}}{channel_type}')
+                    elements = parent.findall(f'.//{{{uri}}}{tag_name}')
                     if elements:
                         break
         if not elements:
             # 尝试不带前缀
-            elements = element.findall(f'.//{channel_type}')
+            elements = parent.findall(f'.//{tag_name}')
+        return elements
 
+    @classmethod
+    def _find_channels(cls, element: Element, ns: dict, channel_type: str = "AnalogChannel") -> dict:
+        """查找并解析通道为字典"""
+        elements = cls._find_all_elements(element, ns, channel_type)
         result = {}
         for el in elements:
             if channel_type == "AnalogChannel":
@@ -162,7 +147,7 @@ class DmfElement(DmfRootModel):
                         break
 
     @classmethod
-    def from_file(cls, _file_name: Path | ComtradeFile | str) -> 'ComtradeModel|None':
+    def from_file(cls, file_name: Path | ComtradeFile | str) -> 'ComtradeModel|None':
         """
         从文件路径中加载并解析数据模型
 
@@ -172,7 +157,7 @@ class DmfElement(DmfRootModel):
         返回:
             ComtradeModel: 数据模型实例，如果文件不存在或禁用则返回None
         """
-        cf = ComtradeFile.from_path(file_path=_file_name)
+        cf = ComtradeFile.from_path(file_path=file_name)
 
         if not cf.dmf_path.is_enabled():
             return None
@@ -187,6 +172,7 @@ class DmfElement(DmfRootModel):
             root = tree.getroot()
             dmf_element = cls.from_xml(root, ns)
             _model = ComtradeModel(
+                    description=dmf_element.description if hasattr(dmf_element, 'description') else None,
                     buses=dmf_element.buses if hasattr(dmf_element, 'buses') else None,
                     lines=dmf_element.lines if hasattr(dmf_element, 'lines') else None,
                     transformers=dmf_element.transformers if hasattr(dmf_element, 'transformers') else None,
@@ -197,7 +183,7 @@ class DmfElement(DmfRootModel):
         except ET.ParseError as e:
             error_str = f"文件{dmf_path}解析错误,{str(e)}"
             logging.warning(error_str)
-            raise ValueError(error_str)
+            return None
 
 
 if __name__ == '__main__':

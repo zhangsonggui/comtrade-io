@@ -11,23 +11,34 @@ logging = get_logger()
 
 
 class Analog(ChannelBaseModel, ReferenceBaseModel):
-    """
-    模拟量通道类
+    """模拟量通道类
 
-    参数:
-        index(int): 通道索引（模拟通道是An，数字通道是Dn，统一用index表示）
-        name(str): 通道标识（ch_id）
-        phase(Phase): 通道相别标识（ph）
-        equip(str): 被监视的电路元件（ccbm）
-        unit(Unit): 通道单位
-        multiplier(float): 通道增益系数(实数,可使用标准浮点标记法)
-        offset(float): 通道偏移量
-        delay(float): 通道时滞（μs）
-        min_value(float): 数值最小值
-        max_value(float): 数值最大值
-        primary(float): 互感器一次系数
-        secondary(float): 互感器二次系数
-        tran_side(TranSide): 转换标识(P/S)
+    表示COMTRADE配置文件中的模拟量通道信息，包含通道的各种电气参数。
+
+    属性:
+        index: 通道索引（模拟通道是An，数字通道是Dn，统一用index表示）
+        name: 通道标识（ch_id）
+        phase: 通道相别标识（ph）
+        equip: 被监视的电路元件（ccbm）
+        reference: IEC61850参考
+        unit: 通道单位
+        multiplier: 通道增益系数(实数,可使用标准浮点标记法)
+        offset: 通道偏移量
+        delay: 通道时滞（μs）
+        min_value: 数值最小值
+        max_value: 数值最大值
+        primary: 互感器一次系数
+        secondary: 互感器二次系数
+        tran_side: 转换标识(P/S)
+        primary_min_value: 通道一次侧量程的最小值，仅对直流类型有效
+        primary_max_value: 通道一次侧量程的最大值，仅对直流类型有效
+        secondary_min_value: 通道二次侧量程的最小值，仅对直流类型有效
+        secondary_max_value: 通道二次侧量程的最大值，仅对直流类型有效
+        freq: 模拟量频率
+        au: 模拟量标幺
+        bu: 模拟量标幺
+        unit_multiplier: 模拟量增益系数
+        data: 通道数据，一维数组
     """
     unit: Unit = Field(default=Unit.NONE, description="通道单位")
     multiplier: float = Field(default=1.0, ge=0.0, description="通道增益系数(实数,可使用标准浮点标记法)")
@@ -48,13 +59,12 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
     unit_multiplier: str = Field(default="", description="模拟量增益系数")
 
     def __str__(self):
-        """
-        返回对象的字符串表示形式
+        """返回对象的字符串表示形式
 
         该方法扩展了父类的__str__方法，在其基础上添加了当前对象的特定属性信息，
         包括单位值、添加标志、偏移量、延迟、最小值、最大值、主次标识和传输侧等信息。
 
-        Returns:
+        返回:
             str: 包含父类字符串表示和当前对象所有属性信息的完整字符串
         """
         return (
@@ -65,10 +75,9 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
         )
 
     def to_dmf(self):
-        """
-        将模拟量通道对象转换为DMF格式字符串
+        """将模拟量通道对象转换为DMF格式字符串
 
-        Returns:
+        返回:
             str: 转换后的DMF格式字符串
         """
         attrs = [
@@ -91,11 +100,10 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
         return f'<scl:Analog {" ".join(attrs)} />'
 
     def to_inf(self) -> str:
-        """
-        将模拟量通道对象转换为模拟部件模型
+        """将模拟量通道对象转换为模拟部件模型字符串
 
-        Returns:
-            AnalogSection: 转换后的模拟部件模型对象
+        返回:
+            str: 转换后的INF格式字符串
         """
         attrs = [
             f"[Public Analog_Channel_#{self.index}]",

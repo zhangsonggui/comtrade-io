@@ -5,12 +5,13 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+# 支持的时间格式列表，按优先级排序
 time_formats = [
     "%d/%m/%Y,%H:%M:%S.%f",  # 四位年，欧洲格式（日/月/年）
     "%m/%d/%Y,%H:%M:%S.%f",  # 四位年，美国格式（月/日/年）
     "%m/%d/%y,%H:%M:%S.%f",  # 两位年，美国格式（月/日/年）
     "%d/%m/%y,%H:%M:%S.%f",  # 两位年，美国格式（日/月/年）
-    "%d/%m/%Y, %H:%M:%S.%f",  # 四位年，欧洲格式，带空格（你提供的例子）
+    "%d/%m/%Y, %H:%M:%S.%f",  # 四位年，欧洲格式，带空格
     "%Y-%m-%d %H:%M:%S",  # ISO日期格式，无微秒
     "%Y-%m-%d %H:%M:%S.%f",  # ISO日期格式，带微秒
     "%Y-%m-%dT%H:%M:%S.%f",  # ISO日期格式，带微秒
@@ -27,20 +28,22 @@ time_formats = [
 def format_time(str_time: str) -> datetime:
     """解析时间字符串为datetime对象
 
-    支持多种常见的时间格式：
+    支持多种常见的时间格式，按优先级尝试解析：
     - 欧洲格式：dd/mm/yyyy,hh:mm:ss.ffffff
     - 美国格式：mm/dd/yyyy,hh:mm:ss.ffffff
     - ISO格式：yyyy-mm-dd hh:mm:ss.ffffff
     - 斜杠分隔：yyyy/mm/dd hh:mm:ss.ffffff
 
+    会自动处理微秒位数不足的情况，并对2月29日的非闰年情况进行容错处理。
+
     参数:
-        str_time: 时间字符串
+        str_time: 时间字符串，也可以直接是datetime对象
 
     返回:
         datetime: 解析后的datetime对象
 
     异常:
-        ValueError: 当时间字符串格式无法解析时抛出
+        ValueError: 当时间字符串格式无法解析时抛出异常
     """
     if isinstance(str_time, datetime):
         return str_time
@@ -64,7 +67,7 @@ def format_time(str_time: str) -> datetime:
                 except ValueError:
                     continue
             continue
-    raise ValueError(f"时间格式错误")
+    raise ValueError(f"时间格式错误: {str_time}")
 
 
 class PrecisionTime(BaseModel):
@@ -83,7 +86,7 @@ class PrecisionTime(BaseModel):
 
         将datetime对象转换为 'yyyy-mm-dd hh:mm:ss.ffffff' 格式的字符串
 
-        Returns:
+        返回:
             str: 格式化的时间字符串
         """
         return self.time.strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -98,10 +101,10 @@ class PrecisionTime(BaseModel):
         参数:
             _str: 时间字符串，支持多种格式
 
-        Returns:
+        返回:
             PrecisionTime: 解析后的时间对象
 
-        Raises:
+        异常:
             ValueError: 当时间字符串格式无法识别时抛出
         """
         time = format_time(_str)
@@ -117,11 +120,12 @@ class PrecisionTime(BaseModel):
         参数:
             json_str: JSON格式的字符串，必须包含"time"字段
 
-        Returns:
+        返回:
             PrecisionTime: 解析后的时间对象
 
         异常:
             ValueError: 当JSON中缺少time字段或时间格式不正确时抛出
+            json.JSONDecodeError: 当JSON字符串格式不正确时抛出
         """
         data = json.loads(json_str)
         t = data.get("time")

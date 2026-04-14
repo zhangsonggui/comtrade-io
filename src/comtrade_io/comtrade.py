@@ -70,7 +70,7 @@ class Comtrade(ComtradeModel):
         """
         根据通道标识获取模拟量通道，并加载通道数据
         """
-        analog = super().get_analog_channel_info(index)
+        analog = self.get_analog_channel_info(index)
         analog.data = self.dat.data.iloc[:, index + 1].to_numpy()
         return analog
 
@@ -78,7 +78,7 @@ class Comtrade(ComtradeModel):
         """
         根据通道标识获取状态量通道，并加载通道数据
         """
-        digital = super().get_status_channel_info(index)
+        digital = self.get_status_channel_info(index)
         digital.data = self.dat.data.iloc[:, index + self.cfg.channel_num.analog + 1].to_numpy()
         return digital
 
@@ -107,7 +107,7 @@ class Comtrade(ComtradeModel):
         返回:
             线路对象，如果未找到则返回None
         """
-        line = super().get_line_info(name)
+        line = self.get_line_info(name)
         if line is None or self.dat is None:
             return line
 
@@ -178,8 +178,9 @@ class Comtrade(ComtradeModel):
         # 加载各绕组的电压和电流通道数据
         for winding in transformer.trans_winds:
             self._load_analog_channels(
-                (winding.voltage.ua, winding.voltage.ub, winding.voltage.uc, winding.voltage.ul, winding.voltage.un),
-                data)
+                    (winding.voltage.ua, winding.voltage.ub, winding.voltage.uc, winding.voltage.ul,
+                     winding.voltage.un),
+                    data)
             for current in winding.currents:
                 self._load_analog_channels((current.ia, current.ib, current.ic, current.i0), data)
 
@@ -189,6 +190,33 @@ class Comtrade(ComtradeModel):
 
         return transformer
 
+    @staticmethod
+    def _sync_channels(configure: Configure, comtrade_model: ComtradeModel) -> None:
+        """同步Configure和ComtradeModel中的通道信息
+
+        按照index对比通道对象，当属性值不一致时将ComtradeModel中的属性同步到Configure，
+        最后将Configure中的Analogs和Statuses列表赋值给ComtradeModel。
+
+        参数:
+            configure: Configure对象
+            comtrade_model: ComtradeModel对象
+        """
+        # 同步模拟量通道
+        for idx, cfg_analog in configure.analogs.items():
+            if idx in comtrade_model.analogs:
+                cm_analog = comtrade_model.analogs.get(idx)
+                cfg_analog.sync_from(cm_analog)
+
+        # 同步数字量通道
+        for idx, cfg_status in configure.statuses.items():
+            if idx in comtrade_model.statuses:
+                cm_status = comtrade_model.statuses.get(idx)
+                cfg_status.sync_from(cm_status)
+
+        # 将Configure中的通道赋值给ComtradeModel
+        comtrade_model.analogs = configure.analogs
+        comtrade_model.statuses = configure.statuses
+
     @classmethod
     def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
         """
@@ -196,13 +224,12 @@ class Comtrade(ComtradeModel):
         解析顺序：
         1.判断是否是单文件cff，如果是单文件直接解析单文件逻辑
         2.解析cfg文件，获取Configure对象，如果该文件不存在直接返回空
-        3.解析dmf文件，获取ComtradeModel对象，如果dmf文件为空，进入第4步，如果不为空进入第7步
-        4.根据Configure对象按照规则生成ComtradeModel中的模拟量和开关量通道列表
-        5.解析inf文件，获取Information对象，更新ComtradeModel中的母线、线路、主变信息，如果inf文件不为空进入第6步，如果不为空进入第7步
-        6.根据Information对象更新ComtradeModel中的母线、线路、主变信息
-        7.根据Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
-        8.解析dat文件，获取DataContent对象
-        9.合并后形成Comtrade对象
+        3.解析dmf文件，获取ComtradeModel对象，如果dmf文件为空，进入第4步
+        4.解析inf文件，获取ComtradeModel对象，如果inf文件不为空进入第5步，如果不为空进入第6步
+        5.将Configure对象中的通道信息更新到ComtradeModel对象
+        6.根据Configure对象按照规则生成ComtradeModel对象
+        7.解析dat文件，获取DataContent对象
+        8.合并后形成Comtrade对象
 
         参数:
             file_name(str): 文件名称,可以是cfg、dat、cff、inf及dmf任意文件名，后缀名不做要求
@@ -218,37 +245,31 @@ class Comtrade(ComtradeModel):
         if configure is None:
             return None
 
-        # 3.解析dmf文件，获取内部DMFElement
-        cm = DmfElement._from_file_internal(file_name=cf, cfg=configure)
-        # 当dmf对象不存在
+        # 3.解析dmf文件，获取ComtradeModel对象
+        cm = DmfElement.from_file(file_name=cf)
         if cm is None:
-            # 4.根据Configure对象按照规则生成包含模拟量和开关量通道列表的DMFElement对象
-            cm = DmfElement.from_cfg(configure)
-            # 5. 解析inf文件，获取Information对象
-            inf = Information.from_file(file_name=cf)
+            # 4. 解析inf文件，获取ComtradeModel对象
+            cm = Information.from_file(file_name=cf)
 
-            if inf:
-                # 6.根据Information对象更新ComtradeModel中的母线、线路、主变信息
-                cm.from_inf(inf)
-            else:
-                # 7.根据Configure通道尝试进行分组，更新ComtradeModel中的母线、线路、主变信息
-                # todo 待完善
-                pass
+        if cm:
+            # 5.将Configure对象中的通信信息更新到ComtradeModel对象
+            cls._sync_channels(configure, cm)
+        else:
+            # 6.根据Configure对象按照规则生成ComtradeModel对象
+            pass
 
-        # 8.解析dat文件
+        # 7.解析dat文件
         data_content = DataContent(cfg=configure, file_name=cf)
         result = cls(
-            file=cf,
-            cfg=configure,
-            dat=data_content,
-            station_name=cm.station_name,
-            version=cm.version,
-            rec_dev_name=cm.rec_dev_name,
-            buses=cm.buses,
-            lines=cm.lines,
-            transformers=cm.transformers,
-            analog_channels=cm.analog_channels,
-            status_channels=cm.status_channels,
+                file=cf,
+                cfg=configure,
+                dat=data_content,
+                description=cm.description,
+                buses=cm.buses,
+                lines=cm.lines,
+                transformers=cm.transformers,
+                analogs=cm.analogs,
+                statuses=cm.statuses,
         )
         return result
 
@@ -270,17 +291,14 @@ class Comtrade(ComtradeModel):
         data_content = cff_file.to_data_content(configure)
 
         result = cls(
-            file=cf,
-            cfg=configure,
-            dat=data_content,
-            station_name=data_model_fault.station_name,
-            version=data_model_fault.version,
-            rec_dev_name=data_model_fault.rec_dev_name,
-            buses=data_model_fault.buses,
-            lines=data_model_fault.lines,
-            transformers=data_model_fault.transformers,
-            analog_channels=data_model_fault.analog_channels,
-            status_channels=data_model_fault.status_channels,
+                file=cf,
+                cfg=configure,
+                dat=data_content,
+                buses=data_model_fault.buses,
+                lines=data_model_fault.lines,
+                transformers=data_model_fault.transformers,
+                analogs=data_model_fault.analog_channels,
+                statuses=data_model_fault.status_channels,
         )
         return result
 

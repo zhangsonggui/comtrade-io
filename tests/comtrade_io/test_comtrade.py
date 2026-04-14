@@ -52,8 +52,8 @@ class TestGetLine:
         assert line.index == 3
         assert line.name == "ghx"
         assert line.line_length == 9.75
-        assert line.bran_num.value == 1
-        assert len(line.currents) == line.bran_num.value
+        assert line.current_bran_num.value == 1
+        assert len(line.currents) == line.current_bran_num.value
         assert line.impedance.r0 == 0.062
         assert line.impedance.r1 == 0.021
 
@@ -145,7 +145,7 @@ class TestGetTransformer:
         trans_h = trans.trans_winds[0]
         assert trans_h.trans_wind_location.value == "high"
         assert trans_h.rated_voltage == 0
-        assert trans_h.bran_num == len(trans_h.currents)
+        assert trans_h.bran_num.value == len(trans_h.currents)
         assert trans_h.currents[0].idx == 1
         assert trans_h.currents[0].dir.value == "pos"
 

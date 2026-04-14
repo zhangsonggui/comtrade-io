@@ -15,6 +15,17 @@ logging = get_logger()
 
 
 class CffSection(BaseModel):
+    """CFF文件分段数据类
+
+    存储从CFF单文件中提取的各个部分的数据。
+
+    属性:
+        cfg: CFG 配置部分文本
+        dat: DAT 数据部分文本(ASCII格式)
+        dat_bytes: DAT 数据部分字节(二进制格式)
+        inf: INF 信息部分文本
+        hdr: HDR 头部部分文本
+    """
     cfg: Optional[str] = Field(default=None, description="CFG 配置部分文本")
     dat: Optional[str] = Field(default=None, description="DAT 数据部分文本(ASCII格式)")
     dat_bytes: Optional[bytes] = Field(default=None, description="DAT 数据部分字节(二进制格式)")
@@ -23,14 +34,18 @@ class CffSection(BaseModel):
 
 
 def extract_sections(cff_path: Union[str, Path]) -> CffSection:
-    """
-    从 CFF 文件中提取各个 section
+    """从 CFF 文件中提取各个 section
+
+    CFF文件使用类似 "---file type CFG---" 的标记来分隔不同部分。
 
     参数:
         cff_path: CFF 文件路径
 
     返回:
-        CffSection: 包含各部分文本的字典
+        CffSection: 包含各部分文本的对象
+
+    异常:
+        FileNotFoundError: 当CFF文件不存在时抛出
     """
     path = Path(cff_path)
     if not path.exists():
@@ -70,42 +85,65 @@ def extract_sections(cff_path: Union[str, Path]) -> CffSection:
 
 
 class CffFile:
-    """
-    CFF 单文件格式解析器
+    """CFF 单文件格式解析器
 
-    CFF 格式将 cfg/dat/inf/hdr 合并为单个 .cff 文件
+    CFF 格式将 cfg/dat/inf/hdr 合并为单个 .cff 文件，便于文件管理和传输。
+
+    属性:
+        file_path: CFF文件路径
+        sections: 提取的各部分数据
     """
 
     def __init__(self, file_path: Union[str, Path]):
+        """初始化CffFile对象
+
+        参数:
+            file_path: CFF文件路径
+        """
         self.file_path = Path(file_path)
         self.sections = extract_sections(self.file_path)
 
     @property
     def cfg_text(self) -> Optional[str]:
-        """返回 CFG 配置部分文本"""
+        """返回 CFG 配置部分文本
+
+        返回:
+            Optional[str]: CFG配置文本，不存在则返回None
+        """
         return self.sections.cfg
 
     @property
     def dat_text(self) -> Optional[str]:
-        """返回 DAT 数据部分文本"""
+        """返回 DAT 数据部分文本
+
+        返回:
+            Optional[str]: DAT数据文本(ASCII格式)，不存在则返回None
+        """
         return self.sections.dat
 
     @property
     def inf_text(self) -> Optional[str]:
-        """返回 INF 信息部分文本"""
+        """返回 INF 信息部分文本
+
+        返回:
+            Optional[str]: INF信息文本，不存在则返回None
+        """
         return self.sections.inf
 
     @property
     def hdr_text(self) -> Optional[str]:
-        """返回 HDR 头部部分文本"""
+        """返回 HDR 头部部分文本
+
+        返回:
+            Optional[str]: HDR头部文本，不存在则返回None
+        """
         return self.sections.hdr
 
     def to_configure(self) -> Optional[Configure]:
-        """
-        将 CFG 部分转换为 Configure 对象
+        """将 CFG 部分转换为 Configure 对象
 
         返回:
-            Configure: 配置对象
+            Optional[Configure]: 配置对象，解析失败返回None
         """
         if not self.cfg_text:
             logging.error("CFF 文件中未找到 CFG 配置部分")
@@ -118,11 +156,10 @@ class CffFile:
             return None
 
     def to_configure_from_file(self) -> Optional[Configure]:
-        """
-        将 CFG 部分写入临时文件并通过 Configure.from_file 解析
+        """将 CFG 部分写入临时文件并通过 Configure.from_file 解析
 
         返回:
-            Configure: 配置对象
+            Optional[Configure]: 配置对象，解析失败返回None
         """
         if not self.cfg_text:
             logging.error("CFF 文件中未找到 CFG 配置部分")
@@ -142,14 +179,13 @@ class CffFile:
                 temp_cfg_path.unlink()
 
     def to_data_content(self, cfg: Configure) -> Optional[DataContent]:
-        """
-        将 DAT 部分转换为 DataContent 对象
+        """将 DAT 部分转换为 DataContent 对象
 
         参数:
             cfg: Configure 配置对象
 
         返回:
-            DataContent: 数据内容对象
+            Optional[DataContent]: 数据内容对象，解析失败返回None
         """
         if not self.dat_text and not self.dat_bytes:
             logging.error("CFF 文件中未找到 DAT 数据部分")
@@ -180,8 +216,7 @@ class CffFile:
 
     @classmethod
     def from_file(cls, file_path: Union[str, Path]) -> "CffFile":
-        """
-        从文件路径创建 CffFile 对象
+        """从文件路径创建 CffFile 对象
 
         参数:
             file_path: CFF 文件路径
