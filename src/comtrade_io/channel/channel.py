@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Optional
+from typing import Any, Optional
 
-from pydantic import Field
+import numpy as np
+from pydantic import Field, field_serializer
 
 from comtrade_io.base.index_base import IdxOrgBaseModel
 from comtrade_io.type import AnalogChannelFlag, AnalogChannelType, DigitalChannelFlag, DigitalChannelType, Phase
@@ -41,6 +42,15 @@ class ChannelBaseModel(ChannelType):
     name: Optional[str] = Field(default=None, description="通道标识")
     phase: Optional[Phase] = Field(default=Phase.NONE, description="通道相别标识")
     equip: Optional[str] = Field(default='', description="被监视的电路元件")
+    data: Optional[Any] = Field(default=None, description="通道数据，一维数组")
+
+    @field_serializer('data')
+    def serialize_data(self, data: Any) -> Optional[list]:
+        if data is None:
+            return None
+        if isinstance(data, np.ndarray):
+            return data.tolist()
+        return data
 
     def __str__(self) -> str:
         """序列化为逗号分隔的通道字符串"""
