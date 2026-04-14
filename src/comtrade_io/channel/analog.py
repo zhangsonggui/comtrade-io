@@ -64,7 +64,33 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
                 + f",{self.tran_side.value}"
         )
 
-    def analog2section(self) -> str:
+    def to_dmf(self):
+        """
+        将模拟量通道对象转换为DMF格式字符串
+
+        Returns:
+            str: 转换后的DMF格式字符串
+        """
+        attrs = [
+            f'idx_cfg="{self.index}"',
+            f'idx_org="{self.idx_org}"',
+            f'type="{self.type.value}"',
+            f'flag="{self.flag.value}"',
+            f'freq="{self.freq}"',
+            f'au="{self.au}"',
+            f'bu="{self.bu}"',
+            f'sIUnit="{self.unit.value}"',
+            f'multiplier="{self.unit_multiplier}"',
+            f'primary="{self.primary}"',
+            f'secondary="{self.secondary}"',
+            f'ps="{self.tran_side.value}"',
+            f'idx_rl="0"',
+            f'ph="{self.phase.value}"'
+        ]
+
+        return f'<scl:Analog {" ".join(attrs)} />'
+
+    def to_inf(self) -> str:
         """
         将模拟量通道对象转换为模拟部件模型
 
@@ -87,41 +113,3 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f"Data_Primary_Secondary={self.tran_side.value}"
         ]
         return "\n".join(attrs)
-
-    def analog2element(self):
-        """
-        将模拟量通道对象转换为DMF格式字符串
-
-        Returns:
-            str: 转换后的DMF格式字符串
-        """
-        attrs = []
-        if self.index is not None:
-            attrs.append(f'idx="{self.index}"')
-        if self.name:
-            attrs.append(f'ch_id="{self.name}"')
-        if self.phase and self.phase.value:
-            attrs.append(f'ph="{self.phase.value}"')
-        if self.equip:
-            attrs.append(f'ccbm="{self.equip}"')
-        if self.unit and self.unit.value:
-            attrs.append(f'unit="{self.unit.value}"')
-        attrs.append(f'a="{self.multiplier}"')
-        attrs.append(f'b="{self.offset}"')
-        attrs.append(f'skew="{self.delay}"')
-        attrs.append(f'min="{self.min_value}"')
-        attrs.append(f'max="{self.max_value}"')
-        attrs.append(f'primary="{self.primary}"')
-        attrs.append(f'secondary="{self.secondary}"')
-        if self.tran_side:
-            attrs.append(f'ps="{self.tran_side.value}"')
-        if self.idx_org:
-            attrs.append(f'idx_org="{self.idx_org}"')
-        if self.type:
-            attrs.append(f'type="{self.type.value}"')
-        if self.flag:
-            attrs.append(f'flag="{self.flag.value}"')
-        if self.reference:
-            attrs.append(f'reference="{self.reference}"')
-
-        return f'<scl:Analog {" ".join(attrs)} />'

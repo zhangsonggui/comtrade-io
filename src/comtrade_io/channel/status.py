@@ -31,7 +31,19 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         """
         return super().__str__() + f",{self.contact.value}"
 
-    def status2section(self):
+    def to_dmf(self):
+        """将数字量通道对象转换为DMF模型对象"""
+        attrs = [
+            f'idx_cfg="{self.index}"',
+            f'idx_org="{self.idx_org}"',
+            f'type="{self.type.name}"',
+            f'flag="{self.flag.name}"',
+            f'contact="{self.contact.name}"',
+            f'srcRef="{self.reference}"'
+        ]
+        return f"\t<scl:StatusChannel {''.join(attrs)} />"
+
+    def to_info(self):
         """将数字量通道对象转换为模拟部件模型对象
 
         将数字量通道对象转换为模拟部件模型对象。
