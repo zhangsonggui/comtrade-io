@@ -5,6 +5,11 @@ from comtrade_io.type.channel_type import AnalogChannelType, DigitalChannelType
 
 
 class AnalogChannelFlag(BaseEnum):
+    """模拟量通道标志枚举
+
+    定义模拟量通道的物理量类型，如电压、电流、功率、阻抗等。
+    每个枚举值包含：(标志代码, 通道类型, 描述)
+    """
     ACV = ('ACV', AnalogChannelType.A, "电压")
     ACC = ('ACC', AnalogChannelType.A, "电流")
     HF = ('HF', AnalogChannelType.D, "高频")
@@ -18,6 +23,11 @@ class AnalogChannelFlag(BaseEnum):
 
 
 class DigitalChannelFlag(BaseEnum):
+    """数字量通道标志枚举
+
+    定义数字量通道的信号类型，包括保护跳闸、断路器位置、开关量、告警等。
+    每个枚举值包含：(标志代码, 通道类型, 描述)
+    """
     GENERAL = ("general", DigitalChannelType.OTHER, "一般开关量")
     TR = ("Tr", DigitalChannelType.RELAY, "保护跳闸")
     TR_PHS_A = ("TrPhsA", DigitalChannelType.RELAY, "跳A")
