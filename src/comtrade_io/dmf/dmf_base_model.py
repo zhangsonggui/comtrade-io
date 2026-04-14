@@ -12,20 +12,20 @@ from xml.etree.ElementTree import Element
 from pydantic import Field
 
 from comtrade_io.base import IndexBaseModel, ReferenceBaseModel
-from comtrade_io.dmf import ACCBranch
-from comtrade_io.dmf.analog_channel import AnalogChannel
-from comtrade_io.dmf.status_channel import StatusChannel
-from comtrade_io.type import LineBranchNum
-from comtrade_io.utils import parse_float, parse_int
+from comtrade_io.channel.analog import Analog
+from comtrade_io.channel.status import Status
+from comtrade_io.equipment.branch import ACCBranch
+from comtrade_io.type import CurrentBranchNum
+from comtrade_io.utils import parse_float
 
 
 class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
     """
     数据模型基础类
-    
+
     所有DMF数据模型对象的基类，提供设备通用属性的定义。
     继承自IndexBaseModel和ReferenceBaseModel，提供索引和引用功能。
-    
+
     属性:
         name: 设备名称，用于标识设备
         uuid: 设备唯一标识符，用于全局唯一标识设备
@@ -34,103 +34,19 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
     """
     name: str = Field(..., description="设备名称")
     uuid: Optional[str] = Field(default="", description="设备标识")
-    anas: List[AnalogChannel] = Field(default_factory=list, description="模拟通道列表")
-    stas: List[StatusChannel] = Field(default_factory=list, description="开关量通道列表")
-
-    def _get_ana_chn_xml(self) -> str:
-        """
-        获取模拟通道的XML字符串表示
-        
-        返回:
-            格式化的XML字符串，包含所有模拟通道元素
-        """
-        xml = ""
-        for ana_chn in self.anas:
-            if ana_chn is not None:
-                xml += "\n\t\t" + f'<scl:AnaChn idx_cfg="{ana_chn.index}" />'
-        return xml
-
-    def _get_sta_chn_xml(self) -> str:
-        """
-        获取开关量通道的XML字符串表示
-        
-        返回:
-            格式化的XML字符串，包含所有开关量通道元素
-        """
-        xml = ""
-        for sta_chn in self.stas:
-            if sta_chn is not None:
-                xml += "\n\t\t" + f'<scl:StaChn idx_cfg="{sta_chn.index}" />'
-        return xml
-
-    @classmethod
-    def parse_ans_from_xml(cls, element: Element, ns: dict, analog_channels: dict = None,
-                           use_scl_prefix: bool = True) -> List[AnalogChannel]:
-        """
-        从XML元素解析模拟通道列表
-        
-        参数:
-            element: XML元素
-            ns: 命名空间映射
-            analog_channels: 模拟通道字典，根据idx_cfg查找对应的AnalogChannel对象
-            use_scl_prefix: 是否使用scl命名空间前缀
-            
-        返回:
-            AnalogChannel对象列表
-        """
-        if use_scl_prefix and 'scl' in ns:
-            ana_elems = element.findall('scl:AnaChn', ns)
-        else:
-            ana_elems = element.findall('AnaChn')
-
-        result = []
-        for chn in ana_elems:
-            idx_cfg = chn.get('idx_cfg')
-            if idx_cfg and analog_channels:
-                idx = parse_int(idx_cfg)
-                if idx in analog_channels:
-                    result.append(analog_channels[idx])
-        return result
-
-    @classmethod
-    def parse_sts_from_xml(cls, element: Element, ns: dict, status_channels: dict = None,
-                           use_scl_prefix: bool = True) -> List[StatusChannel]:
-        """
-        从XML元素解析开关量通道列表
-        
-        参数:
-            element: XML元素
-            ns: 命名空间映射
-            status_channels: 开关量通道字典，根据idx_cfg查找对应的StatusChannel对象
-            use_scl_prefix: 是否使用scl命名空间前缀
-            
-        返回:
-            StatusChannel对象列表
-        """
-        if use_scl_prefix and 'scl' in ns:
-            sta_elems = element.findall('scl:StaChn', ns)
-        else:
-            sta_elems = element.findall('StaChn')
-
-        result = []
-        for chn in sta_elems:
-            idx_cfg = chn.get('idx_cfg')
-            if idx_cfg and status_channels:
-                idx = parse_int(idx_cfg)
-                if idx in status_channels:
-                    result.append(status_channels[idx])
-        return result
+    anas: List[Analog] = Field(default_factory=list, description="模拟通道列表")
+    stas: List[Status] = Field(default_factory=list, description="开关量通道列表")
 
     def handle_current_branches(self):
         """
         处理电流分支问题
         """
         if len(self.anas) <= 4:
-            return LineBranchNum.B1, [ACCBranch.from_analog_channels(self.anas)]
+            return CurrentBranchNum.B1, [ACCBranch.from_analog_channels(self.anas)]
         mid = len(self.anas) // 2
         b1 = ACCBranch.from_analog_channels(self.anas[:mid])
         b2 = ACCBranch.from_analog_channels(self.anas[mid:])
-        return LineBranchNum.B2, [b1, b2]
+        return CurrentBranchNum.B2, [b1, b2]
 
     def __eq__(self, other):
         return self.index == other.index and self.name == other.name
@@ -159,13 +75,13 @@ class DmfBaseModel(IndexBaseModel, ReferenceBaseModel):
                 setattr(self, field_name, other_value)
 
 
-class ComtradeBaseModel(ReferenceBaseModel):
+class DmfRootModel(ReferenceBaseModel):
     """
     COMTRADE数据模型XML基础类
-    
+
     定义XML文档的基础属性，包括命名空间、版本信息等。
     用于序列化和反序列化COMTRADE数据模型的XML表示。
-    
+
     属性:
         xmlns_scl: XML命名空间（SCL命名空间）
         xmlns_xsi: XML实例命名空间
@@ -185,7 +101,7 @@ class ComtradeBaseModel(ReferenceBaseModel):
     def __str__(self):
         """
         返回COMTRADE模型XML根元素的字符串表示
-        
+
         返回:
             格式化的XML字符串，包含XML声明和根元素开始标签
         """
@@ -202,14 +118,14 @@ class ComtradeBaseModel(ReferenceBaseModel):
         return xml
 
     @classmethod
-    def from_xml(cls, element: Element, ns: dict) -> 'ComtradeBaseModel':
+    def from_xml(cls, element: Element, ns: dict) -> 'DmfRootModel':
         """
         从XML元素创建ComtradeBaseModel实例
 
         参数:
             element: XML元素
             ns: 命名空间
-            
+
         返回:
             ComtradeBaseModel实例
         """

@@ -16,6 +16,7 @@ class Equipment(IndexBaseModel, ReferenceBaseModel):
     name: str = Field(..., description="设备名称")
     uuid: str = Field(default="", description="设备标识")
     stas: list[Status] = Field(default_factory=list, description="开关量通道")
+    anas: Optional[list[Analog]] = Field(default_factory=list, description="模拟量通道")
     acvs: Optional[list[Analog]] = Field(default_factory=list, description="电压通道")
     accs: Optional[list[Analog]] = Field(default_factory=list, description="电流通道")
 

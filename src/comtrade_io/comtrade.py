@@ -4,29 +4,29 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from comtrade_io.cff import CffFile
 from comtrade_io.cfg import Configure
+from comtrade_io.channel.analog import Analog
+from comtrade_io.channel.status import Status
 from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.comtrade_model import ComtradeModel
 from comtrade_io.data import DataContent
-from comtrade_io.dmf import AnalogChannel, ComtradeModel, StatusChannel
-from comtrade_io.dmf.bus import Bus
-from comtrade_io.dmf.line import Line
-from comtrade_io.dmf.transformer import Transformer
+from comtrade_io.dmf.dmf_element import DmfElement
+from comtrade_io.equipment.bus import Bus
+from comtrade_io.equipment.line import Line
+from comtrade_io.equipment.transformer import Transformer
 from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
 
 logging = get_logger()
 
 
-class Comtrade(BaseModel):
+class Comtrade(ComtradeModel):
     file: ComtradeFile = Field(default_factory=ComtradeFile, description="文件路径")
     cfg: Configure = Field(..., description="参数配置文件")
     dat: Optional[DataContent] = Field(default=None, description="故障数据")
-    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线")
-    lines: Optional[list[Line]] = Field(default_factory=list, description="线路")
-    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器")
 
     def model_dump_json(self, *, indent: int | None = None, **kwargs) -> str:
         """
@@ -66,7 +66,7 @@ class Comtrade(BaseModel):
     def get_data(self) -> pd.DataFrame:
         return self.dat.data
 
-    def get_analog_channel(self, index: int) -> Optional[AnalogChannel]:
+    def get_analog_channel(self, index: int) -> Optional[Analog]:
         """
         根据通道标识获取模拟量通道，并加载通道数据
         """
@@ -74,7 +74,7 @@ class Comtrade(BaseModel):
         analog.data = self.dat.data.iloc[:, index + 1].to_numpy()
         return analog
 
-    def get_status_channel(self, index: int) -> Optional[StatusChannel]:
+    def get_status_channel(self, index: int) -> Optional[Status]:
         """
         根据通道标识获取状态量通道，并加载通道数据
         """
@@ -218,12 +218,12 @@ class Comtrade(BaseModel):
         if configure is None:
             return None
 
-        # 3.解析dmf文件
-        cm = ComtradeModel.from_file(file_name=cf, cfg=configure)
+        # 3.解析dmf文件，获取内部DMFElement
+        cm = DmfElement._from_file_internal(file_name=cf, cfg=configure)
         # 当dmf对象不存在
         if cm is None:
-            # 4.根据Configure对象按照规则生成包含模拟量和开关量通道列表的ComtradeModel对象
-            cm = ComtradeModel.from_cfg(configure)
+            # 4.根据Configure对象按照规则生成包含模拟量和开关量通道列表的DMFElement对象
+            cm = DmfElement.from_cfg(configure)
             # 5. 解析inf文件，获取Information对象
             inf = Information.from_file(file_name=cf)
 
@@ -266,7 +266,7 @@ class Comtrade(BaseModel):
         if configure is None:
             return None
 
-        data_model_fault = ComtradeModel.from_cfg(configure)
+        data_model_fault = DmfElement.from_cfg(configure)
         data_content = cff_file.to_data_content(configure)
 
         result = cls(
