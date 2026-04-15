@@ -6,9 +6,10 @@
 import json
 from typing import List, Optional
 
+from pydantic import BaseModel, Field
+
 from comtrade_io.cfg.segment import Segment
 from comtrade_io.utils import get_logger
-from pydantic import BaseModel, Field
 
 logging = get_logger()
 
@@ -16,6 +17,9 @@ logging = get_logger()
 class Sampling(BaseModel):
     freq: Optional[float] = Field(default=50.0, description="电网频率")
     segments: List[Segment] = Field(default_factory=list, description="采样段")
+
+    def __len__(self):
+        return len(self.segments)
 
     def __str__(self) -> str:
         """序列化为多行文本

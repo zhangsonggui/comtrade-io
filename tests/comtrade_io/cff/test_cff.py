@@ -172,7 +172,3 @@ class TestNoTempFiles:
         # 检查tmp_path没有新文件
         final_files = set(tmp_path.iterdir())
         assert initial_files == final_files, "不应该生成临时文件"
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])

@@ -216,31 +216,51 @@ class Comtrade(ComtradeModel):
                 cm_status.sync_from(cfg_status)
 
     @classmethod
-    def _create_comtrade(cls, cf: ComtradeFile, configure: Configure,
-                         _model: ComtradeModel, data_content: DataContent) -> "Comtrade":
+    def _create_comtrade(cls,
+                         file: ComtradeFile,
+                         cfg: Configure,
+                         dat: DataContent,
+                         cm: ComtradeModel = None) -> "Comtrade":
         """
         创建Comtrade对象的共享方法
 
         参数:
-            cf: ComtradeFile 对象
-            configure: Configure 配置对象
-            _model: ComtradeModel 模型对象
-            data_content: DataContent 数据内容对象
+            file: ComtradeFile 对象
+            cfg: Configure 配置对象
+            dat: DataContent 数据内容对象
+            cm: ComtradeModel 模型对象
 
         返回:
             Comtrade: 创建的Comtrade对象
         """
+        # todo 根据data_content校验一下采样段
+        cls.verify_sampling_segment()
+        if cm:
+            cls._sync_model_with_configure(cfg, cm)
+        else:
+            cm = cls._generate_model(cfg)
+
         return cls(
-                file=cf,
-                cfg=configure,
-                dat=data_content,
-                description=_model.description,
-                buses=_model.buses,
-                lines=_model.lines,
-                transformers=_model.transformers,
-                analogs=_model.analogs,
-                statuses=_model.statuses,
+                file=file,
+                cfg=cfg,
+                dat=dat,
+                description=cm.description,
+                buses=cm.buses,
+                lines=cm.lines,
+                transformers=cm.transformers,
+                analogs=cm.analogs,
+                statuses=cm.statuses,
         )
+
+    @classmethod
+    def verify_sampling_segment(cls) -> None:
+        """
+        验证采样段信息
+
+        检查采样段信息，确保采样段数量与数据点数一致。
+        如果采样段数量与数据点数不一致，则打印警告信息并修正采样段数量。
+        """
+        pass
 
     @classmethod
     def _sync_model_with_configure(cls, configure: Configure, _model: ComtradeModel) -> None:
@@ -255,6 +275,21 @@ class Comtrade(ComtradeModel):
         _model.description.version = configure.header.version
         configure.analogs = _model.analogs
         configure.statuses = _model.statuses
+
+    @classmethod
+    def _generate_model(cls, cfg: Configure) -> ComtradeModel:
+        """
+        生成ComtradeModel对象
+        参数:
+            cfg: Configure 配置对象
+        返回:
+            ComtradeModel: 生成的ComtradeModel对象
+        """
+        model = ComtradeModel()
+        model.analogs = cfg.analogs
+        model.statuses = cfg.statuses
+        # todo 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
+        return model
 
     @classmethod
     def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
@@ -290,18 +325,11 @@ class Comtrade(ComtradeModel):
             # 4. 解析inf文件，获取ComtradeModel对象
             _model = Information.from_file(file_name=cf)
 
-        if _model:
-            # 5.将Configure对象中的通信信息更新到ComtradeModel对象
-            cls._sync_model_with_configure(configure, _model)
-        else:
-            # todo 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
-            pass
-
         # 7.解析dat文件
         data_content = DataContent(cfg=configure, file_name=cf)
 
         # 8.创建并返回Comtrade对象
-        return cls._create_comtrade(cf, configure, _model, data_content)
+        return cls._create_comtrade(cf, configure, data_content, _model)
 
     @classmethod
     def _from_cff(cls, cf: ComtradeFile) -> "Comtrade|None":
@@ -320,21 +348,12 @@ class Comtrade(ComtradeModel):
 
         # 尝试从CFF解析INF
         _model = cff_file.to_information()
-        if _model:
-            # 同步通道信息
-            cls._sync_model_with_configure(configure, _model)
-        else:
-            # 没有INF，创建空的ComtradeModel
-            # todo 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
-            _model = ComtradeModel()
-            _model.analogs = configure.analogs
-            _model.statuses = configure.statuses
 
         # 直接从内存解析DAT，不生成临时文件
         data_content = cff_file.to_data_content(configure)
 
         # 创建并返回Comtrade对象
-        return cls._create_comtrade(cf, configure, _model, data_content)
+        return cls._create_comtrade(cf, configure, data_content, _model)
 
     def save_comtrade(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
         """

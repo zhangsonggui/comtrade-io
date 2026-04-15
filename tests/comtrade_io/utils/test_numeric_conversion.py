@@ -1,6 +1,6 @@
 import pytest
 
-from comtrade.utils.numeric_conversion import safe_float_convert, parse_float
+from comtrade_io.utils.numeric_conversion import parse_float, safe_float_convert
 
 
 def test_mixed_string_extraction():

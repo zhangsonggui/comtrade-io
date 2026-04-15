@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -19,8 +20,11 @@ class Segment(BaseModel):
         samp: 采样点数，每个采样段的采样点数量，必须大于0
         end_point: 结束采样点数，该采样段结束时的累计采样点数，必须大于0
     """
-    samp: int = Field(..., description="采样点数", gt=0)
-    end_point: int = Field(..., description="结束采样点数", gt=0)
+    samp: int = Field(..., description="采样率，单位（Hz）", gt=0)
+    end_point: int = Field(..., description="该段结束采样点号", gt=0)
+    start_point: Optional[int] = Field(default=None, description="该段起始采样点号")
+    cycle_point_num: Optional[float] = Field(default=None, description="该段周期采样点数")
+    count: Optional[int] = Field(default=None, description="该段采样点数")
 
     def __str__(self) -> str:
         """序列化为逗号分隔的字符串
