@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from io import BytesIO, StringIO
 from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-from pydantic import Field
-
 from comtrade_io.cff import CffFile
 from comtrade_io.cfg import Configure
 from comtrade_io.channel.analog import Analog
@@ -17,8 +16,10 @@ from comtrade_io.dmf.dmf_element import DmfElement
 from comtrade_io.equipment.bus import Bus
 from comtrade_io.equipment.line import Line
 from comtrade_io.equipment.transformer import Transformer
+from comtrade_io.exporters import export_format
 from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
+from pydantic import Field
 
 logging = get_logger()
 
@@ -58,7 +59,7 @@ class Comtrade(ComtradeModel):
             elif isinstance(d, list):
                 return [process(i) for i in d]
             else:
-                return convert(d)
+                return convert(obj)
 
         data = process(data)
         return json.dumps(data, ensure_ascii=False, default=str, indent=indent)
@@ -192,24 +193,12 @@ class Comtrade(ComtradeModel):
 
     @staticmethod
     def _sync_channels(configure: Configure, comtrade_model: ComtradeModel) -> None:
-        """同步Configure和ComtradeModel中的通道信息
-
-        按照index对比通道对象，使用Channel类的sync_from方法将Configure中的
-        属性同步到ComtradeModel中的通道对象上。sync_from方法会处理更新逻辑：
-        - ComtradeModel中为None的属性直接更新
-        - Configure中为None的属性不更新
-
-        参数:
-            configure: Configure对象
-            comtrade_model: ComtradeModel对象
-        """
-        # 同步模拟量通道：从cfg_analog同步到cm_analog
+        """同步Configure和ComtradeModel中的通道信息"""
         for idx, cfg_analog in configure.analogs.items():
             if idx in comtrade_model.analogs:
                 cm_analog = comtrade_model.analogs.get(idx)
                 cm_analog.sync_from(cfg_analog)
 
-        # 同步数字量通道：从cfg_status同步到cm_status
         for idx, cfg_status in configure.statuses.items():
             if idx in comtrade_model.statuses:
                 cm_status = comtrade_model.statuses.get(idx)
@@ -221,20 +210,7 @@ class Comtrade(ComtradeModel):
                          cfg: Configure,
                          dat: DataContent,
                          cm: ComtradeModel = None) -> "Comtrade":
-        """
-        创建Comtrade对象的共享方法
-
-        参数:
-            file: ComtradeFile 对象
-            cfg: Configure 配置对象
-            dat: DataContent 数据内容对象
-            cm: ComtradeModel 模型对象
-
-        返回:
-            Comtrade: 创建的Comtrade对象
-        """
-        # todo 根据data_content校验一下采样段
-        cls.verify_sampling_segment()
+        """创建Comtrade对象的共享方法"""
         if cm:
             cls._sync_model_with_configure(cfg, cm)
         else:
@@ -253,24 +229,8 @@ class Comtrade(ComtradeModel):
         )
 
     @classmethod
-    def verify_sampling_segment(cls) -> None:
-        """
-        验证采样段信息
-
-        检查采样段信息，确保采样段数量与数据点数一致。
-        如果采样段数量与数据点数不一致，则打印警告信息并修正采样段数量。
-        """
-        pass
-
-    @classmethod
     def _sync_model_with_configure(cls, configure: Configure, _model: ComtradeModel) -> None:
-        """
-        同步Configure和ComtradeModel的共享方法
-
-        参数:
-            configure: Configure 配置对象
-            _model: ComtradeModel 模型对象
-        """
+        """同步Configure和ComtradeModel的共享方法"""
         cls._sync_channels(configure, _model)
         _model.description.version = configure.header.version
         configure.analogs = _model.analogs
@@ -278,123 +238,171 @@ class Comtrade(ComtradeModel):
 
     @classmethod
     def _generate_model(cls, cfg: Configure) -> ComtradeModel:
-        """
-        生成ComtradeModel对象
-        参数:
-            cfg: Configure 配置对象
-        返回:
-            ComtradeModel: 生成的ComtradeModel对象
-        """
+        """生成ComtradeModel对象"""
         model = ComtradeModel()
         model.analogs = cfg.analogs
         model.statuses = cfg.statuses
-        # todo 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
         return model
 
     @classmethod
     def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
-        """
-        从文件名反序列化Comtrade对象
-        解析顺序：
-        1.判断是否是单文件cff，如果是单文件直接解析单文件逻辑
-        2.解析cfg文件，获取Configure对象，如果该文件不存在直接返回空
-        3.解析dmf文件，获取ComtradeModel对象，如果dmf文件为空，进入第4步
-        4.解析inf文件，获取ComtradeModel对象，如果inf文件不为空进入第5步，如果不为空进入第6步
-        5.将Configure对象中的通道信息更新到ComtradeModel对象
-        6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
-        7.解析dat文件，获取DataContent对象
-        8.合并后形成Comtrade对象
-
-        参数:
-            file_name(str): 文件名称,可以是cfg、dat、cff、inf及dmf任意文件名，后缀名不做要求
-        """
+        """从文件名反序列化Comtrade对象"""
         cf = ComtradeFile.from_path(file_name)
 
-        # 1.判断cff文件是否存在，进行cff文件分析
         if cf.cff_path.is_enabled():
             return cls._from_cff(cf)
 
-        # 2.解析cfg文件
         configure = Configure.from_file(file_name=cf)
         if configure is None:
             return None
 
-        # 3.解析dmf文件，获取ComtradeModel对象
         _model = DmfElement.from_file(file_name=cf)
         if _model is None:
-            # 4. 解析inf文件，获取ComtradeModel对象
             _model = Information.from_file(file_name=cf)
 
-        # 7.解析dat文件
         data_content = DataContent(cfg=configure, file_name=cf)
-
-        # 8.创建并返回Comtrade对象
         return cls._create_comtrade(cf, configure, data_content, _model)
 
     @classmethod
     def _from_cff(cls, cf: ComtradeFile) -> "Comtrade|None":
-        """
-        从 CFF 单文件加载 Comtrade 对象（不生成临时文件）
-
-        参数:
-            cf: ComtradeFile 对象
-        """
+        """从 CFF 单文件加载 Comtrade 对象"""
         cff_file = CffFile.from_file(cf.cff_path.path)
-
-        # 直接从内存解析CFG，不生成临时文件
         configure = cff_file.to_configure()
         if configure is None:
             return None
-
-        # 尝试从CFF解析INF
         _model = cff_file.to_information()
-
-        # 直接从内存解析DAT，不生成临时文件
         data_content = cff_file.to_data_content(configure)
-
-        # 创建并返回Comtrade对象
         return cls._create_comtrade(cf, configure, data_content, _model)
 
-    def save_comtrade(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
+    @export_format
+    def save_comtrade(self, output_file_path: ComtradeFile | Path | str, **kwargs):
         """
         将 comtrade 对象保存为文件
+
         参数:
-            output_file_path(str) 保存路径，后缀名可选
-            data_file_type(str) 保存格式，默认保存为二进制文件
+            output_file_path: 保存路径
+            format: 导出格式 (multi_file/cff/json/csv), 默认multi_file
+            data_format: dat文件格式 (ASCII/BINARY/BINARY32/FLOAT32), 默认BINARY
+            **kwargs: 其他参数
         """
-        output_file_path = ComtradeFile.from_path(output_file_path)
+        pass
 
-        self.cfg.write_file(output_file_path)
-        self.dat.write_file(output_file_path, data_type=data_type)
+    def _export_multi_file(self, output_path: str | Path | ComtradeFile,
+                           data_format: str, **kwargs) -> str:
+        """导出多文件格式"""
+        cf = ComtradeFile.from_path(output_path)
+        self.cfg.write_file(cf)
+        self.dat.write_file(cf, data_type=data_format)
+        if cf.inf_path.path:
+            self.write_inf(str(cf.inf_path.path))
+        if cf.dmf_path.path:
+            self.write_dmf(str(cf.dmf_path.path))
+        return f"文件保存成功: cfg={cf.cfg_path.path}, dat={cf.dat_path.path}"
 
-        return (f"文件保存成功："
-                f"参数文件位置：{output_file_path.cfg_path.path}，"
-                f"数据文件位置：{output_file_path.dat_path.path},"
-                f"模型文件位置{output_file_path.dmf_path.path}")
+    def _export_cff(self, output_path: str | Path | ComtradeFile,
+                    data_format: str, **kwargs) -> str:
+        """导出CFF单文件格式"""
+        cf = ComtradeFile.from_path(output_path)
+        cff_path = cf.cff_path.path
+        if not cff_path:
+            base_path = cf.cfg_path.path or cf.dat_path.path
+            if base_path:
+                cff_path = base_path.parent / (base_path.stem + '.cff')
+            else:
+                raise ValueError("无法确定CFF输出路径")
+
+        sections = []
+
+        sections.append("--- file type CFG ---")
+        sections.append(str(self.cfg))
+
+        sections.append("--- file type DAT ---")
+        if data_format == "ASCII":
+            buffer = StringIO()
+            self.dat.data.to_csv(buffer, header=False, index=False)
+            sections.append(buffer.getvalue())
+        else:
+            buffer = BytesIO()
+            from tempfile import NamedTemporaryFile
+            import os
+            with NamedTemporaryFile(delete=False, suffix='.dat') as tmp:
+                tmp_path = tmp.name
+            try:
+                tmp_cf = ComtradeFile.from_path(tmp_path)
+                self.dat.write_file(tmp_cf, data_type=data_format)
+                dat_bytes = Path(tmp_path).read_bytes()
+                sections.append(dat_bytes.decode('latin-1'))
+            finally:
+                os.unlink(tmp_path)
+
+        inf_content = self.to_inf()
+        if inf_content:
+            sections.append("--- file type INF ---")
+            sections.append(inf_content)
+
+        with open(cff_path, 'w', encoding='gbk') as f:
+            f.write('\n'.join(sections))
+
+        logging.info(f"CFF文件{cff_path}写入成功")
+        return f"文件保存成功: {cff_path}"
+
+    def _export_json(self, output_path: str | Path | ComtradeFile,
+                     data_format: str, **kwargs) -> bool:
+        """导出JSON格式"""
+        path = Path(output_path) if not isinstance(output_path, ComtradeFile) else \
+            (output_path.cfg_path.path.parent / (
+                        output_path.cfg_path.path.stem + '.json') if output_path.cfg_path.path else None)
+        if not path:
+            raise ValueError("无法确定JSON输出路径")
+        if path.suffix.lower() != '.json':
+            path = path.with_suffix('.json')
+        return self.save_json(path, indent=kwargs.get('indent'))
+
+    def _export_csv(self, output_path: str | Path | ComtradeFile,
+                    data_format: str, **kwargs) -> bool:
+        """导出CSV格式"""
+        path = Path(output_path) if not isinstance(output_path, ComtradeFile) else \
+            (output_path.cfg_path.path.parent / (
+                        output_path.cfg_path.path.stem + '.csv') if output_path.cfg_path.path else None)
+        if not path:
+            raise ValueError("无法确定CSV输出路径")
+        if path.suffix.lower() != '.csv':
+            path = path.with_suffix('.csv')
+
+        headers = ['Point', 'Time']
+        for idx in sorted(self.cfg.analogs.keys()):
+            a = self.cfg.analogs[idx]
+            headers.append(f"{a.name or f'A{idx}'}")
+        for idx in sorted(self.cfg.statuses.keys()):
+            s = self.cfg.statuses[idx]
+            headers.append(f"{s.name or f'D{idx}'}")
+
+        self.dat.data.to_csv(path, header=headers if kwargs.get('include_headers', True) else False, index=False)
+        logging.info(f"CSV文件{path}写入成功")
+        return True
 
     def save_json(self, output_file_path: Path | str,
                   indent: int | None = None):
-        """
-        将Comtrade对象转换为JSON字符串（包含dat数据）
-        """
+        """将Comtrade对象保存为JSON文件（包含dat数据）"""
         data = self.model_dump(mode='python')
         data.pop("cfg", None)
         data.pop("file", None)
 
         if self.dat is not None and self.dat.data is not None:
             df = self.dat.data
-            analog_list = data.get("analog_channels", [])
-            for channel in analog_list:
-                if channel.get("index") is not None:
-                    col_index = channel["index"] + 2
-                    if col_index < df.shape[1]:
-                        channel["data"] = df.iloc[:, col_index].tolist()
-            status_list = data.get("status_channels", [])
-            for channel in status_list:
-                if channel.get("index") is not None:
-                    col_index = self.cfg.channel_num.analog + channel["index"] + 2
-                    if col_index < df.shape[1]:
-                        channel["data"] = df.iloc[:, col_index].tolist()
+            analog_list = data.get("analogs", [])
+            for ch in analog_list:
+                if isinstance(ch, dict) and ch.get("index") is not None:
+                    col_idx = ch["index"] + 2
+                    if col_idx < df.shape[1]:
+                        ch["data"] = df.iloc[:, col_idx].tolist()
+            status_list = data.get("statuses", [])
+            for ch in status_list:
+                if isinstance(ch, dict) and ch.get("index") is not None:
+                    col_idx = self.cfg.channel_num.analog + ch["index"] + 2
+                    if col_idx < df.shape[1]:
+                        ch["data"] = df.iloc[:, col_idx].tolist()
+
         with open(output_file_path, "w", encoding="utf-8") as f:
             f.write(self._to_json(data, indent))
         logging.info(f"json数据写入{output_file_path}成功")
