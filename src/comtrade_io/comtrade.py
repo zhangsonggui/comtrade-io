@@ -225,7 +225,7 @@ class Comtrade(ComtradeModel):
         3.解析dmf文件，获取ComtradeModel对象，如果dmf文件为空，进入第4步
         4.解析inf文件，获取ComtradeModel对象，如果inf文件不为空进入第5步，如果不为空进入第6步
         5.将Configure对象中的通道信息更新到ComtradeModel对象
-        6.根据Configure对象按照规则生成ComtradeModel对象
+        6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
         7.解析dat文件，获取DataContent对象
         8.合并后形成Comtrade对象
 
@@ -252,10 +252,12 @@ class Comtrade(ComtradeModel):
         if _model:
             # 5.将Configure对象中的通信信息更新到ComtradeModel对象
             cls._sync_channels(configure, _model)
+            # 将Configure对象中的录波版本信息更新到ComtradeModel对象
+            _model.description.version = configure.version
             configure.analogs = _model.analogs
             configure.statuses = _model.statuses
         else:
-            # 6.根据Configure对象按照规则生成ComtradeModel对象
+            # 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
             pass
 
         # 7.解析dat文件
