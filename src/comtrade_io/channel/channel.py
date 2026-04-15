@@ -22,8 +22,8 @@ class ChannelType(IdxOrgBaseModel):
         type: 通道类型，可以是模拟通道类型或数字通道类型
         flag: 通道标志，用于标识通道的具体用途
     """
-    type: AnalogChannelType | DigitalChannelType | None = Field(default=None, description="通道类型")
-    flag: AnalogChannelFlag | DigitalChannelFlag | None = Field(default=None, description="通道标识")
+    type: Optional[AnalogChannelType | DigitalChannelType] = Field(default=None, description="通道类型")
+    flag: Optional[AnalogChannelFlag | DigitalChannelFlag] = Field(default=None, description="通道标识")
 
 
 class ChannelBaseModel(ChannelType):
@@ -44,7 +44,7 @@ class ChannelBaseModel(ChannelType):
     """
     name: Optional[str] = Field(default=None, description="通道标识")
     phase: Optional[Phase] = Field(default=Phase.NONE, description="通道相别标识")
-    equip: Optional[str] = Field(default='', description="被监视的电路元件")
+    equip: Optional[str] = Field(default=None, description="被监视的电路元件")
     data: Optional[Any] = Field(default=None, description="通道数据，一维数组")
 
     @field_serializer('data')
@@ -103,15 +103,33 @@ class ChannelBaseModel(ChannelType):
         return channel
 
     def sync_from(self, other) -> bool:
-        """从另一个通道对象同步差异的属性
+        """从另一个通道对象同步属性
+
+        同步规则：
+        - 如果 self 的属性为 None，用 other 的值更新（不管 other 的值是否为 None）
+        - 如果 other 的属性为 None，不进行更新
+        - 其他情况，如果值不同则更新
 
         参数:
-            other: 要同步的源通道对象
+            other: 要同步的源通道对象（通常是 Configure 中的通道）
         """
         if self.index != other.index:
             return False
-        for field_name in other.model_fields:
-            field_value = getattr(other, field_name)
-            if getattr(self, field_name) != field_value and field_value is not None:
-                setattr(self, field_name, field_value)
+        # 从类而不是实例访问 model_fields 以避免 Pydantic 警告
+        for field_name in other.__class__.model_fields:
+            self_value = getattr(self, field_name)
+            other_value = getattr(other, field_name)
+
+            # 如果 other 的值为 None，不更新
+            if other_value is None:
+                continue
+
+            # 如果 self 的值为 None，直接用 other 的值更新
+            if self_value is None:
+                setattr(self, field_name, other_value)
+                continue
+
+            # 其他情况，如果值不同则更新
+            if self_value != other_value:
+                setattr(self, field_name, other_value)
         return True

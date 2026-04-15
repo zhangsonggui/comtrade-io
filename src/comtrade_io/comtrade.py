@@ -194,28 +194,26 @@ class Comtrade(ComtradeModel):
     def _sync_channels(configure: Configure, comtrade_model: ComtradeModel) -> None:
         """同步Configure和ComtradeModel中的通道信息
 
-        按照index对比通道对象，当属性值不一致时将ComtradeModel中的属性同步到Configure，
-        最后将Configure中的Analogs和Statuses列表赋值给ComtradeModel。
+        按照index对比通道对象，使用Channel类的sync_from方法将Configure中的
+        属性同步到ComtradeModel中的通道对象上。sync_from方法会处理更新逻辑：
+        - ComtradeModel中为None的属性直接更新
+        - Configure中为None的属性不更新
 
         参数:
             configure: Configure对象
             comtrade_model: ComtradeModel对象
         """
-        # 同步模拟量通道
+        # 同步模拟量通道：从cfg_analog同步到cm_analog
         for idx, cfg_analog in configure.analogs.items():
             if idx in comtrade_model.analogs:
                 cm_analog = comtrade_model.analogs.get(idx)
-                cfg_analog.sync_from(cm_analog)
+                cm_analog.sync_from(cfg_analog)
 
-        # 同步数字量通道
+        # 同步数字量通道：从cfg_status同步到cm_status
         for idx, cfg_status in configure.statuses.items():
             if idx in comtrade_model.statuses:
                 cm_status = comtrade_model.statuses.get(idx)
-                cfg_status.sync_from(cm_status)
-
-        # 将Configure中的通道赋值给ComtradeModel
-        comtrade_model.analogs = configure.analogs
-        comtrade_model.statuses = configure.statuses
+                cm_status.sync_from(cfg_status)
 
     @classmethod
     def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
@@ -246,14 +244,16 @@ class Comtrade(ComtradeModel):
             return None
 
         # 3.解析dmf文件，获取ComtradeModel对象
-        cm = DmfElement.from_file(file_name=cf)
-        if cm is None:
+        _model = DmfElement.from_file(file_name=cf)
+        if _model is None:
             # 4. 解析inf文件，获取ComtradeModel对象
-            cm = Information.from_file(file_name=cf)
+            _model = Information.from_file(file_name=cf)
 
-        if cm:
+        if _model:
             # 5.将Configure对象中的通信信息更新到ComtradeModel对象
-            cls._sync_channels(configure, cm)
+            cls._sync_channels(configure, _model)
+            configure.analogs = _model.analogs
+            configure.statuses = _model.statuses
         else:
             # 6.根据Configure对象按照规则生成ComtradeModel对象
             pass
@@ -264,12 +264,12 @@ class Comtrade(ComtradeModel):
                 file=cf,
                 cfg=configure,
                 dat=data_content,
-                description=cm.description,
-                buses=cm.buses,
-                lines=cm.lines,
-                transformers=cm.transformers,
-                analogs=cm.analogs,
-                statuses=cm.statuses,
+                description=_model.description,
+                buses=_model.buses,
+                lines=_model.lines,
+                transformers=_model.transformers,
+                analogs=_model.analogs,
+                statuses=_model.statuses,
         )
         return result
 

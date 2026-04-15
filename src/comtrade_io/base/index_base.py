@@ -24,7 +24,7 @@ class ReferenceBaseModel(BaseModel):
     属性:
         reference: IEC61850参考路径字符串
     """
-    reference: Optional[str] = Field(default="", description="IEC61850参考")
+    reference: Optional[str] = Field(default=None, description="IEC61850参考")
 
 
 class IdxOrgBaseModel(IndexBaseModel, ReferenceBaseModel):
