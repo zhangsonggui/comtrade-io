@@ -182,6 +182,20 @@ CFG 配置文件解析类。
 | .hdr | 否 | 头文件，包含录波设备信息 |
 | .inf | 否 | 信息文件，包含额外的配置信息 |
 
+## 模块文档
+
+详细的模块文档请参考 [docs/modules/README.md](docs/modules/README.md)。
+
+### 主要模块
+
+- [Comtrade 主类](docs/modules/comtrade.md) - 主要入口类，封装完整的 COMTRADE 数据
+- [Configure (CFG 配置)](docs/modules/cfg/configure.md) - CFG 配置文件解析
+- [DataContent (DAT 数据)](docs/modules/data/data_content.md) - DAT 数据文件解析
+- [CffFile (CFF 单文件)](docs/modules/cff/cff.md) - CFF 单文件格式解析
+- [ComtradeFile](docs/modules/comtrade_file.md) - 文件路径封装类
+- [ComtradeModel](docs/modules/comtrade_model.md) - 数据模型基类
+- [Information (INF 信息)](docs/modules/inf/information.md) - INF 信息文件解析
+
 ## 许可证
 
 MIT 许可证
@@ -189,3 +203,6 @@ MIT 许可证
 ## 版本历史
 
 - 0.1.0: 初始版本，支持 COMTRADE 文件的基本读写功能
+- 0.1.1: 添加对 DMF 数据模型文件的支持
+- 0.1.2: 和0.1.1版本一致
+- 0.1.3: 添加对 CFF 单文件、INF 信息文件的支持

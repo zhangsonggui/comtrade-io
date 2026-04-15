@@ -182,6 +182,20 @@ Standard format for power system fault recording data:
 | .hdr | No | Header file - contains recorder device information |
 | .inf | No | Information file - contains additional configuration information |
 
+## Module Documentation
+
+Detailed module documentation is available at [docs/modules/README.md](docs/modules/README.md).
+
+### Main Modules
+
+- [Comtrade Class](docs/modules/comtrade.md) - Main entry class, encapsulates complete COMTRADE data
+- [Configure (CFG Config)](docs/modules/cfg/configure.md) - CFG configuration file parser
+- [DataContent (DAT Data)](docs/modules/data/data_content.md) - DAT data file parser
+- [CffFile (CFF Single File)](docs/modules/cff/cff.md) - CFF single file format parser
+- [ComtradeFile](docs/modules/comtrade_file.md) - File path wrapper class
+- [ComtradeModel](docs/modules/comtrade_model.md) - Data model base class
+- [Information (INF Info)](docs/modules/inf/information.md) - INF information file parser
+
 ## License
 
 MIT License
@@ -189,3 +203,6 @@ MIT License
 ## Version History
 
 - 0.1.0: Initial release - basic COMTRADE read/write support
+- 0.1.1: Added support for DMF data model files
+- 0.1.2: Same as version 0.1.1
+- 0.1.3: Added support for CFF single file and INF information files
