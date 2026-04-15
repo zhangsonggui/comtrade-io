@@ -27,6 +27,8 @@ class DataContent(BaseModel):
     参数:
         cfg(Configure): 配置
         file_name(Path): dat文件路径
+        dat_text(str): DAT数据文本(ASCII格式)，可选
+        dat_bytes(bytes): DAT数据字节(二进制格式)，可选
         data(pd.DataFrame): 数据内容，可选
     返回值
         DataContent|None(pandas.DataFrame): 数据对象
@@ -35,16 +37,26 @@ class DataContent(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     cfg: Configure = Field(..., description="配置文件")
-    file_name: Path | ComtradeFile | str = Field(..., description="dat文件路径")
+    file_name: Path | ComtradeFile | str | None = Field(default=None, description="dat文件路径")
+    dat_text: str | None = Field(default=None, description="DAT数据文本(ASCII格式)")
+    dat_bytes: bytes | None = Field(default=None, description="DAT数据字节(二进制格式)")
     data: pd.DataFrame = Field(default=None, description="数据内容")
 
     def model_post_init(self, context: Any):
-        cf = ComtradeFile.from_path(file_path=self.file_name)
-        if not cf.dat_path.is_enabled():
+        if self.dat_text is not None or self.dat_bytes is not None:
+            # 从内存数据读取
+            self.data = self.read_from_memory()
+        elif self.file_name is not None:
+            # 从文件读取
+            cf = ComtradeFile.from_path(file_path=self.file_name)
+            if not cf.dat_path.is_enabled():
+                return
+            self.file_name = cf.dat_path.path
+            self.data = self.read()
+        else:
             return
-        self.file_name = cf.dat_path.path
-        self.data = self.read()
-        if self.data.shape[0] != self.cfg.sampling.segments[-1].end_point:
+
+        if self.data is not None and self.data.shape[0] != self.cfg.sampling.segments[-1].end_point:
             logging.warning(
                 f"实际读取数据点：{self.data.shape[0]}与配置文件数据点{self.cfg.sampling.segments[-1].end_point}不一致，根据采样点时间进行修正")
             self.verify_and_recalculate_sampling()
@@ -118,6 +130,28 @@ class DataContent(BaseModel):
             content = self.from_ascii_file(expected_rows, expected_cols)
         else:
             content = self.from_binary_file(expected_rows)
+        return self._process_data(content, expected_rows, expected_cols)
+
+    def read_from_memory(self) -> pd.DataFrame | None:
+        """
+        从内存数据读取,返回数据对象(pandas.DataFrame)
+        """
+        expected_rows = self.cfg.sampling.segments[-1].end_point
+        expected_cols = self.cfg.channel_num.total + 2
+        if self.cfg.data_type == DataType.ASCII:
+            content = self.from_ascii_str(expected_rows, expected_cols)
+        else:
+            content = self.from_binary_bytes(expected_rows)
+        return self._process_data(content, expected_rows, expected_cols)
+
+    def _process_data(self, content: pd.DataFrame | None, expected_rows: int,
+                      expected_cols: int) -> pd.DataFrame | None:
+        """
+        处理读取的数据，设置格式并转换模拟量值
+        """
+        if content is None:
+            return None
+
         # 设置数据格式
         type_mapping = {i: "int32" for i in range(2)}
         type_mapping.update(
@@ -132,9 +166,6 @@ class DataContent(BaseModel):
         content = content.astype(type_mapping)
 
         # 将模拟量的原始采样值转换为瞬时值数值
-        if content is None:
-            return None
-
         # 使用向量化操作替代循环，提升性能
         analog_count = self.cfg.channel_num.analog
         if analog_count > 0:
@@ -161,6 +192,33 @@ class DataContent(BaseModel):
             content = content.fillna(0)
         except Exception as e:
             raise ValueError(f"读取数据文件失败:{str(e)}")
+        return self._process_ascii_content(content, expected_rows, expected_cols, str(self.file_name))
+
+    def from_ascii_str(self, expected_rows, expected_cols):
+        """
+        从ASCII格式字符串读取数据
+        """
+        if self.dat_text is None:
+            return None
+
+        try:
+            from io import StringIO
+            content = pd.read_csv(
+                    StringIO(self.dat_text),
+                    sep=",",
+                    na_values=["", "NA", "null", "NULL", "None", "-", "NaN"],
+                    keep_default_na=False,
+                    header=None,
+            )
+            content = content.fillna(0)
+        except Exception as e:
+            raise ValueError(f"读取ASCII数据失败:{str(e)}")
+        return self._process_ascii_content(content, expected_rows, expected_cols, "memory")
+
+    def _process_ascii_content(self, content: pd.DataFrame, expected_rows: int, expected_cols: int, source_name: str):
+        """
+        处理ASCII格式的DataFrame内容
+        """
         actual_rows, actual_cols = content.shape
         # 读取行列号和配置文件一致
         if actual_cols == expected_cols and actual_rows == expected_rows:
@@ -172,11 +230,11 @@ class DataContent(BaseModel):
                 try:
                     pd.isna(content.iloc[actual_rows, 0])
                     logging.warning(
-                        f"数据文件{self.file_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},需要重新计算采样信息"
+                            f"数据{source_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},需要重新计算采样信息"
                     )
                 except:
                     logging.warning(
-                        f"数据文件{self.file_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},数据类型错误进行剪切"
+                            f"数据{source_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},数据类型错误进行剪切"
                     )
                     content = content.iloc[:expected_rows, :]
         # 实际读取的列和通道数量不一样
@@ -184,12 +242,12 @@ class DataContent(BaseModel):
             digital_cols = actual_cols - self.cfg.channel_num.analog - 2
             if digital_cols < 0:
                 logging.error(
-                    f"数据文件{self.file_name}数据拆分错误，期望最少读取{self.cfg.channel_num.analog + 2}列，实际读取{actual_cols}列，不符合返回空数据！"
+                        f"数据{source_name}数据拆分错误，期望最少读取{self.cfg.channel_num.analog + 2}列，实际读取{actual_cols}列，不符合返回空数据！"
                 )
                 return None
             else:
                 logging.error(
-                    f"数据文件{self.file_name}数据拆分错误，期望读取{self.cfg.channel_num.total + 2}列，实际读取{actual_cols}列，丢弃数字量数据！"
+                        f"数据{source_name}数据拆分错误，期望读取{self.cfg.channel_num.total + 2}列，实际读取{actual_cols}列，丢弃数字量数据！"
                 )
                 content = content.iloc[:, : self.cfg.channel_num.analog + 2]
                 new_columns = [
@@ -204,8 +262,27 @@ class DataContent(BaseModel):
         """
         读取BINARY格式的数据文件
         """
-        # 文件大小
-        file_size = self.file_name.stat().st_size
+        try:
+            binary_data = self.file_name.read_bytes()
+        except Exception as e:
+            logging.error(f"读取{self.file_name}文件中的二进制数据失败: {e}")
+            return None
+        return self._process_binary_data(binary_data, expected_rows, str(self.file_name))
+
+    def from_binary_bytes(self, expected_rows):
+        """
+        从字节数据读取BINARY格式数据
+        """
+        if self.dat_bytes is None:
+            return None
+        return self._process_binary_data(self.dat_bytes, expected_rows, "memory")
+
+    def _process_binary_data(self, binary_data: bytes, expected_rows: int, source_name: str):
+        """
+        处理二进制数据
+        """
+        # 数据大小
+        data_size = len(binary_data)
         # 数字量占用字节长度
         digital_word_count = (self.cfg.channel_num.status + 15) // 16
         # 单个模拟量占用字节长度
@@ -220,21 +297,15 @@ class DataContent(BaseModel):
                 ("status", np.uint16, digital_word_count),  # 开关量（以16位字为单位）
             ]
         )
-        # 当个采样点的字节长度
+        # 单个采样点的字节长度
         item_size = dt.itemsize
-        sample_count = file_size // item_size
-
-        try:
-            binary_data = self.file_name.read_bytes()
-        except Exception as e:
-            logging.error(f"读取{self.file_name}文件中的二进制数据失败: {e}")
-            return None
+        sample_count = data_size // item_size
 
         if sample_count == expected_rows:
             samples = np.frombuffer(binary_data, dtype=dt)
         else:
             logging.warning(
-                f"期望采样点数量：{expected_rows},数据文件不是{item_size}的整数倍，实际读取{sample_count}个采样点"
+                    f"期望采样点数量：{expected_rows},数据不是{item_size}的整数倍，实际读取{sample_count}个采样点"
             )
             samples = np.frombuffer(binary_data, dtype=dt, count=sample_count)
 

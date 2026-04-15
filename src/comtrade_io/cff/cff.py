@@ -7,8 +7,8 @@ from typing import Optional, Union
 from pydantic import BaseModel, Field
 
 from comtrade_io.cfg import Configure
-from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.data import DataContent
+from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
 
 logging = get_logger()
@@ -155,31 +155,8 @@ class CffFile:
             logging.error(f"解析 CFG 配置失败: {e}")
             return None
 
-    def to_configure_from_file(self) -> Optional[Configure]:
-        """将 CFG 部分写入临时文件并通过 Configure.from_file 解析
-
-        返回:
-            Optional[Configure]: 配置对象，解析失败返回None
-        """
-        if not self.cfg_text:
-            logging.error("CFF 文件中未找到 CFG 配置部分")
-            return None
-
-        temp_dir = self.file_path.parent
-        temp_cfg_path = temp_dir / "_temp_cff.cfg"
-
-        try:
-            temp_cfg_path.write_text(self.cfg_text, encoding="utf-8", errors="replace")
-            return Configure.from_file(temp_cfg_path)
-        except Exception as e:
-            logging.error(f"解析 CFG 配置失败: {e}")
-            return None
-        finally:
-            if temp_cfg_path.exists():
-                temp_cfg_path.unlink()
-
     def to_data_content(self, cfg: Configure) -> Optional[DataContent]:
-        """将 DAT 部分转换为 DataContent 对象
+        """将 DAT 部分转换为 DataContent 对象（不生成临时文件）
 
         参数:
             cfg: Configure 配置对象
@@ -187,32 +164,34 @@ class CffFile:
         返回:
             Optional[DataContent]: 数据内容对象，解析失败返回None
         """
-        if not self.dat_text and not self.dat_bytes:
+        if not self.dat_text and not self.sections.dat_bytes:
             logging.error("CFF 文件中未找到 DAT 数据部分")
             return None
 
-        temp_dir = self.file_path.parent
-        temp_cfg_path = temp_dir / "_temp_cff.cfg"
-        temp_dat_path = temp_dir / "_temp_cff.dat"
-
         try:
-            temp_cfg_path.write_text(self.cfg_text, encoding="utf-8", errors="replace")
-
             if cfg.data_type.value == "ASCII":
-                temp_dat_path.write_text(self.dat_text, encoding="utf-8", errors="replace")
+                return DataContent(cfg=cfg, dat_text=self.dat_text)
             else:
-                temp_dat_path.write_bytes(self.dat_bytes)
-
-            cf = ComtradeFile.from_path(temp_cfg_path)
-            return DataContent(cfg=cfg, file_name=cf)
+                return DataContent(cfg=cfg, dat_bytes=self.sections.dat_bytes)
         except Exception as e:
             logging.error(f"解析 DAT 数据失败: {e}")
             return None
-        finally:
-            if temp_cfg_path.exists():
-                temp_cfg_path.unlink()
-            if temp_dat_path.exists():
-                temp_dat_path.unlink()
+
+    def to_information(self):
+        """将 INF 部分转换为 Information 对象（不生成临时文件）
+
+        返回:
+            Optional[ComtradeModel]: 信息模型对象，解析失败返回None
+        """
+        if not self.inf_text:
+            logging.debug("CFF 文件中未找到 INF 信息部分")
+            return None
+
+        try:
+            return Information.from_str(self.inf_text)
+        except Exception as e:
+            logging.error(f"解析 INF 信息失败: {e}")
+            return None
 
     @classmethod
     def from_file(cls, file_path: Union[str, Path]) -> "CffFile":

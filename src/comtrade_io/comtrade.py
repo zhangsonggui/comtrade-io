@@ -216,6 +216,47 @@ class Comtrade(ComtradeModel):
                 cm_status.sync_from(cfg_status)
 
     @classmethod
+    def _create_comtrade(cls, cf: ComtradeFile, configure: Configure,
+                         _model: ComtradeModel, data_content: DataContent) -> "Comtrade":
+        """
+        创建Comtrade对象的共享方法
+
+        参数:
+            cf: ComtradeFile 对象
+            configure: Configure 配置对象
+            _model: ComtradeModel 模型对象
+            data_content: DataContent 数据内容对象
+
+        返回:
+            Comtrade: 创建的Comtrade对象
+        """
+        return cls(
+                file=cf,
+                cfg=configure,
+                dat=data_content,
+                description=_model.description,
+                buses=_model.buses,
+                lines=_model.lines,
+                transformers=_model.transformers,
+                analogs=_model.analogs,
+                statuses=_model.statuses,
+        )
+
+    @classmethod
+    def _sync_model_with_configure(cls, configure: Configure, _model: ComtradeModel) -> None:
+        """
+        同步Configure和ComtradeModel的共享方法
+
+        参数:
+            configure: Configure 配置对象
+            _model: ComtradeModel 模型对象
+        """
+        cls._sync_channels(configure, _model)
+        _model.description.version = configure.header.version
+        configure.analogs = _model.analogs
+        configure.statuses = _model.statuses
+
+    @classmethod
     def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
         """
         从文件名反序列化Comtrade对象
@@ -251,58 +292,49 @@ class Comtrade(ComtradeModel):
 
         if _model:
             # 5.将Configure对象中的通信信息更新到ComtradeModel对象
-            cls._sync_channels(configure, _model)
-            # 将Configure对象中的录波版本信息更新到ComtradeModel对象
-            _model.description.version = configure.version
-            configure.analogs = _model.analogs
-            configure.statuses = _model.statuses
+            cls._sync_model_with_configure(configure, _model)
         else:
-            # 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
+            # todo 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
             pass
 
         # 7.解析dat文件
         data_content = DataContent(cfg=configure, file_name=cf)
-        result = cls(
-                file=cf,
-                cfg=configure,
-                dat=data_content,
-                description=_model.description,
-                buses=_model.buses,
-                lines=_model.lines,
-                transformers=_model.transformers,
-                analogs=_model.analogs,
-                statuses=_model.statuses,
-        )
-        return result
+
+        # 8.创建并返回Comtrade对象
+        return cls._create_comtrade(cf, configure, _model, data_content)
 
     @classmethod
     def _from_cff(cls, cf: ComtradeFile) -> "Comtrade|None":
         """
-        从 CFF 单文件加载 Comtrade 对象
+        从 CFF 单文件加载 Comtrade 对象（不生成临时文件）
 
         参数:
             cf: ComtradeFile 对象
         """
         cff_file = CffFile.from_file(cf.cff_path.path)
 
-        configure = cff_file.to_configure_from_file()
+        # 直接从内存解析CFG，不生成临时文件
+        configure = cff_file.to_configure()
         if configure is None:
             return None
 
-        data_model_fault = DmfElement.from_cfg(configure)
+        # 尝试从CFF解析INF
+        _model = cff_file.to_information()
+        if _model:
+            # 同步通道信息
+            cls._sync_model_with_configure(configure, _model)
+        else:
+            # 没有INF，创建空的ComtradeModel
+            # todo 6.根据Configure对象中的模拟量、开关量通道名称、相别、单位按照规则生成分组及Bus、Line、Transformer对象
+            _model = ComtradeModel()
+            _model.analogs = configure.analogs
+            _model.statuses = configure.statuses
+
+        # 直接从内存解析DAT，不生成临时文件
         data_content = cff_file.to_data_content(configure)
 
-        result = cls(
-                file=cf,
-                cfg=configure,
-                dat=data_content,
-                buses=data_model_fault.buses,
-                lines=data_model_fault.lines,
-                transformers=data_model_fault.transformers,
-                analogs=data_model_fault.analog_channels,
-                statuses=data_model_fault.status_channels,
-        )
-        return result
+        # 创建并返回Comtrade对象
+        return cls._create_comtrade(cf, configure, _model, data_content)
 
     def save_comtrade(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
         """
