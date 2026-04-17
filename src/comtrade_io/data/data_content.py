@@ -59,7 +59,7 @@ class DataContent(BaseModel):
         if self.data is not None and self.data.shape[0] != self.cfg.sampling.segments[-1].end_point:
             logging.warning(
                 f"实际读取数据点：{self.data.shape[0]}与配置文件数据点{self.cfg.sampling.segments[-1].end_point}不一致，根据采样点时间进行修正")
-            self.verify_and_recalculate_sampling()
+        self.verify_and_recalculate_sampling()
 
     def get_data(
             self,
@@ -165,8 +165,7 @@ class DataContent(BaseModel):
         )
         content = content.astype(type_mapping)
 
-        # 将模拟量的原始采样值转换为瞬时值数值
-        # 使用向量化操作替代循环，提升性能
+        # 使用向量化将模拟量的原始采样值转换为瞬时值数值
         analog_count = self.cfg.channel_num.analog
         if analog_count > 0:
             analog_list = list(self.cfg.analogs.values())
@@ -409,13 +408,13 @@ class DataContent(BaseModel):
     def verify_and_recalculate_sampling(self) -> Sampling:
         """
         校验采样时间并重新计算采样频率
-        
+
         1. 读取data文件中第二列的采样时间（微秒）
         2. 与cfg中的timemult相乘得出真正的采样时间
         3. 根据采样时间间隔重新计算采样频率，将相同采样频率的点放到一起
-        4. Segment中的samp是该段的采样频率，end_point是该段最后一个采样点索引
-        5. 周波默认20ms
-        
+        4. Segment中的samp是该段的采样频率，end_point是该段最后一个采样点号（累计点数）
+        5. 根据频率计算该段每周期的采样点数及该段采样点数
+
         返回:
             Sampling: 重新计算后的采样信息
         """
@@ -429,11 +428,26 @@ class DataContent(BaseModel):
         segment_starts = np.concatenate([[0], change_indices])
         segment_ends = np.concatenate([change_indices, [len(timestamps_us)]])
 
-        segments = [
-            Segment(samp=round(1_000_000.0 / time_diffs_us[start]), end_point=end)
-            for start, end in zip(segment_starts, segment_ends)
-            if time_diffs_us[start] > 0
-        ]
+        frequency = self.cfg.sampling.freq if self.cfg.sampling.freq else 50
+        cycle_ms = 1000.0 / frequency
+
+        segments = []
+        for start, end in zip(segment_starts, segment_ends):
+            if time_diffs_us[start] <= 0:
+                continue
+
+            samp = round(1_000_000.0 / time_diffs_us[start])
+            start_point = start
+            count = end - start
+            cycle_point_num = samp / frequency
+
+            segments.append(Segment(
+                    samp=samp,
+                    end_point=end,
+                    start_point=start_point,
+                    count=count,
+                    cycle_point_num=cycle_point_num
+            ))
 
         if not segments:
             return self.cfg.sampling
