@@ -3,7 +3,7 @@
 from comtrade_io.channel.channel import ChannelBaseModel
 from comtrade_io.channel.status import Status
 from comtrade_io.type import Contact
-from comtrade_io.utils import get_logger, str_split
+from comtrade_io.utils import get_logger, text_split
 
 logging = get_logger()
 
@@ -18,7 +18,7 @@ class StatusDispose:
         """
         从字符串中解析状态数据
         """
-        str_arr = str_split(_str)
+        str_arr = text_split(_str)
         # 使用前4个元素创建基础通道对象 (index, name, phase, equip)
         channel = ChannelBaseModel.from_str(','.join(str_arr[:4]))
         digital_dict = channel.model_dump()

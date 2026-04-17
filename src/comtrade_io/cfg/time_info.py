@@ -70,8 +70,8 @@ class TimeInfo(BaseModel):
         异常:
             ValueError: 当字符串格式不正确或字段长度不符合要求时抛出
         """
-        from comtrade_io.utils.str_split import str_split
-        parts = str_split(_str)
+        from comtrade_io.utils import text_split
+        parts = text_split(_str)
         if len(parts) < 2:
             raise ValueError(f"字符串分割后数组为[{parts}],长度不足")
         return cls(time_code=parts[0], local_code=parts[1])

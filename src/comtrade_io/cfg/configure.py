@@ -18,7 +18,7 @@ from comtrade_io.channel.analog import Analog
 from comtrade_io.channel.status import Status
 from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
-from comtrade_io.utils import get_logger, parse_float, str_split
+from comtrade_io.utils import get_logger, parse_float, text_split
 
 logging = get_logger()
 
@@ -103,7 +103,7 @@ class Configure(BaseModel):
         返回:
             Configure: 解析后的配置对象
         """
-        parts = str_split(_str, "\n")
+        parts = text_split(_str, "\n")
         # 处理文件头和采样通道数量
         header = Header.from_str(parts[0])
         channel_num = ChannelNum.from_str(parts[1])

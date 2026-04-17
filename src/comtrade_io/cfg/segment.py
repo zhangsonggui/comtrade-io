@@ -5,7 +5,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.utils.str_split import str_split
+from comtrade_io.utils import text_split
 
 
 class Segment(BaseModel):
@@ -51,7 +51,7 @@ class Segment(BaseModel):
         """
         if not isinstance(_str, str):
             return None
-        parts = str_split(_str)
+        parts = text_split(_str)
         samp = int(float(parts[0]))
         end_point = int(parts[1])
         if samp == 0 or end_point == 0:

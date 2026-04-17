@@ -1,6 +1,6 @@
 import pytest
 
-from comtrade_io.utils.str_split import str_split
+from comtrade_io.utils.test_utils import str_split
 
 
 def test_single_line_basic():

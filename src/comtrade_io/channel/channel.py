@@ -7,7 +7,7 @@ from pydantic import Field, field_serializer
 
 from comtrade_io.base.index_base import IdxOrgBaseModel
 from comtrade_io.type import AnalogChannelFlag, AnalogChannelType, DigitalChannelFlag, DigitalChannelType, Phase
-from comtrade_io.utils import str_split
+from comtrade_io.utils import text_split
 
 
 class ChannelType(IdxOrgBaseModel):
@@ -92,7 +92,7 @@ class ChannelBaseModel(ChannelType):
         异常:
             ValueError: 当字符串格式不正确或缺少必填字段时抛出
         """
-        str_arr = str_split(_str)
+        str_arr = text_split(_str)
         if (arr_len := len(str_arr)) < 2:
             raise ValueError(f"字符串分割后数组为[{str_arr}],长度不足")
         channel = cls(index=int(str_arr[0]), name=str_arr[1])

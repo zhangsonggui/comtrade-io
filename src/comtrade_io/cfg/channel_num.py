@@ -4,7 +4,7 @@ import json
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.utils.str_split import str_split
+from comtrade_io.utils import text_split
 
 
 class ChannelNum(BaseModel):
@@ -66,7 +66,7 @@ class ChannelNum(BaseModel):
         异常:
             ValueError: 当总数不等于模拟量与数字量之和时抛出
         """
-        parts = str_split(_str)
+        parts = text_split(_str)
         total = int(parts[0])
         analog = cls._parse_count(parts[1])
         status = cls._parse_count(parts[2])

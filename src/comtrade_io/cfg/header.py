@@ -6,7 +6,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from comtrade_io.type.version import Version
-from comtrade_io.utils.str_split import str_split
+from comtrade_io.utils import text_split
 
 
 class Header(BaseModel):
@@ -40,7 +40,7 @@ class Header(BaseModel):
         返回:
             Header: 解析后的文件头对象
         """
-        str_arr = str_split(_str)
+        str_arr = text_split(_str)
         if len(str_arr) < 2:
             return cls()
         if len(str_arr) < 3:
