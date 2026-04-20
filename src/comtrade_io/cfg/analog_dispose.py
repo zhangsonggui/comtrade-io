@@ -7,6 +7,42 @@ from comtrade_io.utils import get_logger, parse_float
 
 logging = get_logger()
 
+UNIT_PREFIXES = ('T', 'G', 'M', 'k', '', 'm', 'u', 'n', 'p')
+
+
+def _parse_unit_and_multiplier(unit_str: str):
+    """解析单位字符串，分离乘数和基本单位
+
+    支持:
+      - 合并格式: "kV", "mA", "MHz" 等
+      - 分开格式: 单位="V", multiplier="k"
+
+    参数:
+        unit_str: 单位字符串，如 "kV", "V" 等
+
+    返回:
+        tuple: (Unit枚举, 乘数字符串)
+    """
+    unit_str = unit_str.strip()
+    if not unit_str:
+        return Unit.NONE, ''
+
+    # 尝试匹配合并格式 (如 kV, mA)
+    for prefix in UNIT_PREFIXES:
+        if prefix and unit_str.startswith(prefix):
+            base_part = unit_str[len(prefix):]
+            combined = prefix + base_part
+            unit_enum = Unit.get_member_by_value(combined)
+            if unit_enum:
+                return unit_enum, prefix
+
+    # 无法分离，尝试直接匹配
+    unit_enum = Unit.get_member_by_value(unit_str)
+    if unit_enum:
+        return unit_enum, unit_enum.multiplier.value
+
+    return Unit.NONE, ''
+
 
 def amend_channel_name_error(_channel_arr: list) -> list:
     """
@@ -40,13 +76,15 @@ class AnalogDispose:
         str_arr = _str.strip().split(',')
         if len(str_arr) > 13:
             str_arr = amend_channel_name_error(str_arr)
-            logging.warning(f"{_str}参数超过规范的长度，怀疑ch_id(name)存在不合法的“,”,已尝试消除")
+            logging.warning(f"{_str}参数超过规范的长度，怀疑ch_id(name)存在不合法的", ",已尝试消除")
             if not str_arr:
-                logging.error(f"{_str}参数存在不合法的“,”，尝试合并失败，请检查")
-                raise ValueError(f"{_str}参数存在不合法的“,”，尝试合并失败，请检查")
+                logging.error(f"{_str}参数存在不合法的", "，尝试合并失败，请检查")
+                raise ValueError(f"{_str}参数存在不合法的", "，尝试合并失败，请检查")
         channel = ChannelBaseModel.from_str(','.join(str_arr[:4]))
         analog_dict = channel.model_dump()
-        analog_dict['unit'] = Unit.from_value(str_arr[4], Unit.NONE)
+        unit_obj, multiplier_prefix = _parse_unit_and_multiplier(str_arr[4])
+        analog_dict['unit'] = unit_obj
+        analog_dict['unit_multiplier'] = multiplier_prefix if multiplier_prefix else None
         analog_dict['multiplier'] = parse_float(str_arr[5], 1.0)
         analog_dict['offset'] = parse_float(str_arr[6], 0.0)
         analog_dict['delay'] = parse_float(str_arr[7], 0.0)

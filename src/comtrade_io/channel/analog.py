@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 
-from pydantic import Field
-
 from comtrade_io.base import ReferenceBaseModel
 from comtrade_io.channel.channel import ChannelBaseModel
 from comtrade_io.type import TranSide, Unit
 from comtrade_io.utils import get_logger
+from pydantic import Field
 
 logging = get_logger()
 
@@ -58,7 +57,6 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
     freq: float = Field(default=50.0, description="模拟量频率")
     au: Optional[float] = Field(default=None, description="模拟量标幺")
     bu: Optional[float] = Field(default=None, description="模拟量标幺")
-    unit_multiplier: Optional[str] = Field(default=None, description="模拟量增益系数")
 
     def __str__(self):
         """返回对象的字符串表示形式
@@ -91,7 +89,7 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f'au="{self.au}"',
             f'bu="{self.bu}"',
             f'sIUnit="{self.unit.value}"',
-            f'multiplier="{self.unit_multiplier}"',
+            f'multiplier="{self.unit.multiplier.value}"',
             f'primary="{self.primary}"',
             f'secondary="{self.secondary}"',
             f'ps="{self.tran_side.value}"',
@@ -113,7 +111,7 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f"Phase_ID={self.phase.value}",
             f"Monitored_Component={self.reference}",
             f"Channel_Units={self.unit.value}",
-            f"Channel_Multiplier={self.multiplier}",
+            f"Channel_Multiplier={self.unit.multiplier.value}",
             f"Channel_Offset={self.offset}",
             f"Channel_Skew={self.delay}",
             f"Range_Minimum_Limit_Value={self.min_value}",

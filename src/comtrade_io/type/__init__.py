@@ -10,5 +10,5 @@ from comtrade_io.type.phase import Phase
 from comtrade_io.type.tran_side import TranSide
 from comtrade_io.type.trans_type import TransWindLocation, WindFlag
 from comtrade_io.type.tv_install_site import TvInstallSite
-from comtrade_io.type.unit import Unit
+from comtrade_io.type.unit import BaseUnit, Multiplier, Unit
 from comtrade_io.type.version import Version
