@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from io import BytesIO, StringIO
 from pathlib import Path
 from typing import Optional
 
 import pandas as pd
+from pydantic import Field
+
 from comtrade_io.cff import CffFile
 from comtrade_io.cfg import Configure
 from comtrade_io.channel.analog import Analog
@@ -17,9 +18,9 @@ from comtrade_io.equipment.bus import Bus
 from comtrade_io.equipment.line import Line
 from comtrade_io.equipment.transformer import Transformer
 from comtrade_io.exporters import export_format
+from comtrade_io.exporters.json_exporter import _to_json
 from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
-from pydantic import Field
 
 logging = get_logger()
 
@@ -37,32 +38,7 @@ class Comtrade(ComtradeModel):
         data.pop("cfg", None)
         data.pop("dat", None)
         data.pop("file", None)
-        return self._to_json(data, indent)
-
-    @staticmethod
-    def _to_json(data: dict, indent: int | None = None) -> str:
-        import json
-        from uuid import UUID
-
-        def convert(obj):
-            if hasattr(obj, 'value'):
-                return obj.value
-            if isinstance(obj, UUID):
-                return str(obj)
-            if hasattr(obj, '__dict__'):
-                return str(obj)
-            return obj
-
-        def process(d):
-            if isinstance(d, dict):
-                return {k: process(v) for k, v in d.items()}
-            elif isinstance(d, list):
-                return [process(i) for i in d]
-            else:
-                return convert(obj)
-
-        data = process(data)
-        return json.dumps(data, ensure_ascii=False, default=str, indent=indent)
+        return _to_json(data, indent)
 
     def get_data(self) -> pd.DataFrame:
         return self.dat.data
@@ -286,124 +262,3 @@ class Comtrade(ComtradeModel):
             **kwargs: 其他参数
         """
         pass
-
-    def _export_multi_file(self, output_path: str | Path | ComtradeFile,
-                           data_format: str, **kwargs) -> str:
-        """导出多文件格式"""
-        cf = ComtradeFile.from_path(output_path)
-        self.cfg.write_file(cf)
-        self.dat.write_file(cf, data_type=data_format)
-        if cf.inf_path.path:
-            self.write_inf(str(cf.inf_path.path))
-        if cf.dmf_path.path:
-            self.write_dmf(str(cf.dmf_path.path))
-        return f"文件保存成功: cfg={cf.cfg_path.path}, dat={cf.dat_path.path}"
-
-    def _export_cff(self, output_path: str | Path | ComtradeFile,
-                    data_format: str, **kwargs) -> str:
-        """导出CFF单文件格式"""
-        cf = ComtradeFile.from_path(output_path)
-        cff_path = cf.cff_path.path
-        if not cff_path:
-            base_path = cf.cfg_path.path or cf.dat_path.path
-            if base_path:
-                cff_path = base_path.parent / (base_path.stem + '.cff')
-            else:
-                raise ValueError("无法确定CFF输出路径")
-
-        sections = []
-
-        sections.append("--- file type CFG ---")
-        sections.append(str(self.cfg))
-
-        sections.append("--- file type DAT ---")
-        if data_format == "ASCII":
-            buffer = StringIO()
-            self.dat.data.to_csv(buffer, header=False, index=False)
-            sections.append(buffer.getvalue())
-        else:
-            buffer = BytesIO()
-            from tempfile import NamedTemporaryFile
-            import os
-            with NamedTemporaryFile(delete=False, suffix='.dat') as tmp:
-                tmp_path = tmp.name
-            try:
-                tmp_cf = ComtradeFile.from_path(tmp_path)
-                self.dat.write_file(tmp_cf, data_type=data_format)
-                dat_bytes = Path(tmp_path).read_bytes()
-                sections.append(dat_bytes.decode('latin-1'))
-            finally:
-                os.unlink(tmp_path)
-
-        inf_content = self.to_inf()
-        if inf_content:
-            sections.append("--- file type INF ---")
-            sections.append(inf_content)
-
-        with open(cff_path, 'w', encoding='gbk') as f:
-            f.write('\n'.join(sections))
-
-        logging.info(f"CFF文件{cff_path}写入成功")
-        return f"文件保存成功: {cff_path}"
-
-    def _export_json(self, output_path: str | Path | ComtradeFile,
-                     data_format: str, **kwargs) -> bool:
-        """导出JSON格式"""
-        path = Path(output_path) if not isinstance(output_path, ComtradeFile) else \
-            (output_path.cfg_path.path.parent / (
-                        output_path.cfg_path.path.stem + '.json') if output_path.cfg_path.path else None)
-        if not path:
-            raise ValueError("无法确定JSON输出路径")
-        if path.suffix.lower() != '.json':
-            path = path.with_suffix('.json')
-        return self.save_json(path, indent=kwargs.get('indent'))
-
-    def _export_csv(self, output_path: str | Path | ComtradeFile,
-                    data_format: str, **kwargs) -> bool:
-        """导出CSV格式"""
-        path = Path(output_path) if not isinstance(output_path, ComtradeFile) else \
-            (output_path.cfg_path.path.parent / (
-                        output_path.cfg_path.path.stem + '.csv') if output_path.cfg_path.path else None)
-        if not path:
-            raise ValueError("无法确定CSV输出路径")
-        if path.suffix.lower() != '.csv':
-            path = path.with_suffix('.csv')
-
-        headers = ['Point', 'Time']
-        for idx in sorted(self.cfg.analogs.keys()):
-            a = self.cfg.analogs[idx]
-            headers.append(f"{a.name or f'A{idx}'}")
-        for idx in sorted(self.cfg.statuses.keys()):
-            s = self.cfg.statuses[idx]
-            headers.append(f"{s.name or f'D{idx}'}")
-
-        self.dat.data.to_csv(path, header=headers if kwargs.get('include_headers', True) else False, index=False)
-        logging.info(f"CSV文件{path}写入成功")
-        return True
-
-    def save_json(self, output_file_path: Path | str,
-                  indent: int | None = None):
-        """将Comtrade对象保存为JSON文件（包含dat数据）"""
-        data = self.model_dump(mode='python')
-        data.pop("cfg", None)
-        data.pop("file", None)
-
-        if self.dat is not None and self.dat.data is not None:
-            df = self.dat.data
-            analog_list = data.get("analogs", [])
-            for ch in analog_list:
-                if isinstance(ch, dict) and ch.get("index") is not None:
-                    col_idx = ch["index"] + 2
-                    if col_idx < df.shape[1]:
-                        ch["data"] = df.iloc[:, col_idx].tolist()
-            status_list = data.get("statuses", [])
-            for ch in status_list:
-                if isinstance(ch, dict) and ch.get("index") is not None:
-                    col_idx = self.cfg.channel_num.analog + ch["index"] + 2
-                    if col_idx < df.shape[1]:
-                        ch["data"] = df.iloc[:, col_idx].tolist()
-
-        with open(output_file_path, "w", encoding="utf-8") as f:
-            f.write(self._to_json(data, indent))
-        logging.info(f"json数据写入{output_file_path}成功")
-        return True
