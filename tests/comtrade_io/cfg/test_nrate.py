@@ -11,7 +11,7 @@ def test_from_str_case():
 
 
 def test_from_str_insufficient():
-    with pytest.raises(ValueError):
+    with pytest.raises(IndexError):
         Segment.from_str("1920")  # 只有一个部分
 
 

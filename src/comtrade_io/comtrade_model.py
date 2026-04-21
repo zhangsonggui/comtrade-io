@@ -3,14 +3,15 @@
 import logging
 from typing import Optional
 
-from pydantic import BaseModel, Field, model_serializer
+from pydantic import Field, model_serializer
 
 from comtrade_io.base.description import Description
+from comtrade_io.cfg.configure import Configure
 from comtrade_io.channel import Analog, Status
-from comtrade_io.equipment import Bus, Line, Transformer
+from comtrade_io.equipment import Bus, EquipmentGroup, Line, Transformer
 
 
-class ComtradeModel(BaseModel):
+class ComtradeModel(Configure):
     """COMTRADE数据模型基类
 
     定义COMTRADE数据模型的核心结构，包含电力系统设备（母线、线路、变压器）
@@ -27,8 +28,6 @@ class ComtradeModel(BaseModel):
     buses: Optional[list[Bus]] = Field(default_factory=list, description="母线")
     lines: Optional[list[Line]] = Field(default_factory=list, description="线路")
     transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器")
-    analogs: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道")
-    statuses: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道")
 
     @model_serializer(mode='wrap')
     def serialize_model(self, handler):
@@ -37,13 +36,71 @@ class ComtradeModel(BaseModel):
         参数:
             handler: Pydantic序列化处理器
 
-        返回:
+返回:
             dict: 序列化后的数据字典
         """
         data = handler(self)
         data['analogs'] = list(self.analogs.values())
         data['statuses'] = list(self.statuses.values())
         return data
+
+    @classmethod
+    def from_configure(cls, cfg: Configure) -> "ComtradeModel":
+        """根据配置文件生成ComtradeModel对象
+
+        使用 model_construct 避免重复验证，提升性能。
+
+        参数:
+            cfg: 配置文件对象
+        """
+        return cls.model_construct(
+                header=cfg.header,
+                channel_num=cfg.channel_num,
+                analogs=cfg.analogs,
+                statuses=cfg.statuses,
+                sampling=cfg.sampling,
+                start_time=cfg.start_time,
+                fault_time=cfg.fault_time,
+                data_type=cfg.data_type,
+                timemult=cfg.timemult,
+                time_info=cfg.time_info,
+                sampling_time_quality=cfg.sampling_time_quality,
+                description=Description(
+                        version=cfg.header.version,
+                        station_name=cfg.header.station,
+                        rec_dev_name=cfg.header.recorder,
+                ),
+        )
+
+    def from_equipment_group(self, eg: EquipmentGroup):
+        """根据设备组生成ComtradeModel对象
+
+        参数:
+            eg (EquipmentGroup): 设备组对象
+
+        返回:
+            ComtradeModel: 生成的ComtradeModel对象
+        """
+        self.buses = eg.buses
+        self.lines = eg.lines
+        self.transformers = eg.transformers
+        for idx, analog in eg.analogs.items():
+            analog_model = self.analogs.get(idx)
+            if analog_model:
+                analog_model.sync_from(analog)
+        for idx, status in eg.statuses.items():
+            status_model = self.statuses.get(idx)
+            if status_model:
+                status_model.sync_from(status)
+
+    def generate_equipment_group(self) -> EquipmentGroup:
+        """生成设备组对象
+
+        返回:
+            EquipmentGroup: 设备组对象
+        """
+        pass
+
 
     def get_bus_info(self, name: str) -> Bus | None:
         """根据名称获取母线信息
@@ -58,6 +115,7 @@ class ComtradeModel(BaseModel):
             return None
 
         return next((bus for bus in self.buses if bus.name == name), None)
+
 
     def get_line_info(self, name: str) -> Line | None:
         """根据名称获取线路信息
@@ -125,7 +183,8 @@ class ComtradeModel(BaseModel):
         返回:
             str: 部件模型字符串
         """
-        pass
+        desc_heard = self.description.to_dmf()
+
 
     def write_dmf(self, path: str) -> None:
         """将 ComtradeModel 模型写入DMF文件

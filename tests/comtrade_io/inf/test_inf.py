@@ -312,9 +312,9 @@ def test_empty_content():
 
 def test_comtrade_model_fields():
     """测试 ComtradeModel 字段类型正确"""
-    from comtrade_io.comtrade_model import ComtradeModel
+    from comtrade_io.equipment import EquipmentGroup
 
-    model = ComtradeModel()
+    model = EquipmentGroup()
     assert isinstance(model.analogs, dict)
     assert isinstance(model.statuses, dict)
     assert isinstance(model.buses, list)
@@ -393,3 +393,53 @@ def test_encoding_handling():
         )
         model = Information.from_file(p)
         assert model is not None
+
+
+def test_read_real_binary_inf_file():
+    """测试读取实际的binary_inf.inf文件"""
+    # 获取测试数据文件的路径
+    test_dir = Path(__file__).parent.parent.parent / "data"
+    inf_file = test_dir / "binary_inf.inf"
+
+    # 确保文件存在
+    assert inf_file.exists(), f"测试文件不存在: {inf_file}"
+
+    # 读取并解析INF文件
+    model = Information.from_file(inf_file)
+
+    # 验证解析成功
+    assert model is not None, "INF文件解析失败"
+
+    # 验证基本属性 - 根据binary_inf.inf文件内容
+    # 文件中有Total_Channel_Count=356, Analog_Channel_Count=155, Status_Channel_Count=201
+    # 但EquipmentGroup只包含analogs和statuses字典，我们可以验证这些字典的长度
+    # 注意：EquipmentGroup中的analogs和statuses是字典，键从1开始
+    assert len(model.analogs) == 155, f"模拟通道数量应为155，实际为{len(model.analogs)}"
+    assert len(model.statuses) == 201, f"状态通道数量应为201，实际为{len(model.statuses)}"
+
+    # 验证description中的站点名称（从文件第12行：Station_Name=220kV���վ����）
+    # 注意：中文字符可能被正确解析，我们至少验证非空
+    assert model.description is not None
+    assert model.description.station_name != ""
+
+    # 验证录波设备ID（Recording_Device_ID=ZH3D-1）
+    assert model.description.rec_dev_name == "ZH3D-1"
+
+    # 验证版本（Revision_Year=1999）
+    from comtrade_io.type import Version
+    assert model.description.version == Version.V1999
+
+    # 验证文件类型为BINARY（File_Type=BINARY）
+    # 这个信息可能不在EquipmentGroup中，但我们至少可以验证解析没有出错
+    # 同时验证其他设备部分（母线、线路、变压器）可能为空
+    # 根据文件内容，可能没有这些部分，我们只验证它们存在且为列表
+    assert isinstance(model.buses, list)
+    assert isinstance(model.lines, list)
+    assert isinstance(model.transformers, list)
+
+    print(f"成功解析INF文件: {inf_file}")
+    print(f"模拟通道数: {len(model.analogs)}")
+    print(f"状态通道数: {len(model.statuses)}")
+    print(f"站点名称: {model.description.station_name}")
+    print(f"录波设备: {model.description.rec_dev_name}")
+    print(f"版本: {model.description.version}")

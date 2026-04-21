@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from comtrade_io.comtrade_file import ComtradeFile
-from comtrade_io.type import DataType
+from comtrade_io.type.data_type import DataType
 from comtrade_io.utils import get_logger
 from .cff_exporter import export_cff
 from .csv_exporter import export_csv
@@ -24,14 +24,6 @@ class ExportFormat(str, Enum):
     CSV = "csv"
 
 
-class DataFormat(str, Enum):
-    """数据文件格式枚举"""
-    ASCII = "ASCII"
-    BINARY = "BINARY"
-    BINARY32 = "BINARY32"
-    FLOAT32 = "FLOAT32"
-
-
 def export_format(func: Callable) -> Callable:
     """
     导出格式装饰器 - 简洁版本
@@ -47,21 +39,15 @@ def export_format(func: Callable) -> Callable:
         # 验证并转换格式枚举
         try:
             export_fmt = ExportFormat(format.lower())
-            data_fmt = DataFormat(data_format.upper())
+            data_fmt = DataType.from_value(data_format.upper())
         except ValueError as e:
             raise ValueError(f"无效格式参数: {e}") from e
 
         # 保存原始data_type
         original_data_type = self.cfg.data_type
 
-        # 映射data_format到DataType
-        data_type_map = {
-            DataFormat.ASCII   : DataType.ASCII,
-            DataFormat.BINARY  : DataType.BINARY,
-            DataFormat.BINARY32: DataType.BINARY32,
-            DataFormat.FLOAT32 : DataType.FLOAT32,
-        }
-        self.cfg.data_type = data_type_map[data_fmt]
+        # 直接使用DataType枚举
+        self.cfg.data_type = data_fmt
 
         try:
             # 使用字典映射分发
@@ -71,7 +57,8 @@ def export_format(func: Callable) -> Callable:
                 ExportFormat.JSON      : export_json,
                 ExportFormat.CSV       : export_csv,
             }
-            return export_handlers[export_fmt](output_path, data_fmt.value, **kwargs)
+            logging.debug(f"使用{export_fmt.value}格式导出")
+            return export_handlers[export_fmt](self, output_path, data_fmt.value, **kwargs)
         finally:
             # 恢复原始data_type
             self.cfg.data_type = original_data_type

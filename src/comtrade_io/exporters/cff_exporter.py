@@ -42,6 +42,11 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
     sections.append("--- file type CFG ---")
     sections.append(str(comtrade.cfg))
 
+    inf_content = comtrade.to_inf()
+    if inf_content:
+        sections.append("--- file type INF ---")
+        sections.append(inf_content)
+
     sections.append("--- file type DAT ---")
     if data_format == "ASCII":
         buffer = StringIO()
@@ -58,12 +63,6 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
             sections.append(dat_bytes.decode('latin-1'))
         finally:
             os.unlink(tmp_path)
-
-    inf_content = comtrade.to_inf()
-    if inf_content:
-        sections.append("--- file type INF ---")
-        sections.append(inf_content)
-
     with open(cff_path, 'w', encoding='gbk') as f:
         f.write('\n'.join(sections))
 

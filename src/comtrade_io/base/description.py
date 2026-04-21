@@ -38,3 +38,18 @@ class Description(ReferenceBaseModel):
         xml = f'<?xml version="1.0" encoding="UTF-8"?>'
         xml += "\n" + f'<scl:ComtradeModel {",".join(attrs)}>'
         return xml
+
+    def to_info(self) -> str:
+        """
+        将描述文件转换为INF格式字符串
+
+        返回:
+            INF格式字符串
+        """
+        attrs = [
+            f"[Public File_Description]",
+            f"Station_Name={self.station_name}",
+            f"Recording_Device_ID={self.rec_dev_name}",
+            f"Revision_Year={self.version.value}"
+        ]
+        return "\n".join(attrs)

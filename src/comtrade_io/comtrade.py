@@ -15,6 +15,7 @@ from comtrade_io.comtrade_model import ComtradeModel
 from comtrade_io.data import DataContent
 from comtrade_io.dmf.dmf_element import DmfElement
 from comtrade_io.equipment.bus import Bus
+from comtrade_io.equipment.equipment_group import EquipmentGroup
 from comtrade_io.equipment.line import Line
 from comtrade_io.equipment.transformer import Transformer
 from comtrade_io.exporters import export_format
@@ -27,15 +28,13 @@ logging = get_logger()
 
 class Comtrade(ComtradeModel):
     file: ComtradeFile = Field(default_factory=ComtradeFile, description="文件路径")
-    cfg: Configure = Field(..., description="参数配置文件")
     dat: Optional[DataContent] = Field(default=None, description="故障数据")
 
     def model_dump_json(self, *, indent: int | None = None, **kwargs) -> str:
         """
-        将Comtrade模型转换为JSON字符串（不包含dat、cfg、file字段）
+        将Comtrade模型转换为JSON字符串（不包含dat、file字段）
         """
         data = self.model_dump(mode='python')
-        data.pop("cfg", None)
         data.pop("dat", None)
         data.pop("file", None)
         return _to_json(data, indent)
@@ -56,14 +55,14 @@ class Comtrade(ComtradeModel):
         根据通道标识获取状态量通道，并加载通道数据
         """
         digital = self.get_status_channel_info(index)
-        digital.data = self.dat.data.iloc[:, index + self.cfg.channel_num.analog + 1].to_numpy()
+        digital.data = self.dat.data.iloc[:, index + self.channel_num.analog + 1].to_numpy()
         return digital
 
     def _load_digital_data(self, channels: list, data: pd.DataFrame):
         """加载数字量通道数据到通道对象列表"""
         for chn in channels:
             if chn and chn.index is not None:
-                col_index = self.cfg.channel_num.analog + chn.index + 1
+                col_index = self.channel_num.analog + chn.index + 1
                 chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
 
     @staticmethod
@@ -184,41 +183,34 @@ class Comtrade(ComtradeModel):
     def _create_comtrade(cls,
                          file: ComtradeFile,
                          cfg: Configure,
-                         dat: DataContent,
-                         cm: ComtradeModel = None) -> "Comtrade":
+                         eg: EquipmentGroup = None,
+                         dat: DataContent = None) -> "Comtrade":
         """创建Comtrade对象的共享方法"""
-        if cm:
-            cls._sync_model_with_configure(cfg, cm)
+        _model = ComtradeModel.from_configure(cfg)
+        if eg:
+            _model.from_equipment_group(eg)
         else:
-            cm = cls._generate_model(cfg)
+            _model.generate_equipment_group()
 
-        return cls(
+        return cls.model_construct(
                 file=file,
-                cfg=cfg,
+                header=_model.header,
+                channel_num=_model.channel_num,
+                analogs=_model.analogs,
+                statuses=_model.statuses,
+                sampling=_model.sampling,
+                start_time=_model.start_time,
+                fault_time=_model.fault_time,
+                data_type=_model.data_type,
+                timemult=_model.timemult,
+                time_info=_model.time_info,
+                sampling_time_quality=_model.sampling_time_quality,
+                description=_model.description,
+                buses=_model.buses,
+                lines=_model.lines,
+                transformers=_model.transformers,
                 dat=dat,
-                description=cm.description,
-                buses=cm.buses,
-                lines=cm.lines,
-                transformers=cm.transformers,
-                analogs=cm.analogs,
-                statuses=cm.statuses,
         )
-
-    @classmethod
-    def _sync_model_with_configure(cls, configure: Configure, _model: ComtradeModel) -> None:
-        """同步Configure和ComtradeModel的共享方法"""
-        cls._sync_channels(configure, _model)
-        _model.description.version = configure.header.version
-        configure.analogs = _model.analogs
-        configure.statuses = _model.statuses
-
-    @classmethod
-    def _generate_model(cls, cfg: Configure) -> ComtradeModel:
-        """生成ComtradeModel对象"""
-        model = ComtradeModel()
-        model.analogs = cfg.analogs
-        model.statuses = cfg.statuses
-        return model
 
     @classmethod
     def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None":
@@ -232,12 +224,12 @@ class Comtrade(ComtradeModel):
         if configure is None:
             return None
 
-        _model = DmfElement.from_file(file_name=cf)
-        if _model is None:
-            _model = Information.from_file(file_name=cf)
+        eg = DmfElement.from_file(file_name=cf)
+        if eg is None:
+            eg = Information.from_file(file_name=cf)
 
         data_content = DataContent(cfg=configure, file_name=cf)
-        return cls._create_comtrade(cf, configure, data_content, _model)
+        return cls._create_comtrade(file=cf, cfg=configure, eg=eg, dat=data_content)
 
     @classmethod
     def _from_cff(cls, cf: ComtradeFile) -> "Comtrade|None":
@@ -246,9 +238,9 @@ class Comtrade(ComtradeModel):
         configure = cff_file.to_configure()
         if configure is None:
             return None
-        _model = cff_file.to_information()
+        eg = cff_file.to_information()
         data_content = cff_file.to_data_content(configure)
-        return cls._create_comtrade(cf, configure, data_content, _model)
+        return cls._create_comtrade(file=cf, cfg=configure, eg=eg, dat=data_content)
 
     @export_format
     def save_comtrade(self, output_file_path: ComtradeFile | Path | str, **kwargs):

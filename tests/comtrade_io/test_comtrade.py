@@ -30,10 +30,10 @@ class TestComtradeInitialization:
     def test_comtrade_initialization(self, comtrade):
         """测试Comtrade类初始化"""
         assert comtrade.file.cfg_path.path == CFG_FILE
-        assert comtrade.cfg.header.station == "GHBZ"
-        assert comtrade.cfg.channel_num.analog == 96
-        assert comtrade.cfg.channel_num.status == 192
-        assert comtrade.cfg.data_type.value == "BINARY"
+        assert comtrade.header.station == "GHBZ"
+        assert comtrade.channel_num.analog == 96
+        assert comtrade.channel_num.status == 192
+        assert comtrade.data_type.value == "BINARY"
 
     def test_data_loaded(self, comtrade):
         """测试数据已正确加载"""
@@ -215,7 +215,7 @@ class TestGetAnalogChannel:
 
     def test_get_all_analog_channels_data(self, comtrade, expected_df):
         """测试所有模拟量通道数据"""
-        analog_count = comtrade.cfg.channel_num.analog
+        analog_count = comtrade.channel_num.analog
         for ch_idx in range(1, analog_count + 1):
             analog = comtrade.get_analog_channel(ch_idx)
             col_idx = ch_idx + 1
@@ -242,7 +242,7 @@ class TestGetStatusChannel:
     def test_get_status_channel_data(self, comtrade, expected_df):
         """测试状态量通道数据"""
         status = comtrade.get_status_channel(1)
-        analog_count = comtrade.cfg.channel_num.analog
+        analog_count = comtrade.channel_num.analog
         col_idx = analog_count + 2
         actual = status.data
         expected = expected_df.iloc[:, col_idx].values.astype(int)
@@ -250,8 +250,8 @@ class TestGetStatusChannel:
 
     def test_get_all_status_channels_data(self, comtrade, expected_df):
         """测试所有状态量通道数据"""
-        analog_count = comtrade.cfg.channel_num.analog
-        digital_count = comtrade.cfg.channel_num.status
+        analog_count = comtrade.channel_num.analog
+        digital_count = comtrade.channel_num.status
         for ch_idx in range(1, digital_count + 1):
             status = comtrade.get_status_channel(ch_idx)
             col_idx = analog_count + ch_idx + 1

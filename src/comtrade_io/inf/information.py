@@ -11,9 +11,9 @@ from pydantic import BaseModel, Field
 from comtrade_io.base.description import Description
 from comtrade_io.channel import Analog, Status
 from comtrade_io.comtrade_file import ComtradeFile
-from comtrade_io.comtrade_model import ComtradeModel
 from comtrade_io.equipment import Bus, Line, Transformer
 from comtrade_io.equipment.branch import ACVBranch
+from comtrade_io.equipment.equipment_group import EquipmentGroup
 from comtrade_io.inf.analog_section import AnalogSection
 from comtrade_io.inf.bus_section import BusSection
 from comtrade_io.inf.description_section import DescriptionSection
@@ -93,8 +93,8 @@ class Information(BaseModel):
         return bus_id, matched_buses
 
     @classmethod
-    def from_file(cls, file_name: str | Path) -> 'ComtradeModel | None':
-        """从文件读取并解析INF内容，返回 ComtradeModel 实例"""
+    def from_file(cls, file_name: str | Path) -> 'EquipmentGroup | None':
+        """从文件读取并解析INF内容，返回 EquipmentGroup 实例"""
         cf = ComtradeFile.from_path(file_name)
         if not cf.inf_path.is_enabled():
             return None
@@ -112,11 +112,11 @@ class Information(BaseModel):
         return cls.from_str(inf_content)
 
     @classmethod
-    def from_str(cls, content: str) -> 'ComtradeModel':
+    def from_str(cls, content: str) -> 'EquipmentGroup':
         """从字符串解析INF内容，返回 ComtradeModel 实例"""
         inst = cls()
         inst.split_sections(content)
-        _model = ComtradeModel()
+        _model = EquipmentGroup()
 
         # 解析模拟通道（Analogs）直接使用已有对象
         _model.description = inst.file_description if hasattr(inst, 'file_description') else Description()

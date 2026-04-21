@@ -121,14 +121,13 @@ class TestComtradeFromCff:
         """验证从CFF文件创建Comtrade对象"""
         comtrade = Comtrade.from_file(cff_file_path)
         assert comtrade is not None
-        assert comtrade.cfg is not None
         assert comtrade.dat is not None
 
     def test_comtrade_cfg_from_cff(self, cff_file_path):
         """验证从CFF文件解析的配置"""
         comtrade = Comtrade.from_file(cff_file_path)
-        assert comtrade.cfg.channel_num.analog == 96
-        assert comtrade.cfg.channel_num.status == 192
+        assert comtrade.channel_num.analog == 96
+        assert comtrade.channel_num.status == 192
 
     def test_comtrade_dat_from_cff(self, cff_file_path):
         """验证从CFF文件解析的数据"""
@@ -141,18 +140,18 @@ class TestComtradeFromCff:
     def test_comtrade_analog_channels(self, cff_file_path):
         """验证模拟通道信息"""
         comtrade = Comtrade.from_file(cff_file_path)
-        assert len(comtrade.cfg.analogs) == 96
+        assert len(comtrade.analogs) == 96
         # 检查第一个模拟通道
-        first_analog = comtrade.cfg.analogs.get(1)
+        first_analog = comtrade.analogs.get(1)
         assert first_analog is not None
         assert first_analog.index == 1
 
     def test_comtrade_status_channels(self, cff_file_path):
         """验证状态通道信息"""
         comtrade = Comtrade.from_file(cff_file_path)
-        assert len(comtrade.cfg.statuses) == 192
+        assert len(comtrade.statuses) == 192
         # 检查第一个状态通道
-        first_status = comtrade.cfg.statuses.get(1)
+        first_status = comtrade.statuses.get(1)
         assert first_status is not None
         assert first_status.index == 1
 

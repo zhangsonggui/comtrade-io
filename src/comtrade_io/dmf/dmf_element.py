@@ -9,34 +9,22 @@ DMF元素模块
 """
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Optional
 from xml.etree.ElementTree import Element
 
-from pydantic import BaseModel, Field
-
-from comtrade_io.base.description import Description
-from comtrade_io.channel import Analog, Status
 from comtrade_io.comtrade_file import ComtradeFile
-from comtrade_io.comtrade_model import ComtradeModel
 from comtrade_io.dmf.analog_element import AnalogElement
 from comtrade_io.dmf.bus_element import BusElement
 from comtrade_io.dmf.description_element import DescriptionElement
 from comtrade_io.dmf.line_element import LineElement
 from comtrade_io.dmf.status_element import StatusElement
 from comtrade_io.dmf.transformer_element import TransformerElement
-from comtrade_io.equipment import Bus, Line, Transformer
+from comtrade_io.equipment.equipment_group import EquipmentGroup
 from comtrade_io.utils import get_logger
 
 logging = get_logger(__name__)
 
 
-class DmfElement(BaseModel):
-    description: Description = Field(default_factory=Description, description="描述文件")
-    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线")
-    lines: Optional[list[Line]] = Field(default_factory=list, description="线路")
-    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器")
-    analogs: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道")
-    statuses: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道")
+class DmfElement(EquipmentGroup):
 
     @classmethod
     def from_xml(cls, element: Element, ns: dict) -> 'DmfElement':
@@ -147,7 +135,7 @@ class DmfElement(BaseModel):
                         break
 
     @classmethod
-    def from_file(cls, file_name: Path | ComtradeFile | str) -> 'ComtradeModel|None':
+    def from_file(cls, file_name: Path | ComtradeFile | str) -> 'EquipmentGroup|None':
         """
         从文件路径中加载并解析数据模型
 
@@ -170,16 +158,15 @@ class DmfElement(BaseModel):
         try:
             tree = ET.parse(dmf_path)
             root = tree.getroot()
-            dmf_element = cls.from_xml(root, ns)
-            _model = ComtradeModel(
-                    description=dmf_element.description if hasattr(dmf_element, 'description') else None,
-                    buses=dmf_element.buses if hasattr(dmf_element, 'buses') else None,
-                    lines=dmf_element.lines if hasattr(dmf_element, 'lines') else None,
-                    transformers=dmf_element.transformers if hasattr(dmf_element, 'transformers') else None,
-                    analogs=dmf_element.analogs if hasattr(dmf_element, 'analogs') else None,
-                    statuses=dmf_element.statuses if hasattr(dmf_element, 'statuses') else None
+            _dmf = cls.from_xml(root, ns)
+            return EquipmentGroup(
+                    description=_dmf.description,
+                    buses=_dmf.buses,
+                    lines=_dmf.lines,
+                    transformers=_dmf.transformers,
+                    analogs=_dmf.analogs,
+                    statuses=_dmf.statuses
             )
-            return _model
         except ET.ParseError as e:
             error_str = f"文件{dmf_path}解析错误,{str(e)}"
             logging.warning(error_str)
