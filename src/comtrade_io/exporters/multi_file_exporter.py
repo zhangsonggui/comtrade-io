@@ -26,7 +26,7 @@ def export_multi_file(comtrade: "Comtrade", output_path: "str | Path | ComtradeF
         成功消息
     """
     cf = ComtradeFile.from_path(output_path)
-    comtrade.cfg.write_file(cf)
+    comtrade.write_cfg(str(cf.cfg_path.path))
     comtrade.dat.write_file(cf, data_type=data_format)
     if cf.inf_path.path:
         comtrade.write_inf(str(cf.inf_path.path))

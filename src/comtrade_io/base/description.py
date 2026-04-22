@@ -36,10 +36,10 @@ class Description(ReferenceBaseModel):
             f'xsi:schemaLocation="{self.xsi_schema_location}"'
         ]
         xml = f'<?xml version="1.0" encoding="UTF-8"?>'
-        xml += "\n" + f'<scl:ComtradeModel {",".join(attrs)}>'
+        xml += "\n" + f'<scl:ComtradeModel {" ".join(attrs)}>'
         return xml
 
-    def to_info(self) -> str:
+    def to_inf(self) -> str:
         """
         将描述文件转换为INF格式字符串
 

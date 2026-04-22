@@ -44,10 +44,10 @@ def export_format(func: Callable) -> Callable:
             raise ValueError(f"无效格式参数: {e}") from e
 
         # 保存原始data_type
-        original_data_type = self.cfg.data_type
+        original_data_type = self.data_type
 
         # 直接使用DataType枚举
-        self.cfg.data_type = data_fmt
+        self.data_type = data_fmt
 
         try:
             # 使用字典映射分发
@@ -61,6 +61,6 @@ def export_format(func: Callable) -> Callable:
             return export_handlers[export_fmt](self, output_path, data_fmt.value, **kwargs)
         finally:
             # 恢复原始data_type
-            self.cfg.data_type = original_data_type
+            self.data_type = original_data_type
 
     return wrapper

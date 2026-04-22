@@ -43,7 +43,7 @@ class Transformer(Equipment):
         xml = f"\t<scl:Transformer {' '.join(attrs)}>"
 
         for trans_wind in self.trans_winds:
-            xml += "\n\t\t" + str(trans_wind)
+            xml += "\n\t\t" + trans_wind.to_dmf()
         xml += self._get_ana_chn_xml()
         xml += self._get_sta_chn_xml()
         xml += "\n\t</scl:Transformer>"
@@ -60,6 +60,9 @@ class Transformer(Equipment):
             f"[PRIVATELY Transformer_#{self.index}]",
             f"DEV_ID={self.name}",
             f"SYS_ID={self.uuid}",
-            f"RATED_POWER={self.capacity}MVA"
+            f"CAPACITY={self.capacity}(MVA)",
+            f"WINDING_NUM={len(self.trans_winds)}"
         ]
+        for trans_wind in self.trans_winds:
+            attrs.append(trans_wind.to_inf())
         return "\n".join(attrs)

@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 
+from pydantic import Field
+
 from comtrade_io.base import ReferenceBaseModel
 from comtrade_io.channel.channel import ChannelBaseModel
 from comtrade_io.type import TranSide, Unit
 from comtrade_io.utils import get_logger
-from pydantic import Field
 
 logging = get_logger()
 
@@ -83,8 +84,8 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
         attrs = [
             f'idx_cfg="{self.index}"',
             f'idx_org="{self.idx_org}"',
-            f'type="{self.type.value}"',
-            f'flag="{self.flag.value}"',
+            f'type="{self.type.value if self.type else ""}"',
+            f'flag="{self.flag.value if self.flag else ""}"',
             f'freq="{self.freq}"',
             f'au="{self.au}"',
             f'bu="{self.bu}"',
@@ -97,7 +98,7 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f'ph="{self.phase.value}"'
         ]
 
-        return f'<scl:Analog {" ".join(attrs)} />'
+        return f'\t<scl:Analog {" ".join(attrs)} />'
 
     def to_inf(self) -> str:
         """将模拟量通道对象转换为模拟部件模型字符串

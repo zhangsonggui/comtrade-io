@@ -169,13 +169,36 @@ class ComtradeModel(Configure):
             return None
         return self.statuses.get(index)
 
+    def to_cfg(self):
+        """将 ComtradeModel 模型转换为CFG格式字符串
+
+        返回:
+            str: 部件模型字符串
+        """
+        return super().__str__()
+
     def to_dmf(self) -> str:
         """将 ComtradeModel 对象转换为DMF格式XML字符串
 
         返回:
             str: 转换后的DMF格式XML字符串
         """
-        pass
+        attrs = [
+            f"{str(self.description)}",
+
+        ]
+        for analog in self.analogs.values():
+            attrs.append(analog.to_dmf())
+        for status in self.statuses.values():
+            attrs.append(status.to_dmf())
+        for bus in self.buses:
+            attrs.append(bus.to_dmf())
+        for line in self.lines:
+            attrs.append(line.to_dmf())
+        for trans in self.transformers:
+            attrs.append(trans.to_dmf())
+        attrs.append(f"</scl:ComtradeModel>")
+        return "\n".join(attrs)
 
     def to_inf(self) -> str:
         """将 ComtradeModel 模型转换为部件模型
@@ -183,8 +206,50 @@ class ComtradeModel(Configure):
         返回:
             str: 部件模型字符串
         """
-        desc_heard = self.description.to_dmf()
+        inf_str = self.description.to_inf()
+        attrs = [
+            f"Total_Channel_Count={self.channel_num.total}",
+            f"Analog_Channel_Count={self.channel_num.analog}",
+            f"Status_Channel_Count={self.channel_num.status}",
+            f"Line_Frequency={self.sampling.freq}",
+            f"Sample_Rate_Count={len(self.sampling)}",
+        ]
+        for idx, segment in enumerate(self.sampling.segments):
+            attrs.append(f"Sample_Rate_#{idx + 1}={segment.samp}")
+            attrs.append(f"End_Sample_Rate_#{idx + 1}={segment.end_point}")
+        attrs.append(f"File_Start_Time={str(self.start_time)}")
+        attrs.append(f"Trigger_Time={str(self.fault_time)}")
+        attrs.append(f"File_Type={self.data_type.value}")
+        attrs.append(f"Time_Multiplier={self.timemult}")
 
+        for analog in self.analogs.values():
+            attrs.append(f"\n")
+            attrs.append(analog.to_inf())
+        for status in self.statuses.values():
+            attrs.append(f"\n")
+            attrs.append(status.to_inf())
+        for bus in self.buses:
+            attrs.append(f"\n")
+            attrs.append(bus.to_inf())
+        for line in self.lines:
+            attrs.append(f"\n")
+            attrs.append(line.to_inf())
+        for transformer in self.transformers:
+            attrs.append(f"\n")
+            attrs.append(transformer.to_inf())
+        attr_str = "\n".join(attrs)
+        return inf_str + "\n" + attr_str
+
+    def write_cfg(self, path: str) -> None:
+        """将 ComtradeModel 模型写入CFG文件
+
+        参数:
+            path: CFG文件路径
+
+        异常:
+            IOError: 当文件写入失败时抛出
+        """
+        super().write_file(path)
 
     def write_dmf(self, path: str) -> None:
         """将 ComtradeModel 模型写入DMF文件
@@ -195,7 +260,7 @@ class ComtradeModel(Configure):
         异常:
             IOError: 当文件写入失败时抛出
         """
-        with open(path, 'w', encoding='utf-8') as f:
+        with open(path, 'w', encoding='utf-8', errors='ignore') as f:
             f.write(self.to_dmf())
         logging.info(f"DMF文件{path}写入成功")
 
@@ -208,6 +273,6 @@ class ComtradeModel(Configure):
         异常:
             IOError: 当文件写入失败时抛出
         """
-        with open(path, 'w', encoding='gbk') as f:
+        with open(path, 'w', encoding='gbk', errors='ignore') as f:
             f.write(self.to_inf())
         logging.info(f"INF文件{path}写入成功")

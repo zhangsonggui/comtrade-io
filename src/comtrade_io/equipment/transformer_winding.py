@@ -29,7 +29,10 @@ class WindGroup(BaseModel):
         返回:
             格式化字符串，表示绕组标识符信息
         """
-        return f"{self.wind_flag.value}{12 if self.angle == 0 else 11}"
+        angle_str = ""
+        if self.angle != 0:
+            angle_str = f"{self.angle}"
+        return f"{self.wind_flag.value}{angle_str}"
 
     @classmethod
     def from_str(cls, _str: str):
@@ -65,7 +68,7 @@ class Igap(BaseModel):
         """
         zgap_idx = self.zgap.index if self.zgap else 0
         zsgap_idx = self.zsgap.index if self.zsgap else 0
-        xml = f"<scl:Igap zGap_idx={zgap_idx} zSGap_idx={zsgap_idx} />"
+        xml = f"<scl:Igap zGap_idx='{zgap_idx}' zSGap_idx='{zsgap_idx}' />"
         return xml
 
 
@@ -107,12 +110,11 @@ class TransformerWinding(BaseModel):
             格式化的XML字符串，包含绕组及其所有子元素的完整表示
         """
         attrs = [
-            f'location={self.trans_wind_location.value}"',
-            f'srcRef={self.reference}"',
-            f'VRtg={self.rated_voltage}"',
-            f'ARtg={self.rated_current}"',
-            f'bran_num={self.bran_num}"',
-            f'bus_ID={self.bus_id}"',
+            f'location="{self.trans_wind_location.value}"',
+            f'VRtg="{self.rated_voltage}"',
+            f'ARtg="{self.rated_current}"',
+            f'bran_num="{self.bran_num.value}"',
+            f'bus_ID="{self.bus_id}"',
             f'wG="{str(self.wind_group)}"'
         ]
         attrs = [attr for attr in attrs if attr is not None]
@@ -124,5 +126,28 @@ class TransformerWinding(BaseModel):
         xml += "\n\t\t</scl:TransformerWinding>"
         return xml
 
-    def to_info(self):
-        pass
+    def to_inf(self):
+        """
+        将变压器绕组转换为INF格式字符串
+
+        返回:
+            INF格式字符串
+        """
+        if self.trans_wind_location == TransWindLocation.HIGH:
+            _flag = "H"
+            _idx = 1
+        elif self.trans_wind_location == TransWindLocation.LOW:
+            _flag = "L"
+            _idx = 3
+        else:
+            _flag = "M"
+            _idx = 5
+        acv = [ac.index for ac in (self.voltage.ua, self.voltage.ub, self.voltage.uc)]
+        attrs = [
+            f"{_flag}_PARAM={str(self.wind_group)},{self.rated_voltage}(kV),{self.bran_num.value}",
+            f"TV_CHNS={','.join(str(x) for x in acv)}"
+        ]
+        for idx, acc_bran in enumerate(self.currents):
+            acc_ids = [acc.index for acc in (acc_bran.ia, acc_bran.ib, acc_bran.ic)]
+            attrs.append(f"TA_Id_#{idx + _idx}={','.join(str(x) for x in acc_ids)}")
+        return "\n".join(attrs)

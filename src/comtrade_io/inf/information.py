@@ -101,7 +101,7 @@ class Information(BaseModel):
         inf_path = cf.inf_path.path
         logging.debug(f"开始解析INF文件: {inf_path}")
         try:
-            inf_content = inf_path.read_text(encoding='gbk')
+            inf_content = inf_path.read_text(encoding='gbk', errors='replace')
         except UnicodeDecodeError:
             logging.warning(f"配置文件{inf_path}编码不是GBK编码，尝试使用UTF8解析")
             try:

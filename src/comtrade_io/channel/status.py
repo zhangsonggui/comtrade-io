@@ -42,12 +42,12 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         attrs = [
             f'idx_cfg="{self.index}"',
             f'idx_org="{self.idx_org}"',
-            f'type="{self.type.name}"',
-            f'flag="{self.flag.name}"',
+            f'type="{self.type.value if self.type else ""}"',
+            f'flag="{self.flag.value if self.flag else ""}"',
             f'contact="{self.contact.name}"',
             f'srcRef="{self.reference}"'
         ]
-        return f"\t<scl:StatusChannel {''.join(attrs)} />"
+        return f"\t<scl:StatusChannel {' '.join(attrs)} />"
 
     def to_inf(self):
         """将数字量通道对象转换为INF格式字符串

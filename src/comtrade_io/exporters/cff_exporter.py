@@ -36,20 +36,20 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
             cff_path = base_path.parent / (base_path.stem + '.cff')
         else:
             raise ValueError("无法确定CFF输出路径")
+    logging.debug(f"正在输出CFG部分")
+    sections = ["--- file type CFG ---", str(comtrade.to_cfg())]
 
-    sections = []
-
-    sections.append("--- file type CFG ---")
-    sections.append(str(comtrade.cfg))
-
+    logging.debug(f"正在输出INF部分")
     inf_content = comtrade.to_inf()
     if inf_content:
         sections.append("--- file type INF ---")
         sections.append(inf_content)
 
+    logging.debug(f"正在输出DAT部分")
     sections.append("--- file type DAT ---")
     if data_format == "ASCII":
         buffer = StringIO()
+
         comtrade.dat.data.to_csv(buffer, header=False, index=False)
         sections.append(buffer.getvalue())
     else:
@@ -60,10 +60,10 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
             tmp_cf = ComtradeFile.from_path(tmp_path)
             comtrade.dat.write_file(tmp_cf, data_type=data_format)
             dat_bytes = Path(tmp_path).read_bytes()
-            sections.append(dat_bytes.decode('latin-1'))
+            sections.append(dat_bytes.decode('latin-1', errors='ignore'))
         finally:
             os.unlink(tmp_path)
-    with open(cff_path, 'w', encoding='gbk') as f:
+    with open(cff_path, 'w', encoding='gbk', errors='ignore') as f:
         f.write('\n'.join(sections))
 
     logging.info(f"CFF文件{cff_path}写入成功")

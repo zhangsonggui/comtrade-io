@@ -22,7 +22,7 @@ class Bus(Equipment):
             str: 转换后的DMF格式XML字符串
         """
         attrs = [
-            f'idx"={self.index}"',
+            f'idx="{self.index}"',
             f'bus_name="{self.name}"',
             f'srcRef="{self.reference}"',
             f'VRtg="{self.rated_primary_voltage}"',

@@ -26,9 +26,9 @@ class Line(Equipment):
     def to_dmf(self) -> str:
         """将线路部件转换为DMF格式XML字符串"""
         attrs = [
-            f"idx={self.index}",
-            f"line_name={self.name}",
-            f"bus_ID={self.bus_index}",
+            f'idx="{self.index}"',
+            f'line_name="{self.name}"',
+            f'bus_ID="{self.bus_index}"',
             f'srcRef="{self.reference}"',
             f'VRtg="{self.rated_primary_voltage}"',
             f'ARtg="{self.rated_primary_current}"',
