@@ -6,7 +6,9 @@ from pydantic import BaseModel, Field
 
 from comtrade_io.base.description import Description
 from comtrade_io.channel import Analog, Status
-from comtrade_io.equipment import Bus, Line, Transformer
+from comtrade_io.equipment.bus import Bus
+from comtrade_io.equipment.line import Line
+from comtrade_io.equipment.transformer import Transformer
 
 
 class EquipmentGroup(BaseModel):
