@@ -168,7 +168,7 @@ class Configure(BaseModel):
             return None
         cfg_path = cf.cfg_path.path
         try:
-            cfg_content = cfg_path.read_text(encoding="GBK")
+            cfg_content = cfg_path.read_text(encoding="GBK", errors='replace')
         except UnicodeDecodeError:
             logging.warning(f"配置文件{cfg_path}编码不是GBK编码，尝试使用UTF8解析")
             try:
@@ -195,7 +195,7 @@ class Configure(BaseModel):
         output_file_path = ComtradeFile.from_path(output_file_path)
         cfg_path = output_file_path.cfg_path.path
 
-        with open(cfg_path, "w", encoding="gbk") as f:
+        with open(cfg_path, "w", encoding="gbk", errors='ignore') as f:
             f.write(self.__str__())
         logging.info(f"配置文件{cfg_path}写入成功")
         return True
