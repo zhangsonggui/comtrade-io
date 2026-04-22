@@ -49,7 +49,7 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         ]
         return f"\t<scl:StatusChannel {''.join(attrs)} />"
 
-    def to_info(self):
+    def to_inf(self):
         """将数字量通道对象转换为INF格式字符串
 
         返回:
