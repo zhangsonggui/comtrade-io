@@ -307,10 +307,10 @@ class DataContent(BaseModel):
 
         segments = []
         for start, end in zip(segment_starts, segment_ends):
-            if time_diffs_us[start] <= 0:
+            if time_diffs_us[start] <= 0 or not np.isfinite(time_diffs_us[start]):
                 continue
 
-            samp = round(1_000_000.0 / time_diffs_us[start])
+            samp = int(np.ceil(1_000_000.0 / time_diffs_us[start]))
             start_point = start
             count = end - start
             cycle_point_num = samp / frequency
