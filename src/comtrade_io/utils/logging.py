@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 """日志管理模块
 
-提供统一的日志配置和获取功能，支持环境变量配置、控制台输出和文件输出。
+基于 loguru 提供统一的日志配置和获取功能，支持环境变量配置、控制台输出和文件输出。
+异常日志自动记录 traceback，并定位模块、方法、行号。
 """
 
-import inspect
-import logging
+import sys
 from pathlib import Path
 from typing import Optional
+
+from loguru import logger
 
 # 环境文件路径
 _env_files = [
@@ -18,9 +20,10 @@ _env_files = [
 
 # 默认配置常量
 _DEFAULT_LEVEL = "WARNING"
-_DEFAULT_FORMAT = "%(asctime)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s"
 _DEFAULT_LOG_TO_FILE = False
 _DEFAULT_LOG_FILE_PATH = "comtrade-io.log"
+_DEFAULT_LOG_FILE_MAX_MB = "5"
+_DEFAULT_LOG_FILE_BACKUP_COUNT = "5"
 
 
 def _load_env() -> dict:
@@ -49,108 +52,20 @@ def _load_env() -> dict:
     return env
 
 
-def _level_from_str(level_str: str) -> int:
-    """将日志级别字符串转换为logging模块的级别常量
-
-    参数:
-        level_str: 日志级别字符串，如"DEBUG"、"INFO"、"WARNING"等
-
-    返回:
-        int: 对应的logging级别常量
-    """
-    level = level_str.upper()
-    mapping = {
-        "CRITICAL": logging.CRITICAL,
-        "ERROR"   : logging.ERROR,
-        "WARNING" : logging.WARNING,
-        "WARN"    : logging.WARNING,
-        "INFO"    : logging.INFO,
-        "DEBUG"   : logging.DEBUG,
-        "NOTSET"  : logging.NOTSET,
-    }
-    return mapping.get(level, logging.INFO)
-
-
 # 加载环境变量配置
 _env = _load_env()
 _LOG_LEVEL = _env.get("LOG_LEVEL", _DEFAULT_LEVEL)
-_LOG_FORMAT = _env.get("LOG_FORMAT", _DEFAULT_FORMAT)
-
-# 文件日志配置（可选）
-_log_to_file_str = _env.get("LOG_TO_FILE", "")
-_LOG_TO_FILE = _log_to_file_str.lower() in ("true", "1", "yes", "on") if _log_to_file_str else _DEFAULT_LOG_TO_FILE
-_LOG_FILE_PATH = _env.get("LOG_FILE_PATH",_DEFAULT_LOG_FILE_PATH)
-_LOG_FILE_MAX_MB = int(_env.get("LOG_FILE_MAX_MB", "5") or 0)
-_LOG_FILE_BACKUP_COUNT = int(_env.get("LOG_FILE_BACKUP_COUNT", "5") or 0)
-
-
-class LineNoFormatter(logging.Formatter):
-    """日志格式化器
-
-    继承自logging.Formatter，提供带行号的日志格式化功能。
-    """
-
-    def format(self, record: logging.LogRecord) -> str:
-        """格式化日志记录
-
-        参数:
-            record: 日志记录对象
-
-        返回:
-            str: 格式化后的日志字符串
-        """
-        return super().format(record)
-
-
-def _get_root_handler(level: int) -> logging.Handler:
-    """获取控制台日志处理器
-
-    参数:
-        level: 日志级别
-
-    返回:
-        logging.Handler: 配置好的控制台日志处理器
-    """
-    sh = logging.StreamHandler()
-    sh.setLevel(level)
-    fmt = LineNoFormatter(_LOG_FORMAT)
-    sh.setFormatter(fmt)
-    return sh
-
-
-def _get_file_handler(level: int) -> Optional[logging.Handler]:
-    """获取文件日志处理器
-
-    参数:
-        level: 日志级别
-
-    返回:
-        Optional[logging.Handler]: 配置好的文件日志处理器，如果未启用文件日志则返回None
-    """
-    if not _LOG_TO_FILE:
-        return None
-    log_path = Path(_LOG_FILE_PATH) if _LOG_FILE_PATH else (
-                Path(__file__).resolve().parents[2] / "logs" / "comtrade.log")
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if _LOG_FILE_MAX_MB and _LOG_FILE_MAX_MB > 0:
-        from logging.handlers import RotatingFileHandler
-        handler = RotatingFileHandler(str(log_path), maxBytes=_LOG_FILE_MAX_MB * 1024 * 1024,
-                                      backupCount=max(0, _LOG_FILE_BACKUP_COUNT))
-    else:
-        from logging import FileHandler
-        handler = FileHandler(str(log_path))
-    handler.setLevel(level)
-    handler.setFormatter(LineNoFormatter(_LOG_FORMAT))
-    return handler
-
+_LOG_TO_FILE = _env.get("LOG_TO_FILE", "").lower() in ("true", "1", "yes", "on")
+_LOG_FILE_PATH = _env.get("LOG_FILE_PATH", _DEFAULT_LOG_FILE_PATH)
+_LOG_FILE_MAX_MB = int(_env.get("LOG_FILE_MAX_MB", _DEFAULT_LOG_FILE_MAX_MB) or 0)
+_LOG_FILE_BACKUP_COUNT = int(_env.get("LOG_FILE_BACKUP_COUNT", _DEFAULT_LOG_FILE_BACKUP_COUNT) or 0)
 
 # 全局配置标志
 _configured = False
 
 
-def _configure_root_logger():
-    """配置根日志记录器
+def _configure_logger():
+    """配置 loguru 日志记录器
 
     该函数只执行一次，配置控制台处理器和可选的文件处理器。
     """
@@ -158,45 +73,94 @@ def _configure_root_logger():
     if _configured:
         return
 
-    level = _level_from_str(_LOG_LEVEL)
-    root = logging.getLogger()
-    # Remove any existing handlers to prevent duplicates
-    for h in list(root.handlers):
-        root.removeHandler(h)
-    # Always attach a single StreamHandler
-    root.addHandler(_get_root_handler(level))
-    root.setLevel(level)
-    file_handler = _get_file_handler(level)
-    if file_handler:
-        root.addHandler(file_handler)
+    # 移除 loguru 默认处理器
+    logger.remove()
+
+    # 日志格式：时间 | 级别 | 模块:函数:行号 - 消息
+    log_format = (
+        "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
+        "<level>{level: <8}</level> | "
+        "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
+        "<level>{message}</level>"
+    )
+
+    # 控制台输出
+    logger.add(
+        sys.stderr,
+        level=_LOG_LEVEL,
+        format=log_format,
+        colorize=True,
+        enqueue=True,
+    )
+
+    # 文件输出（可选）
+    if _LOG_TO_FILE:
+        log_path = Path(_LOG_FILE_PATH)
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        rotation = f"{_LOG_FILE_MAX_MB} MB" if _LOG_FILE_MAX_MB > 0 else "5 MB"
+        retention = max(0, _LOG_FILE_BACKUP_COUNT)
+        logger.add(
+            str(log_path),
+            level=_LOG_LEVEL,
+            format=log_format,
+            rotation=rotation,
+            retention=retention,
+            enqueue=True,
+            encoding="utf-8",
+        )
+
     _configured = True
 
 
-def _caller_module_name():
-    """获取调用者模块名
+class LoguruLoggerWrapper:
+    """loguru 日志包装器
 
-    通过检查调用栈，动态获取调用 get_logger 的模块名称。
-
-    返回:
-        Optional[str]: 调用者模块名，无法确定时返回None
+    兼容标准 logging.Logger 的常用接口，支持在 except 块中自动捕获并记录异常 traceback。
     """
-    # 尝试动态获取调用者模块名
-    frame = None
-    try:
-        stack = inspect.stack()
-        # 从第三帧开始往上找，避免获取 logging 自身的帧
-        for frame_info in stack[2:]:
-            mod = frame_info.frame.f_globals.get("__name__")
-            filename = frame_info.frame.f_globals.get("__file__")
-            if filename and __file__ not in filename and mod:
-                return mod
-        return None
-    finally:
-        if frame is not None:
-            del frame
+
+    def __init__(self, name: Optional[str] = None):
+        self._name = name
+        _configure_logger()
+        self._logger = logger
+
+    def debug(self, msg, *args, **kwargs):
+        """记录 DEBUG 级别日志"""
+        self._logger.opt(depth=1).debug(msg, *args, **kwargs)
+
+    def info(self, msg, *args, **kwargs):
+        """记录 INFO 级别日志"""
+        self._logger.opt(depth=1).info(msg, *args, **kwargs)
+
+    def warning(self, msg, *args, **kwargs):
+        """记录 WARNING 级别日志"""
+        self._logger.opt(depth=1).warning(msg, *args, **kwargs)
+
+    def error(self, msg, *args, **kwargs):
+        """记录 ERROR 级别日志
+
+        如果在 except 块中调用，会自动记录异常 traceback。
+        """
+        if sys.exc_info()[0] is not None and not kwargs.get("exc_info"):
+            self._logger.opt(depth=1, exception=True).error(msg, *args, **kwargs)
+        else:
+            self._logger.opt(depth=1).error(msg, *args, **kwargs)
+
+    def critical(self, msg, *args, **kwargs):
+        """记录 CRITICAL 级别日志
+
+        如果在 except 块中调用，会自动记录异常 traceback。
+        """
+        if sys.exc_info()[0] is not None and not kwargs.get("exc_info"):
+            self._logger.opt(depth=1, exception=True).critical(msg, *args, **kwargs)
+        else:
+            self._logger.opt(depth=1).critical(msg, *args, **kwargs)
+
+    def exception(self, msg, *args, **kwargs):
+        """记录 ERROR 级别日志并始终附带异常 traceback"""
+        self._logger.opt(depth=1, exception=True).error(msg, *args, **kwargs)
 
 
-def get_logger(name: Optional[str] = None) -> logging.Logger:
+def get_logger(name: Optional[str] = None):
     """获取日志记录器
 
     如果未指定名称，会自动尝试获取调用者的模块名。
@@ -205,19 +169,21 @@ def get_logger(name: Optional[str] = None) -> logging.Logger:
         name: 日志记录器名称，可选
 
     返回:
-        logging.Logger: 配置好的日志记录器
+        LoguruLoggerWrapper: 配置好的日志记录器包装器
     """
-    _configure_root_logger()
-
     if not name:
-        derived = _caller_module_name()
-        name = derived if derived else "comtrade.unknown"
+        import inspect
+        try:
+            stack = inspect.stack()
+            for frame_info in stack[2:]:
+                mod = frame_info.frame.f_globals.get("__name__")
+                filename = frame_info.frame.f_globals.get("__file__")
+                if filename and __file__ not in filename and mod:
+                    name = mod
+                    break
+        except Exception:
+            pass
+        if not name:
+            name = "comtrade.unknown"
 
-    logger = logging.getLogger(name)
-
-    if not logger.handlers:
-        # Do not attach root handlers to child loggers to avoid duplicate outputs.
-        # Rely on root logger configuration and propagation.
-        pass
-
-    return logger
+    return LoguruLoggerWrapper(name)
