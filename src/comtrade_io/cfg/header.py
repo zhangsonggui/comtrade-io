@@ -6,8 +6,9 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from comtrade_io.type.version import Version
-from comtrade_io.utils import text_split
+from comtrade_io.utils import get_logger, text_split
 
+logging = get_logger()
 
 class Header(BaseModel):
     """文件头类
@@ -40,6 +41,7 @@ class Header(BaseModel):
         返回:
             Header: 解析后的文件头对象
         """
+        logging.debug(f"正在解析配置文件第一行内容:{_str}")
         str_arr = text_split(_str)
         if len(str_arr) < 2:
             return cls()

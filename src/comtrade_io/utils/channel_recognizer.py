@@ -26,8 +26,8 @@ class ChannelRecognizer:
     """通道识别器：根据通道名称识别类型和标识"""
 
     TYPE_PATTERNS = [
-        (['电压'], AnalogChannelFlag.ACV),
-        (['电流'], AnalogChannelFlag.ACC),
+        (['电压'], AnalogChannelFlag.TV),
+        (['电流'], AnalogChannelFlag.TA),
         (['高频'], AnalogChannelFlag.HF),
         (['频率', '频率曲线'], AnalogChannelFlag.FQ),
         (['功率'], AnalogChannelFlag.PW),
@@ -65,7 +65,7 @@ class ChannelRecognizer:
     def recognize_flag(self, channel_name: str) -> AnalogChannelFlag:
         """根据通道名称识别通道标志"""
         if not channel_name:
-            return AnalogChannelFlag.ACV
+            return AnalogChannelFlag.TV
 
         name = channel_name.strip()
         if name == 'P':
@@ -83,13 +83,13 @@ class ChannelRecognizer:
         name_upper = channel_name.upper()
         for phase in self.PHASE_VOLTAGE:
             if name_upper.endswith(phase.upper()):
-                return AnalogChannelFlag.ACV
+                return AnalogChannelFlag.TV
 
         for phase in self.PHASE_CURRENT:
             if name_upper.endswith(phase.upper()):
-                return AnalogChannelFlag.ACC
+                return AnalogChannelFlag.TA
 
-        return AnalogChannelFlag.ACV
+        return AnalogChannelFlag.TV
 
     def extract_device_id(self, channel_name: str) -> str:
         """从通道名称中提取设备标识"""

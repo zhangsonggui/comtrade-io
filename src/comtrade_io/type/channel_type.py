@@ -19,8 +19,8 @@ class DigitalChannelType(BaseEnum):
 
     定义数字量通道的信号类型，包括保护动作、断路器位置、开关位置、告警等。
     """
-    RELAY = ("Relay", "保护动作出口")
-    BREAKER = ("Breaker", "断路器位置")
-    SWITCH = ("Switch", "开关位置")
-    WARNING = ("Warning", "装置告警出口")
-    OTHER = ("Other", "其他")
+    Relay_Act = ("Relay", "保护动作")
+    Breaker_Pos = ("Breaker", "断路器位置")
+    Switch_Pos = ("Switch", "开关位置")
+    Device_Alarm = ("Warning", "装置故障告警")
+    Other = ("Other", "其他")

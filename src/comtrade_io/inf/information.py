@@ -60,8 +60,12 @@ class Information(BaseModel):
     file_description: Optional[Description] = Field(default_factory=Description, description="文件描述信息")
     analog_channels: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道信息")
     status_channels: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道信息")
-    analog_channel_parameters: Optional[list] = Field(default_factory=list, description="模拟通道参数信息")
-    status_channel_parameters: Optional[list] = Field(default_factory=list, description="状态量通道参数信息")
+    analog_channel_parameters: Optional[dict[int, Analog]] = Field(
+        default_factory=dict, description="模拟通道参数信息"
+    )
+    status_channel_parameters: Optional[dict[int, Status]] = Field(
+        default_factory=dict, description="状态量通道参数信息"
+    )
     buses: Optional[list[Bus]] = Field(default_factory=list, description="母线信息")
     lines: Optional[list[Line]] = Field(default_factory=list, description="线路信息")
     transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器信息")
@@ -91,6 +95,112 @@ class Information(BaseModel):
             bus_id = matched_buses[0].index
 
         return bus_id, matched_buses
+
+    def _parse_analog_channel_parameters(self, data: dict):
+        """解析模拟量通道参数段 [ZYHD ANALOG_CHANNELS_Parameter]"""
+        for key, value in data.items():
+            if not key.upper().startswith("CHNL_INFO_#"):
+                continue
+            if not value:
+                continue
+            parts = [p.strip() for p in value.split(",")]
+            if len(parts) < 11:
+                continue
+
+            def get_part(idx, default=None):
+                return parts[idx] if idx < len(parts) else default
+
+            def to_float_part(idx, default=0.0):
+                val = get_part(idx, None)
+                if val is None or val == "":
+                    return default
+                try:
+                    return float(val)
+                except (ValueError, TypeError):
+                    return default
+
+            try:
+                idx_cfg = int(parts[0])
+            except (ValueError, TypeError):
+                continue
+
+            param_data = {
+                "index": idx_cfg,
+                "idx_org": int(parts[1]) if parts[1] else 0,
+                "name": parts[2],
+                "type": parts[3],
+                "freq": to_float_part(4, 50.0),
+                "t1": to_float_part(5, 0.0),
+                "t2": to_float_part(7, 0.0),
+                "ad": to_float_part(9, 0.0),
+                "bd": to_float_part(10, 0.0),
+            }
+
+            param_obj = AnalogSection.from_dict(param_data)
+            self.analog_channel_parameters[idx_cfg] = param_obj
+
+            # 如果已有对应通道，合并参数
+            if idx_cfg in self.analog_channels:
+                existing = self.analog_channels[idx_cfg]
+                if param_obj.primary != 1.0:
+                    existing.primary = param_obj.primary
+                if param_obj.secondary != 1.0:
+                    existing.secondary = param_obj.secondary
+                if param_obj.freq != 50.0:
+                    existing.freq = param_obj.freq
+                if param_obj.au is not None:
+                    existing.au = param_obj.au
+                if param_obj.bu is not None:
+                    existing.bu = param_obj.bu
+                if param_obj.flag is not None:
+                    existing.flag = param_obj.flag
+                if param_obj.type is not None:
+                    existing.type = param_obj.type
+            else:
+                self.analog_channels[idx_cfg] = param_obj
+
+    def _parse_status_channel_parameters(self, data: dict):
+        """解析开关量通道参数段 [ZYHD STATUS_CHANNELS_Parameter]"""
+        for key, value in data.items():
+            if not key.upper().startswith("CHNL_INFO_#"):
+                continue
+            if not value:
+                continue
+            parts = [p.strip() for p in value.split(",")]
+            if len(parts) < 5:
+                continue
+
+            def get_part(idx, default=None):
+                return parts[idx] if idx < len(parts) else default
+
+            try:
+                idx_cfg = int(parts[0])
+            except (ValueError, TypeError):
+                continue
+
+            param_data = {
+                "index": idx_cfg,
+                "idx_org": int(parts[1]) if parts[1] else 0,
+                "name": parts[2],
+                "level": parts[3],
+                "type": parts[4],
+                "obj": get_part(5),
+            }
+
+            param_obj = StatusSection.from_dict(param_data)
+            self.status_channel_parameters[idx_cfg] = param_obj
+
+            # 如果已有对应通道，合并参数
+            if idx_cfg in self.status_channels:
+                existing = self.status_channels[idx_cfg]
+                if param_obj.flag is not None:
+                    existing.flag = param_obj.flag
+                if param_obj.type is not None:
+                    existing.type = param_obj.type
+                if param_obj.equipment_no is not None:
+                    existing.equipment_no = param_obj.equipment_no
+            else:
+                self.status_channels[idx_cfg] = param_obj
 
     @classmethod
     def from_file(cls, file_name: str | Path) -> 'EquipmentGroup | None':
@@ -158,9 +268,13 @@ class Information(BaseModel):
             elif sec_type in ['ANALOG_CHANNEL', 'ANALOG_CHANNELS']:
                 ana = AnalogSection.from_dict(data)
                 self.analog_channels[ana.index] = ana
+            elif sec_type == "ANALOG_CHANNELS_PARAMETER":
+                self._parse_analog_channel_parameters(data)
             elif sec_type in ['STATUS_CHANNEL', 'STATUS_CHANNELS']:
                 sta = StatusSection.from_dict(data)
                 self.status_channels[sta.index] = sta
+            elif sec_type == "STATUS_CHANNELS_PARAMETER":
+                self._parse_status_channel_parameters(data)
             elif sec_type == 'BUS':
                 _bus = BusSection.from_dict(data, self.analog_channels, self.status_channels)
                 _bus.voltage = ACVBranch.from_analog_channels(_bus.acvs)

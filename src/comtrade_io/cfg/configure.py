@@ -103,6 +103,7 @@ class Configure(BaseModel):
         返回:
             Configure: 解析后的配置对象
         """
+        logging.debug(f"正在解析CFG文件内容")
         parts = text_split(_str, "\n")
         # 处理文件头和采样通道数量
         header = Header.from_str(parts[0])
@@ -167,6 +168,7 @@ class Configure(BaseModel):
         if not cf.cfg_path.is_enabled():
             return None
         cfg_path = cf.cfg_path.path
+        logging.debug(f"正在读取配置文件{cfg_path}")
         try:
             cfg_content = cfg_path.read_text(encoding="GBK", errors='replace')
         except UnicodeDecodeError:

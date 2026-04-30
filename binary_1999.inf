@@ -1,0 +1,2865 @@
+[Public File_Description]
+Station_Name=GHBZ
+Recording_Device_ID=220kV线路故障
+Revision_Year=1999
+Total_Channel_Count=288
+Analog_Channel_Count=96
+Status_Channel_Count=192
+Line_Frequency=50.0
+Sample_Rate_Count=1
+Sample_Rate_#1=10000
+End_Sample_Rate_#1=45600
+File_Start_Time=2023-05-12 19:45:25.600000
+Trigger_Time=2023-05-12 19:45:25.814600
+File_Type=BINARY
+Time_Multiplier=1.0
+
+
+[Public Analog_Channel_#1]
+Channel_ID=220kV母线_Ua
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=127017.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#2]
+Channel_ID=220kV母线_Ub
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=127017.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#3]
+Channel_ID=220kV母线_Uc
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=127017.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#4]
+Channel_ID=220kV母线_3U0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=73323.4531
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#5]
+Channel_ID=35kV母线Ⅰ_Ua
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=20207.25
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#6]
+Channel_ID=35kV母线Ⅰ_Ub
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=20207.25
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#7]
+Channel_ID=35kV母线Ⅰ_Uc
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=20207.25
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#8]
+Channel_ID=35kV母线Ⅰ_3U0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=11662.4697
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#9]
+Channel_ID=电压3 Ua
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#10]
+Channel_ID=电压3 Ub
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#11]
+Channel_ID=电压3 Uc
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#12]
+Channel_ID=电压3 3U0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#13]
+Channel_ID=电压4 Ua
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#14]
+Channel_ID=电压4 Ub
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#15]
+Channel_ID=电压4 Uc
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#16]
+Channel_ID=电压4 3U0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=57735.0
+Channel_Ratio_Secondary=57.735
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#17]
+Channel_ID=220kV hh1x_211开关_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#18]
+Channel_ID=220kV hh1x_211开关_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#19]
+Channel_ID=220kV hh1x_211开关_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#20]
+Channel_ID=220kV hh1x_211开关_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#21]
+Channel_ID=220kV 主变高压侧_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#22]
+Channel_ID=220kV 主变高压侧_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#23]
+Channel_ID=220kV 主变高压侧_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#24]
+Channel_ID=220kV 主变高压侧_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#25]
+Channel_ID=220kV ghx_212开关_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=2000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#26]
+Channel_ID=220kV ghx_212开关_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=2000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#27]
+Channel_ID=220kV ghx_212开关_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=2000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#28]
+Channel_ID=220kV ghx_212开关_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=2000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#29]
+Channel_ID=220kV hh2x_213开关_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#30]
+Channel_ID=220kV hh2x_213开关_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#31]
+Channel_ID=220kV hh2x_213开关_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#32]
+Channel_ID=220kV hh2x_213开关_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#33]
+Channel_ID=电流5 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#34]
+Channel_ID=电流5 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#35]
+Channel_ID=电流5 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#36]
+Channel_ID=主变间隙_I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=100.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#37]
+Channel_ID=电流6 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#38]
+Channel_ID=电流6 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#39]
+Channel_ID=电流6 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#40]
+Channel_ID=主变高压侧零序电流_I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=300.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#41]
+Channel_ID=220kV #1电抗器_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#42]
+Channel_ID=220kV #1电抗器_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#43]
+Channel_ID=220kV #1电抗器_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#44]
+Channel_ID=220kV #1电抗器_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#45]
+Channel_ID=220kV #2电抗器_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#46]
+Channel_ID=220kV #2电抗器_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#47]
+Channel_ID=220kV #2电抗器_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#48]
+Channel_ID=220kV #2电抗器_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1250.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#49]
+Channel_ID=主变低压侧_Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=4000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#50]
+Channel_ID=主变低压侧_Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=4000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#51]
+Channel_ID=主变低压侧_Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=4000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#52]
+Channel_ID=主变低压侧_3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=4000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#53]
+Channel_ID=电流10 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#54]
+Channel_ID=电流10 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#55]
+Channel_ID=电流10 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#56]
+Channel_ID=电流10 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#57]
+Channel_ID=电流11 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#58]
+Channel_ID=电流11 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#59]
+Channel_ID=电流11 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#60]
+Channel_ID=电流11 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#61]
+Channel_ID=电流12 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#62]
+Channel_ID=电流12 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#63]
+Channel_ID=电流12 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#64]
+Channel_ID=电流12 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#65]
+Channel_ID=电流13 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#66]
+Channel_ID=电流13 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#67]
+Channel_ID=电流13 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#68]
+Channel_ID=电流13 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#69]
+Channel_ID=电流14 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#70]
+Channel_ID=电流14 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#71]
+Channel_ID=电流14 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#72]
+Channel_ID=电流14 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#73]
+Channel_ID=电流15 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#74]
+Channel_ID=电流15 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#75]
+Channel_ID=电流15 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#76]
+Channel_ID=电流15 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#77]
+Channel_ID=电流16 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#78]
+Channel_ID=电流16 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#79]
+Channel_ID=电流16 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#80]
+Channel_ID=电流16 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#81]
+Channel_ID=电流17 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#82]
+Channel_ID=电流17 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#83]
+Channel_ID=电流17 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#84]
+Channel_ID=电流17 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#85]
+Channel_ID=电流18 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#86]
+Channel_ID=电流18 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#87]
+Channel_ID=电流18 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#88]
+Channel_ID=电流18 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#89]
+Channel_ID=电流19 Ia
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#90]
+Channel_ID=电流19 Ib
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#91]
+Channel_ID=电流19 Ic
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#92]
+Channel_ID=电流19 3I0
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=A
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=1000.0
+Channel_Ratio_Secondary=1.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#93]
+Channel_ID=#3充电柜直流1+
+Phase_ID=A
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=220.0
+Channel_Ratio_Secondary=220.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#94]
+Channel_ID=#3充电柜直流1-
+Phase_ID=B
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=220.0
+Channel_Ratio_Secondary=220.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#95]
+Channel_ID=直流2+
+Phase_ID=C
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=220.0
+Channel_Ratio_Secondary=220.0
+Data_Primary_Secondary=S
+
+
+[Public Analog_Channel_#96]
+Channel_ID=直流2-
+Phase_ID=N
+Monitored_Component=None
+Channel_Units=V
+Channel_Multiplier=
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=0.0
+Range_Maximum_Limit_Value=0.0
+Channel_Ratio_Primary=220.0
+Channel_Ratio_Secondary=220.0
+Data_Primary_Secondary=S
+
+
+[Public Status_Channel_#1]
+Channel_ID=220kV hh1x_211开关_A相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#2]
+Channel_ID=220kV hh1x_211开关_A相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#3]
+Channel_ID=220kV hh1x_211开关_B相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#4]
+Channel_ID=220kV hh1x_211开关_B相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#5]
+Channel_ID=220kV hh1x_211开关_C相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#6]
+Channel_ID=220kV hh1x_211开关_C相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#7]
+Channel_ID=主变高压侧_断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#8]
+Channel_ID=主变高压侧_断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#9]
+Channel_ID=220kV ghx_212开关_A相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#10]
+Channel_ID=220kV ghx_212开关_A相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#11]
+Channel_ID=220kV ghx_212开关_B相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#12]
+Channel_ID=220kV ghx_212开关_B相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#13]
+Channel_ID=220kV ghx_212开关_C相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#14]
+Channel_ID=220kV ghx_212开关_C相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#15]
+Channel_ID=220kV hh2x_213开关_A相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#16]
+Channel_ID=220kV hh2x_213开关_A相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#17]
+Channel_ID=220kV hh2x_213开关_B相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#18]
+Channel_ID=220kV hh2x_213开关B相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#19]
+Channel_ID=220kV hh2x_213开关_C相断路器合位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#20]
+Channel_ID=220kV hh2x_213开关_C相断路器分位
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#21]
+Channel_ID=220kV母差保护一_I母差动动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#22]
+Channel_ID=220kV母差保护一_I母失灵动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#23]
+Channel_ID=220kV母差保护一_断线告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#24]
+Channel_ID=220kV母差保护二_I母差动动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#25]
+Channel_ID=220kV母差保护二_I母失灵动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#26]
+Channel_ID=220kV hh1x_保护一_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#27]
+Channel_ID=220kV hh1x_保护一_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#28]
+Channel_ID=220kV hh1x_保护一_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#29]
+Channel_ID=220kV hh1x_保护一_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#30]
+Channel_ID=220kV hh1x_保护一_远跳
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#31]
+Channel_ID=220kV hh1x_保护一_通道故障
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#32]
+Channel_ID=开关量32
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#33]
+Channel_ID=220kV hh1x_211开关_操作箱A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#34]
+Channel_ID=220kV hh1x_211开关_操作箱B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#35]
+Channel_ID=220kV hh1x_211开关_操作箱C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#36]
+Channel_ID=220kV hh1x_211开关_操作箱三跳
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#37]
+Channel_ID=220kV hh1x_211开关_操作箱重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#38]
+Channel_ID=220kV hh1x_211开关_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#39]
+Channel_ID=220kV hh1x_211开关_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#40]
+Channel_ID=220kV hh1x_211开关_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#41]
+Channel_ID=220kV hh1x_211开关_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#42]
+Channel_ID=220kV hh1x_211开关_远传
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#43]
+Channel_ID=220kV hh1x_211开关_不一致跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#44]
+Channel_ID=220kV hh1x_211开关_过负荷告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#45]
+Channel_ID=220kV hh1x_211开关_通道告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#46]
+Channel_ID=220kV hh1x_保护二_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#47]
+Channel_ID=220kV hh1x_保护二_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#48]
+Channel_ID=220kV hh1x_保护二_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#49]
+Channel_ID=220kV hh1x_保护二_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#50]
+Channel_ID=220kV hh1x_保护二_保护三跳
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#51]
+Channel_ID=#1电抗器_保护动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#52]
+Channel_ID=#1电抗器_过负荷告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#53]
+Channel_ID=#1电抗器_非电量保护动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#54]
+Channel_ID=#1电抗器_绕组温度高温报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#55]
+Channel_ID=#1电抗器_油面温度高温报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#56]
+Channel_ID=#1电抗器_本体油位异常报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#57]
+Channel_ID=#1电抗器_本体轻瓦斯报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#58]
+Channel_ID=#1电抗器_绕组温度超温跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#59]
+Channel_ID=#1电抗器_油面温度超温跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#60]
+Channel_ID=#1电抗器_本体压力释放跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#61]
+Channel_ID=#1电抗器_本体重瓦斯跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#62]
+Channel_ID=#1电抗器_突发压力继电器报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#63]
+Channel_ID=#1电抗器_跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#64]
+Channel_ID=开关量64
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#65]
+Channel_ID=220kV hh2x_保护一_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#66]
+Channel_ID=220kV hh2x_保护一_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#67]
+Channel_ID=220kV hh2x_保护一_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#68]
+Channel_ID=220kV hh2x_保护一_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#69]
+Channel_ID=220kV hh2x_保护一_远跳
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#70]
+Channel_ID=220kV hh2x_保护一_通道故障
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#71]
+Channel_ID=220kV hh2x_212开关_操作箱A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#72]
+Channel_ID=220kV hh2x_212开关_操作箱B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#73]
+Channel_ID=220kV hh2x_212开关_操作箱C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#74]
+Channel_ID=220kV hh2x_212开关_操作箱三跳
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#75]
+Channel_ID=220kV hh2x_212开关_操作箱重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#76]
+Channel_ID=220kV hh2x_212开关_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#77]
+Channel_ID=220kV hh2x_212开关_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#78]
+Channel_ID=220kV hh2x_212开关_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#79]
+Channel_ID=220kV hh2x_212开关_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#80]
+Channel_ID=220kV hh2x_212开关_远传
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#81]
+Channel_ID=220kV hh2x_212开关_不一致跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#82]
+Channel_ID=220kV hh2x_212开关_过负荷告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#83]
+Channel_ID=220kV hh2x_212开关_通道告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#84]
+Channel_ID=220kV hh2x_保护二_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#85]
+Channel_ID=220kV hh2x_保护二_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#86]
+Channel_ID=220kV hh2x_保护二_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#87]
+Channel_ID=220kV hh2x_保护二_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#88]
+Channel_ID=220kV hh2x_保护二_保护三跳
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#89]
+Channel_ID=主变_保护一_保护动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#90]
+Channel_ID=主变_保护一_过负荷
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#91]
+Channel_ID=主变_保护二_过负荷
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#92]
+Channel_ID=主变_保护二_跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#93]
+Channel_ID=开关量93
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#94]
+Channel_ID=开关量94
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#95]
+Channel_ID=开关量95
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#96]
+Channel_ID=开关量96
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#97]
+Channel_ID=#2电抗器_保护动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#98]
+Channel_ID=#2电抗器_过负荷告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#99]
+Channel_ID=#2电抗器_非电量保护动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#100]
+Channel_ID=#2电抗器_绕组温度高温报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#101]
+Channel_ID=#2电抗器_油面温度高温报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#102]
+Channel_ID=#2电抗器_本体油位异常报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#103]
+Channel_ID=#2电抗器_本体轻瓦斯报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#104]
+Channel_ID=#2电抗器_绕组温度超温跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#105]
+Channel_ID=#2电抗器_油面温度超温跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#106]
+Channel_ID=#2电抗器_本体压力释放跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#107]
+Channel_ID=#2电抗器_本体重瓦斯跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#108]
+Channel_ID=#2电抗器_突发压力继电器报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#109]
+Channel_ID=#2电抗器_跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#110]
+Channel_ID=主变_非电量保护动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#111]
+Channel_ID=主变_绕组过温报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#112]
+Channel_ID=主变_油温高报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#113]
+Channel_ID=主变_本体油位异常报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#114]
+Channel_ID=主变_本体轻瓦斯报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#115]
+Channel_ID=主变_绕组过温跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#116]
+Channel_ID=主变_油温高跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#117]
+Channel_ID=主变_本体压力释放跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#118]
+Channel_ID=主变_本体重瓦斯跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#119]
+Channel_ID=主变_本体压力释放阀报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#120]
+Channel_ID=主变_速动油压继电器报警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#121]
+Channel_ID=主变_高压侧_第一组三跳动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#122]
+Channel_ID=主变_高压侧_第二组三跳动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#123]
+Channel_ID=主变_低压侧_第一组三跳动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#124]
+Channel_ID=主变_低压侧_第二组三跳动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#125]
+Channel_ID=主变_低压侧_断路器分闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#126]
+Channel_ID=主变_低压侧_断路器合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#127]
+Channel_ID=开关量127
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#128]
+Channel_ID=开关量128
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#129]
+Channel_ID=220kV ghx_保护一_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#130]
+Channel_ID=220kV ghx_保护一_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#131]
+Channel_ID=220kV ghx_保护一_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#132]
+Channel_ID=220kV ghx_保护一_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#133]
+Channel_ID=220kV ghx_保护一_其他动作
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#134]
+Channel_ID=220kV ghx_保护一_通道告警
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#135]
+Channel_ID=220kV ghx_操作箱一_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#136]
+Channel_ID=220kV ghx_操作箱一_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#137]
+Channel_ID=220kV ghx_操作箱一_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#138]
+Channel_ID=220kV ghx_操作箱一_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#139]
+Channel_ID=220kV ghx_操作箱一_三相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#140]
+Channel_ID=220kV ghx_保护二_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#141]
+Channel_ID=220kV ghx_保护二_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#142]
+Channel_ID=220kV ghx_保护二_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#143]
+Channel_ID=220kV ghx_保护二_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#144]
+Channel_ID=220kV ghx_保护二_远传
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#145]
+Channel_ID=220kV ghx_操作箱二_A相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#146]
+Channel_ID=220kV ghx_操作箱二_B相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#147]
+Channel_ID=220kV ghx_操作箱二_C相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#148]
+Channel_ID=220kV ghx_操作箱二_重合闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#149]
+Channel_ID=220kV ghx_操作箱二_三相跳闸
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#150]
+Channel_ID=开关量150
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#151]
+Channel_ID=开关量151
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#152]
+Channel_ID=开关量152
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#153]
+Channel_ID=开关量153
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#154]
+Channel_ID=开关量154
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#155]
+Channel_ID=开关量155
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#156]
+Channel_ID=开关量156
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#157]
+Channel_ID=开关量157
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#158]
+Channel_ID=开关量158
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#159]
+Channel_ID=开关量159
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#160]
+Channel_ID=开关量160
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#161]
+Channel_ID=开关量161
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#162]
+Channel_ID=开关量162
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#163]
+Channel_ID=开关量163
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#164]
+Channel_ID=开关量164
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#165]
+Channel_ID=开关量165
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#166]
+Channel_ID=开关量166
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#167]
+Channel_ID=开关量167
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#168]
+Channel_ID=开关量168
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#169]
+Channel_ID=开关量169
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#170]
+Channel_ID=开关量170
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#171]
+Channel_ID=开关量171
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#172]
+Channel_ID=开关量172
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#173]
+Channel_ID=开关量173
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#174]
+Channel_ID=开关量174
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#175]
+Channel_ID=开关量175
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#176]
+Channel_ID=开关量176
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#177]
+Channel_ID=开关量177
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#178]
+Channel_ID=开关量178
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#179]
+Channel_ID=开关量179
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#180]
+Channel_ID=开关量180
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#181]
+Channel_ID=开关量181
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#182]
+Channel_ID=开关量182
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#183]
+Channel_ID=开关量183
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#184]
+Channel_ID=开关量184
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#185]
+Channel_ID=开关量185
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#186]
+Channel_ID=开关量186
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#187]
+Channel_ID=开关量187
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#188]
+Channel_ID=开关量188
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#189]
+Channel_ID=开关量189
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#190]
+Channel_ID=开关量190
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#191]
+Channel_ID=开关量191
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[Public Status_Channel_#192]
+Channel_ID=开关量192
+Phase_ID=
+Monitored_Component=
+Normal_State=0
+
+
+[PRIVATELY Bus_#1]
+DEV_ID=220kV母线U
+SYS_ID=
+RATED_VALUE=0.0V
+TV_RATIO=0.0kV/0.0V
+TV_CHNS=
+TV_POS=BUS
+
+
+[PRIVATELY Bus_#2]
+DEV_ID=35kV母线ⅠU
+SYS_ID=
+RATED_VALUE=0.0V
+TV_RATIO=0.0kV/0.0V
+TV_CHNS=
+TV_POS=BUS
+
+
+[PRIVATELY Line_#1]
+DEV_ID=hh1x
+SYS_ID=
+OBJECT_TYPE=LINE
+LENGTH=23.79(km)
+RX=0.0469(Ω/km),0.1525(Ω/km),0.1289(Ω/km),0.2825(Ω/km)
+CG=0.0(μf/km),0.0(S/km),0.0(μf/km),0.0(S/km)
+MRX=0.0(Ω/km),0.0(Ω/km)
+REACTOR=-1(Ω)
+TA_CHNS=17,18,19,20
+TV_CHNS=1,2,3,4
+STATUS_CHNS=1,2,3,4,5,6,33,34,35,38,39,40,41
+
+
+[PRIVATELY Line_#3]
+DEV_ID=ghx
+SYS_ID=
+OBJECT_TYPE=LINE
+LENGTH=9.75(km)
+RX=0.021(Ω/km),0.276(Ω/km),0.062(Ω/km),0.66(Ω/km)
+CG=0.0(μf/km),0.0(S/km),0.0(μf/km),0.0(S/km)
+MRX=0.0(Ω/km),0.0(Ω/km)
+REACTOR=-1(Ω)
+TA_CHNS=25,26,27,28
+TV_CHNS=1,2,3,4
+STATUS_CHNS=9,10,11,12,13,14,129,130,131,132,135,136,137,138,140,141,142,143,145,146,147,148
+
+
+[PRIVATELY Line_#4]
+DEV_ID=hh2x
+SYS_ID=
+OBJECT_TYPE=LINE
+LENGTH=23.81(km)
+RX=0.0469(Ω/km),0.1525(Ω/km),0.1289(Ω/km),0.285(Ω/km)
+CG=0.0(μf/km),0.0(S/km),0.0(μf/km),0.0(S/km)
+MRX=0.0(Ω/km),0.0(Ω/km)
+REACTOR=-1(Ω)
+TA_CHNS=29,30,31,32
+TV_CHNS=1,2,3,4
+STATUS_CHNS=15,16,17,18,19,20,71,72,73,75,76,77,78,79
+
+
+[PRIVATELY Transformer_#1]
+DEV_ID=1号主变
+SYS_ID=
+RATED_POWER=0.0MVA

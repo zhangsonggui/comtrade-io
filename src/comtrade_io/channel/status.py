@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pydantic import Field
+from typing import Optional
+
+from pydantic import ConfigDict, Field
 
 from comtrade_io.base import ReferenceBaseModel
 from comtrade_io.channel.channel import ChannelBaseModel
@@ -21,7 +23,11 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         contact: 状态通道正常状态，默认为常开
         data: 通道数据，一维数组
     """
+    model_config = ConfigDict(extra="allow")
     contact: Contact = Field(default=Contact.NormallyOpen, description="状态通道正常状态")
+    equipment_no: Optional[str] = Field(
+        default=None, description="保护/断路器/刀闸序号，如Relay_#1、Breaker_#1"
+    )
 
     def __str__(self) -> str:
         """序列化为逗号分隔的字符串
