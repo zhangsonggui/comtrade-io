@@ -69,3 +69,15 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
             f"Normal_State={self.contact.value}"
         ]
         return "\n".join(attrs)
+
+    def to_inf_parameter(self) -> str:
+        """将数字量通道对象转换为参数段CHNL_INFO格式字符串
+
+        返回:
+            str: 参数段CHNL_INFO格式字符串
+        """
+        type_name = self.type.name if self.type else ""
+        flag_name = self.flag.name if self.flag else ""
+        obj_val = self.equipment_no if self.equipment_no is not None else ""
+
+        return f"{self.index}, {self.idx_org}, {self.name}, {type_name}, {flag_name}, {obj_val}"

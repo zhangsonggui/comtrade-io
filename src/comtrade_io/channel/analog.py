@@ -122,3 +122,25 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f"Data_Primary_Secondary={self.tran_side.value}"
         ]
         return "\n".join(attrs)
+
+    def to_inf_parameter(self) -> str:
+        """将模拟量通道对象转换为参数段CHNL_INFO格式字符串
+
+        返回:
+            str: 参数段CHNL_INFO格式字符串
+        """
+        flag_name = self.flag.name if self.flag else ""
+        if flag_name in ("TA", "TA1"):
+            t1_unit, t2_unit = "kA", "A"
+        elif flag_name in ("TV", "TV1"):
+            t1_unit, t2_unit = "kV", "V"
+        else:
+            t1_unit = t2_unit = self.unit.value if self.unit else ""
+
+        au_val = self.au if self.au is not None else 0.0
+        bu_val = self.bu if self.bu is not None else 0.0
+
+        return (
+            f"{self.index}, {self.idx_org}, {self.name}, {flag_name}, {self.freq}, "
+            f"{self.primary}, {t1_unit}, {self.secondary}, {t2_unit}, {au_val}, {bu_val}"
+        )

@@ -443,3 +443,133 @@ def test_read_real_binary_inf_file():
     print(f"站点名称: {model.description.station_name}")
     print(f"录波设备: {model.description.rec_dev_name}")
     print(f"版本: {model.description.version}")
+
+
+def test_parse_analog_channel_parameters():
+    """测试模拟量通道参数段解析"""
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "sample.inf"
+        p.write_text(
+            """
+[Public Analog_Channel_#1]
+Channel_ID=Ia
+Phase_ID=A
+Monitored_Component=TCTR$MX$Amp$
+Channel_Units=A
+Channel_Multiplier=0.01
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=-32767
+Range_Maximum_Limit_Value=32767
+Channel_Ratio_Primary=600
+Channel_Ratio_Secondary=1
+Data_Primary_Secondary=S
+
+[ZYHD Analog_Channels_Parameter]
+CHNL_INFO_#1=1, 1, Ia, TA, 50, 0.6, kA, 1, A, 1, 0,
+            """.strip(),
+            encoding="utf-8",
+        )
+        model = Information.from_file(p)
+        assert model is not None
+        assert len(model.analogs) == 1
+
+        ana1 = model.analogs[1]
+        assert ana1.index == 1
+        assert ana1.name == "Ia"
+        # 参数段中的 t1 应覆盖通道段中的 Channel_Ratio_Primary
+        assert ana1.primary == 0.6
+        # 参数段中的 t2 应覆盖通道段中的 Channel_Ratio_Secondary
+        assert ana1.secondary == 1.0
+        # flag 应从参数段 type 解析
+        from comtrade_io.type import AnalogChannelFlag
+
+        assert ana1.flag == AnalogChannelFlag.TA
+
+
+def test_parse_status_channel_parameters():
+    """测试开关量通道参数段解析"""
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "sample.inf"
+        p.write_text(
+            """
+[Public Status_Channel_#1]
+Channel_ID=Breaker1
+Phase_ID=A
+Monitored_Component=XCBR$ST$Pos$
+Normal_State=0
+
+[ZYHD Status_Channels_Parameter]
+CHNL_INFO_#1=1, 1, Breaker1, Breaker_Pos, Unknown,
+            """.strip(),
+            encoding="utf-8",
+        )
+        model = Information.from_file(p)
+        assert model is not None
+        assert len(model.statuses) == 1
+
+        sta1 = model.statuses[1]
+        assert sta1.index == 1
+        assert sta1.name == "Breaker1"
+        # type 应从参数段 level 解析
+        from comtrade_io.type import DigitalChannelType
+
+        assert sta1.type == DigitalChannelType.Breaker_Pos
+
+
+def test_comtrade_model_to_inf_with_parameters():
+    """测试 ComtradeModel 的 to_inf 输出包含参数段"""
+    from comtrade_io.comtrade_model import ComtradeModel
+    from comtrade_io.channel import Analog, Status
+    from comtrade_io.type import (
+        AnalogChannelFlag,
+        DigitalChannelType,
+        DigitalChannelFlag,
+        Phase,
+        Unit,
+        Contact,
+    )
+    from comtrade_io.cfg.header import Header
+    from comtrade_io.cfg.channel_num import ChannelNum
+
+    # 构建一个包含参数信息的 ComtradeModel（使用 model_construct 避免验证）
+    model = ComtradeModel.model_construct(
+        header=Header(),
+        channel_num=ChannelNum(total=2, analog=1, status=1),
+        analogs={},
+        statuses={},
+    )
+    model.analogs[1] = Analog(
+        index=1,
+        name="Ia",
+        phase=Phase.PHASE_A,
+        reference="TCTR$MX$Amp$",
+        unit=Unit.A,
+        primary=0.6,
+        secondary=1.0,
+        flag=AnalogChannelFlag.TA,
+        au=1.0,
+        bu=0.0,
+    )
+    model.statuses[1] = Status(
+        index=1,
+        name="Breaker1",
+        phase=Phase.PHASE_A,
+        reference="XCBR$ST$Pos$",
+        contact=Contact.NormallyOpen,
+        type=DigitalChannelType.Breaker_Pos,
+        flag=DigitalChannelFlag.GENERAL,
+        equipment_no="Breaker_#1",
+    )
+
+    inf_output = model.to_inf()
+
+    # 验证输出包含参数段头
+    assert "[ZYHD Analog_Channels_Parameter]" in inf_output
+    assert "[ZYHD Status_Channels_Parameter]" in inf_output
+
+    # 验证模拟量参数段格式
+    assert "CHNL_INFO_#1=1, 0, Ia, TA, 50.0, 0.6, kA, 1.0, A, 1.0, 0.0" in inf_output
+
+    # 验证开关量参数段格式（flag.name 为 GENERAL）
+    assert "CHNL_INFO_#1=1, 0, Breaker1, Breaker_Pos, GENERAL, Breaker_#1" in inf_output

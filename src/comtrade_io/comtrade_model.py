@@ -101,7 +101,6 @@ class ComtradeModel(Configure):
         """
         pass
 
-
     def get_bus_info(self, name: str) -> Bus | None:
         """根据名称获取母线信息
 
@@ -115,7 +114,6 @@ class ComtradeModel(Configure):
             return None
 
         return next((bus for bus in self.buses if bus.name == name), None)
-
 
     def get_line_info(self, name: str) -> Line | None:
         """根据名称获取线路信息
@@ -228,6 +226,21 @@ class ComtradeModel(Configure):
         for status in self.statuses.values():
             attrs.append(f"\n")
             attrs.append(status.to_inf())
+
+        # 模拟量通道参数段
+        if self.analogs:
+            attrs.append(f"\n")
+            attrs.append("[ZYHD Analog_Channels_Parameter]")
+            for analog in self.analogs.values():
+                attrs.append(f"CHNL_INFO_#{analog.index}={analog.to_inf_parameter()}")
+
+        # 开关量通道参数段
+        if self.statuses:
+            attrs.append(f"\n")
+            attrs.append("[ZYHD Status_Channels_Parameter]")
+            for status in self.statuses.values():
+                attrs.append(f"CHNL_INFO_#{status.index}={status.to_inf_parameter()}")
+
         for bus in self.buses:
             attrs.append(f"\n")
             attrs.append(bus.to_inf())
