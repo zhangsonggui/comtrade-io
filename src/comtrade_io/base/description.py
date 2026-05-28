@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Optional
 
 from pydantic import Field
 
@@ -16,7 +15,7 @@ class Description(ReferenceBaseModel):
     station_name: str = Field(default="", description="站点名称")
     data_model_version: float = Field(default=1.0, description="数据模型版本")
     rec_dev_name: str = Field(default="", description="录波设备")
-    version: Optional[Version] = Field(default=Version.V1991, description="版本")
+    version: Version | None = Field(default=Version.V1991, description="版本")
     xsi_schema_location: str = Field(default="http://www.iec.ch/61850/2003/SCLcomtrade_mdl_v1.1.xsd",
                                      description="XML架构")
 

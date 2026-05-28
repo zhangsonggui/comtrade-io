@@ -9,7 +9,7 @@ from comtrade_io.utils import get_logger
 if TYPE_CHECKING:
     from comtrade_io.comtrade import Comtrade
 
-logging = get_logger()
+logger = get_logger()
 
 
 def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
@@ -34,13 +34,13 @@ def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
         path = path.with_suffix('.csv')
 
     headers = ['Point', 'Time']
-    for idx in sorted(comtrade.cfg.analogs.keys()):
-        a = comtrade.cfg.analogs[idx]
+    for idx in sorted(comtrade.analogs.keys()):
+        a = comtrade.analogs[idx]
         headers.append(f"{a.name or f'A{idx}'}")
-    for idx in sorted(comtrade.cfg.statuses.keys()):
-        s = comtrade.cfg.statuses[idx]
+    for idx in sorted(comtrade.statuses.keys()):
+        s = comtrade.statuses[idx]
         headers.append(f"{s.name or f'D{idx}'}")
 
     comtrade.dat.data.to_csv(path, header=headers if kwargs.get('include_headers', True) else False, index=False)
-    logging.info(f"CSV文件{path}写入成功")
+    logger.info(f"CSV文件{path}写入成功")
     return True

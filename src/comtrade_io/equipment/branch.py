@@ -7,7 +7,6 @@
 ACVBranch用于表示电压通道组，ACCBranch用于表示电流通道组。
 """
 
-from typing import Optional
 from xml.etree.ElementTree import Element
 
 from pydantic import BaseModel, Field
@@ -35,11 +34,11 @@ class ACVBranch(BaseModel):
         ul: L相电压通道（线电压）
     """
 
-    ua: Optional[Analog] = Field(default=None, description="A相电压通道")
-    ub: Optional[Analog] = Field(default=None, description="B相电压通道")
-    uc: Optional[Analog] = Field(default=None, description="C相电压通道")
-    un: Optional[Analog] = Field(default=None, description="N相电压通道")
-    ul: Optional[Analog] = Field(default=None, description="L相电压通道")
+    ua: Analog | None = Field(default=None, description="A相电压通道")
+    ub: Analog | None = Field(default=None, description="B相电压通道")
+    uc: Analog | None = Field(default=None, description="C相电压通道")
+    un: Analog | None = Field(default=None, description="N相电压通道")
+    ul: Analog | None = Field(default=None, description="L相电压通道")
 
     def __str__(self):
         """
@@ -163,10 +162,10 @@ class ACCBranch(BaseModel):
     """
 
     idx: int = Field(default=None, description="分支序号")
-    ia: Optional[Analog] = Field(default=None, description="A相电流通道")
-    ib: Optional[Analog] = Field(default=None, description="B相电流通道")
-    ic: Optional[Analog] = Field(default=None, description="C相电流通道")
-    i0: Optional[Analog] = Field(default=None, description="N相电流通道")
+    ia: Analog | None = Field(default=None, description="A相电流通道")
+    ib: Analog | None = Field(default=None, description="B相电流通道")
+    ic: Analog | None = Field(default=None, description="C相电流通道")
+    i0: Analog | None = Field(default=None, description="N相电流通道")
     dir: CtDirection = Field(default=CtDirection.POS, description="电流方向")
 
     def __str__(self):

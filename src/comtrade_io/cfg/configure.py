@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from pathlib import Path
-from typing import Optional, cast
+from typing import cast
 
 from pydantic import BaseModel, Field, model_serializer
 
 from comtrade_io.base.precision_time import PrecisionTime
-from comtrade_io.cfg.analog_dispose import AnalogDispose
+from comtrade_io.cfg.analog_parser import AnalogParser
 from comtrade_io.cfg.channel_num import ChannelNum
 from comtrade_io.cfg.header import Header
 from comtrade_io.cfg.sampling import Sampling
 from comtrade_io.cfg.sampling_time_quality import SamplingTimeQuality
 from comtrade_io.cfg.segment import Segment
-from comtrade_io.cfg.status_dispose import StatusDispose
+from comtrade_io.cfg.status_parser import StatusParser
 from comtrade_io.cfg.time_info import TimeInfo
 from comtrade_io.channel.analog import Analog
 from comtrade_io.channel.status import Status
@@ -20,7 +20,7 @@ from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger, parse_float, text_split
 
-logging = get_logger()
+logger = get_logger()
 
 
 class Configure(BaseModel):
@@ -49,8 +49,12 @@ class Configure(BaseModel):
     fault_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障时间")
     data_type: DataType = Field(default=DataType.BINARY, description="录波文件数据格式")
     timemult: float = Field(default=1.0, description="时标倍率因子")
-    time_info: Optional[TimeInfo] = Field(default=None, description="时间信息及与UTC时间关系")
-    sampling_time_quality: Optional[SamplingTimeQuality] = Field(default=None, description="采样时间品质")
+    time_info: TimeInfo | None = Field(
+        default=None, description="时间信息及与UTC时间关系"
+    )
+    sampling_time_quality: SamplingTimeQuality | None = Field(
+        default=None, description="采样时间品质"
+    )
 
     @model_serializer(mode='wrap')
     def serialize_model(self, handler):
@@ -103,7 +107,7 @@ class Configure(BaseModel):
         返回:
             Configure: 解析后的配置对象
         """
-        logging.debug(f"正在解析CFG文件内容")
+        logger.debug(f"正在解析CFG文件内容")
         parts = text_split(_str, "\n")
         # 处理文件头和采样通道数量
         header = Header.from_str(parts[0])
@@ -141,11 +145,11 @@ class Configure(BaseModel):
             configure.sampling_time_quality = SamplingTimeQuality.from_str(parts[cursor_row + 2])
         # 处理模拟量、数字量通道
         for i in range(channel_num.analog):
-            analog = AnalogDispose.from_string(parts[i + 2])
+            analog = AnalogParser.from_string(parts[i + 2])
             configure.analogs[analog.index] = analog
         cursor_row = channel_num.analog + 2
         for i in range(channel_num.status):
-            status = StatusDispose.from_string(parts[i + cursor_row])
+            status = StatusParser.from_string(parts[i + cursor_row])
             configure.statuses[status.index] = status
 
         return configure
@@ -168,21 +172,21 @@ class Configure(BaseModel):
         if not cf.cfg_path.is_enabled():
             return None
         cfg_path = cf.cfg_path.path
-        logging.debug(f"正在读取配置文件{cfg_path}")
+        logger.debug(f"正在读取配置文件{cfg_path}")
         try:
             cfg_content = cfg_path.read_text(encoding="GBK", errors='replace')
         except UnicodeDecodeError:
-            logging.warning(f"配置文件{cfg_path}编码不是GBK编码，尝试使用UTF8解析")
+            logger.warning(f"配置文件{cfg_path}编码不是GBK编码，尝试使用UTF8解析")
             try:
                 cfg_content = cfg_path.read_text(encoding="utf-8", errors='replace')
             except UnicodeDecodeError:
-                logging.error(f"配置文件{cfg_path}编码不是UTF8编码，请检查文件编码")
+                logger.error(f"配置文件{cfg_path}编码不是UTF8编码，请检查文件编码")
                 raise
         try:
             return Configure.from_str(cfg_content)
         except IndexError as e:
             error_str = f"配置文件{cfg_path}行数不对应,{str(e)}"
-            logging.error(error_str)
+            logger.error(error_str)
             raise ValueError(f"配置文件{cfg_path}行数不对应,{e}")
 
     def write_file(self, output_file_path: ComtradeFile | Path | str):
@@ -199,10 +203,10 @@ class Configure(BaseModel):
 
         with open(cfg_path, "w", encoding="gbk", errors='ignore') as f:
             f.write(self.__str__())
-        logging.info(f"配置文件{cfg_path}写入成功")
+        logger.info(f"配置文件{cfg_path}写入成功")
         return True
 
-    def get_analog(self, index: int) -> Optional[Analog]:
+    def get_analog(self, index: int) -> Analog | None:
         """
         按通道的an(index)获取模拟量通道
         参数:
@@ -212,9 +216,9 @@ class Configure(BaseModel):
         """
         return self.analogs.get(index)
 
-    def get_digital(self, index: int) -> Optional[Status]:
+    def get_status(self, index: int) -> Status | None:
         """
-        按通道的an(index)获取数字量通道
+        按通道的an(index)获取状态量通道
         参数:
             index: 通道索引
         返回:
@@ -222,7 +226,7 @@ class Configure(BaseModel):
         """
         return self.statuses.get(index)
 
-    def get_sampling_segment(self, index: int) -> Optional[Segment]:
+    def get_sampling_segment(self, index: int) -> Segment | None:
         """
         按采样段号获取该采样段的采样频率和结束采样点
         参数:
@@ -230,6 +234,6 @@ class Configure(BaseModel):
         返回:
             数字量通道对象，不存在返回None
         """
-        if 1 <= index <= len(self.sampling.segments):
+        if not (1 <= index <= len(self.sampling.segments)):
             return None
         return self.sampling.segments[index - 1]

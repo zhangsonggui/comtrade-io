@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Optional
 
 from pydantic import ConfigDict, Field
 
@@ -25,7 +24,7 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
     """
     model_config = ConfigDict(extra="allow")
     contact: Contact = Field(default=Contact.NormallyOpen, description="状态通道正常状态")
-    equipment_no: Optional[str] = Field(
+    equipment_no: str | None = Field(
         default=None, description="保护/断路器/刀闸序号，如Relay_#1、Breaker_#1"
     )
 

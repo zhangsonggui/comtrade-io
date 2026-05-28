@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -22,9 +21,9 @@ class Segment(BaseModel):
     """
     samp: int = Field(..., description="采样率，单位（Hz）", gt=0)
     end_point: int = Field(..., description="该段结束采样点号", gt=0)
-    start_point: Optional[int] = Field(default=None, description="该段起始采样点号")
-    cycle_point_num: Optional[float] = Field(default=None, description="该段周期采样点数")
-    count: Optional[int] = Field(default=None, description="该段采样点数")
+    start_point: int | None = Field(default=None, description="该段起始采样点号")
+    cycle_point_num: float | None = Field(default=None, description="该段周期采样点数")
+    count: int | None = Field(default=None, description="该段采样点数")
 
     def __str__(self) -> str:
         """序列化为逗号分隔的字符串

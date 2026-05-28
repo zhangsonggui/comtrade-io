@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Optional
 
 from pydantic import Field
 
@@ -9,7 +8,7 @@ from comtrade_io.channel.channel import ChannelBaseModel
 from comtrade_io.type import TranSide, Unit
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 
 class Analog(ChannelBaseModel, ReferenceBaseModel):
@@ -51,13 +50,21 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
     primary: float = Field(default=1.0, description="互感器一次系数")
     secondary: float = Field(default=1.0, description="互感器二次系数")
     tran_side: TranSide = Field(default=TranSide.S, description="转换标识(P/S)")
-    primary_min_value: Optional[float] = Field(default=None, description="通道一次侧量程的最小值，仅对直流类型有效")
-    primary_max_value: Optional[float] = Field(default=None, description="通道一次侧量程的最大值，仅对直流类型有效")
-    secondary_min_value: Optional[float] = Field(default=None, description="通道二次侧量程的最小值，仅对直流类型有效")
-    secondary_max_value: Optional[float] = Field(default=None, description="通道二次侧量程的最大值，仅对直流类型有效")
+    primary_min_value: float | None = Field(
+        default=None, description="通道一次侧量程的最小值，仅对直流类型有效"
+    )
+    primary_max_value: float | None = Field(
+        default=None, description="通道一次侧量程的最大值，仅对直流类型有效"
+    )
+    secondary_min_value: float | None = Field(
+        default=None, description="通道二次侧量程的最小值，仅对直流类型有效"
+    )
+    secondary_max_value: float | None = Field(
+        default=None, description="通道二次侧量程的最大值，仅对直流类型有效"
+    )
     freq: float = Field(default=50.0, description="模拟量频率")
-    au: Optional[float] = Field(default=None, description="模拟量标幺")
-    bu: Optional[float] = Field(default=None, description="模拟量标幺")
+    au: float | None = Field(default=None, description="模拟量标幺")
+    bu: float | None = Field(default=None, description="模拟量标幺")
 
     def __str__(self):
         """返回对象的字符串表示形式

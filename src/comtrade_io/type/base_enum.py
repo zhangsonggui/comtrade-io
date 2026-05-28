@@ -3,7 +3,7 @@
 
 import json
 from enum import Enum
-from typing import Any, Dict, Optional, TypeVar, cast
+from typing import Any, Dict, TypeVar, cast
 
 T = TypeVar('T', bound='BaseEnum')
 
@@ -21,7 +21,7 @@ class BaseEnum(Enum):
     """
 
     @classmethod
-    def from_value(cls, value: Any, default: Optional[T] = None) -> T:
+    def from_value(cls, value: Any, default: T | None = None) -> T:
         """从值反序列化为枚举成员
 
         参数:
@@ -88,7 +88,7 @@ class BaseEnum(Enum):
             )
 
     @classmethod
-    def get_member_by_value(cls, value: Any) -> Optional[T]:
+    def get_member_by_value(cls, value: Any) -> T | None:
         """安全的从值获取枚举成员
 
         无匹配时返回None，不抛异常。
@@ -97,7 +97,7 @@ class BaseEnum(Enum):
             value: 枚举的值（支持普通值和元组值的第一个元素）
 
         返回:
-            Optional[T]: 枚举成员或None
+            T | None: 枚举成员或None
         """
         # 将字符串值转换为大写，保持与from_value一致
         if isinstance(value, str):

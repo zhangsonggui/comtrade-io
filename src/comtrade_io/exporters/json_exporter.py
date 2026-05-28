@@ -11,7 +11,7 @@ from comtrade_io.utils import get_logger
 if TYPE_CHECKING:
     from comtrade_io.comtrade import Comtrade
 
-logging = get_logger()
+logger = get_logger()
 
 
 def _to_json(data: dict, indent: int | None = None) -> str:
@@ -73,13 +73,13 @@ def save_json(comtrade: "Comtrade", output_file_path: "Path | str",
         status_list = data.get("statuses", [])
         for ch in status_list:
             if isinstance(ch, dict) and ch.get("index") is not None:
-                col_idx = comtrade.cfg.channel_num.analog + ch["index"] + 2
+                col_idx = comtrade.channel_num.analog + ch["index"] + 2
                 if col_idx < df.shape[1]:
                     ch["data"] = df.iloc[:, col_idx].tolist()
 
     with open(output_file_path, "w", encoding="utf-8") as f:
         f.write(_to_json(data, indent))
-    logging.info(f"json数据写入{output_file_path}成功")
+    logger.info(f"json数据写入{output_file_path}成功")
     return True
 
 

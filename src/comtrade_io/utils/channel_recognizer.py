@@ -9,7 +9,7 @@
 """
 
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Tuple
 
 from comtrade_io.type import AnalogChannelFlag, AnalogChannelType
 
@@ -175,7 +175,7 @@ class ChannelRecognizer:
         return channel_type, channel_flag
 
 
-_recognizer: Optional[ChannelRecognizer] = None
+_recognizer: ChannelRecognizer | None = None
 
 
 def get_recognizer() -> ChannelRecognizer:

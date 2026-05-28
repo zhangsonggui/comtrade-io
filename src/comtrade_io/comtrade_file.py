@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from pydantic import BaseModel, Field
 
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 
 class FilePath(BaseModel):
@@ -21,7 +21,7 @@ class FilePath(BaseModel):
         is_empty: 文件是否为空
         is_readable: 文件是否可读
     """
-    path: Optional[Path] = Field(default=None, description="文件路径")
+    path: Path | None = Field(default=None, description="文件路径")
     is_exists: bool = Field(default=True, description="文件是否存在")
     is_empty: bool = Field(default=False, description="文件是否为空")
     is_readable: bool = Field(default=True, description="文件是否可读")
@@ -40,7 +40,8 @@ class FilePath(BaseModel):
             try:
                 with open(self.path, "rb") as f:
                     f.read(1)
-            except Exception:
+            except Exception as e:
+                logger.debug(f"文件{self.path}不可读: {e}")
                 self.is_readable = False
         else:
             self.is_exists = False

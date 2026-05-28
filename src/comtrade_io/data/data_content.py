@@ -15,7 +15,7 @@ from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.type import DataType
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 CYCLE_TIME_MS = 20.0
 
@@ -41,9 +41,14 @@ class DataContent(BaseModel):
         else:
             return
 
-        if self.data is not None and self.data.shape[0] != self.cfg.sampling.segments[-1].end_point:
-            logging.warning(
-                f"实际读取数据点：{self.data.shape[0]}与配置文件数据点{self.cfg.sampling.segments[-1].end_point}不一致，根据采样点时间进行修正")
+        if (
+            self.data is not None
+            and self.cfg.sampling.segments
+            and self.data.shape[0] != self.cfg.sampling.segments[-1].end_point
+        ):
+            logger.warning(
+                f"实际读取数据点：{self.data.shape[0]}与配置文件数据点{self.cfg.sampling.segments[-1].end_point}不一致，根据采样点时间进行修正"
+            )
         self.verify_and_recalculate_sampling()
 
     def get_data(self, index: int, data_type: str = "analog", start_point: int = 1, end_point: int = None):
@@ -77,7 +82,11 @@ class DataContent(BaseModel):
         return None
 
     def read(self) -> pd.DataFrame | None:
-        expected_rows = self.cfg.sampling.segments[-1].end_point
+        expected_rows = (
+            self.cfg.sampling.segments[-1].end_point
+            if self.cfg.sampling.segments
+            else 0
+        )
         expected_cols = self.cfg.channel_num.total + 2
         if self.cfg.data_type == DataType.ASCII:
             content = self.from_ascii_file(expected_rows, expected_cols)
@@ -86,7 +95,11 @@ class DataContent(BaseModel):
         return self._process_data(content, expected_rows, expected_cols)
 
     def read_from_memory(self) -> pd.DataFrame | None:
-        expected_rows = self.cfg.sampling.segments[-1].end_point
+        expected_rows = (
+            self.cfg.sampling.segments[-1].end_point
+            if self.cfg.sampling.segments
+            else 0
+        )
         expected_cols = self.cfg.channel_num.total + 2
         if self.cfg.data_type == DataType.ASCII:
             content = self.from_ascii_str(expected_rows, expected_cols)
@@ -158,22 +171,26 @@ class DataContent(BaseModel):
             if actual_rows > expected_rows:
                 try:
                     pd.isna(content.iloc[actual_rows, 0])
-                    logging.warning(
-                        f"数据{source_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},需要重新计算采样信息")
-                except:
-                    logging.warning(
-                        f"数据{source_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},数据类型错误进行剪切")
+                    logger.warning(
+                        f"数据{source_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},需要重新计算采样信息"
+                    )
+                except Exception:
+                    logger.warning(
+                        f"数据{source_name}中实际采样点{actual_rows}超过配置文件中定义采样点{expected_rows},数据类型错误进行剪切"
+                    )
                 content = content.iloc[:expected_rows, :]
 
         if actual_cols != expected_cols:
             digital_cols = actual_cols - self.cfg.channel_num.analog - 2
             if digital_cols < 0:
-                logging.error(
-                    f"数据{source_name}数据拆分错误，期望最少读取{self.cfg.channel_num.analog + 2}列，实际读取{actual_cols}列，不符合返回空数据！")
+                logger.error(
+                    f"数据{source_name}数据拆分错误，期望最少读取{self.cfg.channel_num.analog + 2}列，实际读取{actual_cols}列，不符合返回空数据！"
+                )
                 return None
             else:
-                logging.error(
-                    f"数据{source_name}数据拆分错误，期望读取{self.cfg.channel_num.total + 2}列，实际读取{actual_cols}列，丢弃数字量数据！")
+                logger.error(
+                    f"数据{source_name}数据拆分错误，期望读取{self.cfg.channel_num.total + 2}列，实际读取{actual_cols}列，丢弃数字量数据！"
+                )
                 content = content.iloc[:, : self.cfg.channel_num.analog + 2]
                 new_columns = [self.cfg.channel_num.analog + 2 + i for i in range(self.cfg.channel_num.status)]
                 new_data = pd.DataFrame(0, index=content.index, columns=new_columns)
@@ -184,7 +201,7 @@ class DataContent(BaseModel):
         try:
             binary_data = self.file_name.read_bytes()
         except Exception as e:
-            logging.error(f"读取{self.file_name}文件中的二进制数据失败: {e}")
+            logger.error(f"读取{self.file_name}文件中的二进制数据失败: {e}")
             return None
         return self._process_binary_data(binary_data, expected_rows, str(self.file_name))
 
@@ -195,25 +212,28 @@ class DataContent(BaseModel):
 
     def _process_binary_data(self, binary_data: bytes, expected_rows: int, source_name: str):
         data_size = len(binary_data)
-        digital_word_count = (self.cfg.channel_num.status + 15) // 16
+        status_word_count = (self.cfg.channel_num.status + 15) // 16
         INT32_TYPES = {DataType.BINARY32, DataType.FLOAT32}
         is_int32 = self.cfg.data_type in INT32_TYPES
         analog_dtype_str = "i4" if is_int32 else "i2"
         analog_count = self.cfg.channel_num.analog
-        dt = np.dtype([
-            ("index", "<i4", 1),
-            ("timestamp", "<i4", 1),
-            ("analog", "<" + analog_dtype_str, analog_count),
-            ("status", "<u2", digital_word_count),
-        ])
+        dt = np.dtype(
+            [
+                ("index", "<i4", 1),
+                ("timestamp", "<i4", 1),
+                ("analog", "<" + analog_dtype_str, analog_count),
+                ("status", "<u2", status_word_count),
+            ]
+        )
         item_size = dt.itemsize
         sample_count = data_size // item_size
 
         if sample_count == expected_rows:
             samples = np.frombuffer(binary_data, dtype=dt)
         else:
-            logging.warning(
-                f"期望采样点数量：{expected_rows},数据不是{item_size}的整数倍，实际读取{sample_count}个采样点")
+            logger.warning(
+                f"期望采样点数量：{expected_rows},数据不是{item_size}的整数倍，实际读取{sample_count}个采样点"
+            )
             samples = np.frombuffer(binary_data, dtype=dt, count=sample_count)
 
         index_data = samples["index"].astype(np.int32)
@@ -221,43 +241,56 @@ class DataContent(BaseModel):
         analog_data = samples["analog"].astype(np.float64)
 
         if self.cfg.channel_num.status > 0:
-            digital_data = samples["status"].reshape(-1, digital_word_count)
-            digital_bytes = digital_data.view(np.uint8).reshape(sample_count, -1)
-            bits = np.unpackbits(digital_bytes, axis=1, bitorder="little")
-            digital_bits = bits[:, : self.cfg.channel_num.status]
+            status_data = samples["status"].reshape(-1, status_word_count)
+            status_bytes = status_data.view(np.uint8).reshape(sample_count, -1)
+            bits = np.unpackbits(status_bytes, axis=1, bitorder="little")
+            status_bits = bits[:, : self.cfg.channel_num.status]
         else:
-            digital_bits = np.zeros((sample_count, 0), dtype=np.int32)
+            status_bits = np.zeros((sample_count, 0), dtype=np.int32)
 
         if self.cfg.channel_num.analog > 0:
-            data_array = np.column_stack([index_data, timestamp_data, analog_data, digital_bits])
+            data_array = np.column_stack(
+                [index_data, timestamp_data, analog_data, status_bits]
+            )
         else:
-            data_array = np.column_stack([index_data, timestamp_data, digital_bits])
+            data_array = np.column_stack([index_data, timestamp_data, status_bits])
 
         content = pd.DataFrame(data_array)
         return content
 
-    def write_file(self, output_file_path: ComtradeFile | Path | str, data_type: str = "BINARY"):
+    def write_file(
+        self,
+        output_file_path: ComtradeFile | Path | str,
+        data_type: str | DataType = "BINARY",
+    ):
         output_file_path = ComtradeFile.from_path(output_file_path)
         data_path = output_file_path.dat_path.path
 
-        if data_type.upper() == "ASCII":
+        if isinstance(data_type, DataType):
+            dt_value = data_type
+        else:
+            dt_value = DataType.from_value(data_type.upper())
+
+        if dt_value == DataType.ASCII:
             self._write_ascii_dat_file(data_path)
         else:
-            self._write_binary_dat_file(data_path)
+            self._write_binary_dat_file(data_path, dt_value)
         return True
 
     def _write_ascii_dat_file(self, output_file_path: Path | str):
         self.data.to_csv(str(output_file_path), header=False, index=False)
-        logging.info(f"数据文件{output_file_path}写入成功")
+        logger.info(f"数据文件{output_file_path}写入成功")
 
-    def _write_binary_dat_file(self, output_file_path: Path | str):
+    def _write_binary_dat_file(
+        self, output_file_path: Path | str, data_type: DataType = DataType.BINARY
+    ):
         INT32_TYPES = {DataType.BINARY32, DataType.FLOAT32}
-        is_int32 = self.cfg.data_type in INT32_TYPES
+        is_int32 = data_type in INT32_TYPES
         analog_fmt = "<i" if is_int32 else "<h"
 
         analog_count = self.cfg.channel_num.analog
-        digital_count = self.cfg.channel_num.status
-        digital_word_count = (digital_count + 15) // 16
+        status_count = self.cfg.channel_num.status
+        status_word_count = (status_count + 15) // 16
 
         with open(str(output_file_path), "wb") as f:
             for i in range(len(self.data)):
@@ -276,19 +309,19 @@ class DataContent(BaseModel):
                         ival = 0
                     f.write(struct.pack(analog_fmt, ival))
 
-                for word_idx in range(digital_word_count):
+                for word_idx in range(status_word_count):
                     digital_word = 0
                     for bit_idx in range(16):
                         channel_idx = word_idx * 16 + bit_idx
                         col = 2 + analog_count + channel_idx
-                        if channel_idx < digital_count and col < self.data.shape[1]:
+                        if channel_idx < status_count and col < self.data.shape[1]:
                             bit_val = int(float(self.data.iloc[i, col].real) if hasattr(self.data.iloc[i, col],
                                                                                         "real") else float(
                                     self.data.iloc[i, col]))
                             if bit_val != 0:
                                 digital_word |= 1 << bit_idx
                     f.write(struct.pack("<H", digital_word))
-        logging.info(f"数据文件{output_file_path}写入成功")
+        logger.info(f"数据文件{output_file_path}写入成功")
         return True
 
     def verify_and_recalculate_sampling(self) -> Sampling:

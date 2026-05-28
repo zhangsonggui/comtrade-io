@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -24,7 +23,7 @@ class ReferenceBaseModel(BaseModel):
     属性:
         reference: IEC61850参考路径字符串
     """
-    reference: Optional[str] = Field(default=None, description="IEC61850参考")
+    reference: str | None = Field(default=None, description="IEC61850参考")
 
 
 class IdxOrgBaseModel(IndexBaseModel, ReferenceBaseModel):
@@ -37,4 +36,4 @@ class IdxOrgBaseModel(IndexBaseModel, ReferenceBaseModel):
         reference: IEC61850参考
         idx_org: 端子排号，非负整数
     """
-    idx_org: Optional[int] = Field(default=0, ge=0, description="端子排号")
+    idx_org: int | None = Field(default=0, ge=0, description="端子排号")

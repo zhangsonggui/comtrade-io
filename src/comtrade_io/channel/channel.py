@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 from pydantic import Field, field_serializer
@@ -22,8 +22,12 @@ class ChannelType(IdxOrgBaseModel):
         type: 通道类型，可以是模拟通道类型或数字通道类型
         flag: 通道标志，用于标识通道的具体用途
     """
-    type: Optional[AnalogChannelType | DigitalChannelType] = Field(default=None, description="通道类型")
-    flag: Optional[AnalogChannelFlag | DigitalChannelFlag] = Field(default=None, description="通道标识")
+    type: AnalogChannelType | DigitalChannelType | None = Field(
+        default=None, description="通道类型"
+    )
+    flag: AnalogChannelFlag | DigitalChannelFlag | None = Field(
+        default=None, description="通道标识"
+    )
 
 
 class ChannelBaseModel(ChannelType):
@@ -42,13 +46,13 @@ class ChannelBaseModel(ChannelType):
         equip: 被监视的电路元件
         data: 通道数据，一维数组
     """
-    name: Optional[str] = Field(default=None, description="通道标识")
-    phase: Optional[Phase] = Field(default=Phase.NONE, description="通道相别标识")
-    equip: Optional[str] = Field(default=None, description="被监视的电路元件")
-    data: Optional[Any] = Field(default=None, description="通道数据，一维数组")
+    name: str | None = Field(default=None, description="通道标识")
+    phase: Phase | None = Field(default=Phase.NONE, description="通道相别标识")
+    equip: str | None = Field(default=None, description="被监视的电路元件")
+    data: Any | None = Field(default=None, description="通道数据，一维数组")
 
     @field_serializer('data')
-    def serialize_data(self, data: Any) -> Optional[list]:
+    def serialize_data(self, data: Any) -> list | None:
         """序列化通道数据
 
         将numpy数组转换为列表以便序列化。
@@ -57,7 +61,7 @@ class ChannelBaseModel(ChannelType):
             data: 通道数据，可以是None、numpy数组或其他类型
 
         返回:
-            Optional[list]: 序列化后的数据列表，或None
+            list | None: 序列化后的数据列表，或None
         """
         if data is None:
             return None

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -56,8 +55,8 @@ class Igap(BaseModel):
         zgap: 中性点直接接地电流的通道
         zsgap: 中性点经间隙接地电流的通道
     """
-    zgap: Optional[Analog] = Field(default=None, description="中性点直接接地电流的通道")
-    zsgap: Optional[Analog] = Field(default=None, description="中性点经间隙接地电流的通道")
+    zgap: Analog | None = Field(default=None, description="中性点直接接地电流的通道")
+    zsgap: Analog | None = Field(default=None, description="中性点经间隙接地电流的通道")
 
     def to_dmf(self):
         """
@@ -93,7 +92,7 @@ class TransformerWinding(BaseModel):
     """
     bus_id: int = Field(default=0, description="母线索引号")
     trans_wind_location: TransWindLocation = Field(default=TransWindLocation.HIGH, description="绕组位置")
-    reference: Optional[str] = Field(default="", description="IEC61850参引")
+    reference: str | None = Field(default="", description="IEC61850参引")
     rated_voltage: float = Field(default=0.0, description="额定电压")
     rated_current: float = Field(default=0.0, description="一次额定电流")
     bran_num: CurrentBranchNum = Field(default=CurrentBranchNum.B1, description="分路数")

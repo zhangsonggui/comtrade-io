@@ -12,7 +12,7 @@ from comtrade_io.utils import get_logger
 if TYPE_CHECKING:
     from comtrade_io.comtrade import Comtrade
 
-logging = get_logger()
+logger = get_logger()
 
 
 def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
@@ -36,16 +36,16 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
             cff_path = base_path.parent / (base_path.stem + '.cff')
         else:
             raise ValueError("无法确定CFF输出路径")
-    logging.debug(f"正在输出CFG部分")
+    logger.debug(f"正在输出CFG部分")
     sections = ["--- file type CFG ---", str(comtrade.to_cfg())]
 
-    logging.debug(f"正在输出INF部分")
+    logger.debug(f"正在输出INF部分")
     inf_content = comtrade.to_inf()
     if inf_content:
         sections.append("--- file type INF ---")
         sections.append(inf_content)
 
-    logging.debug(f"正在输出DAT部分")
+    logger.debug(f"正在输出DAT部分")
     sections.append("--- file type DAT ---")
     if data_format == "ASCII":
         buffer = StringIO()
@@ -66,5 +66,5 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
     with open(cff_path, 'w', encoding='gbk', errors='ignore') as f:
         f.write('\n'.join(sections))
 
-    logging.info(f"CFF文件{cff_path}写入成功")
+    logger.info(f"CFF文件{cff_path}写入成功")
     return f"文件保存成功: {cff_path}"

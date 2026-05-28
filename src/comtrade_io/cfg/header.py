@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from comtrade_io.type.version import Version
 from comtrade_io.utils import get_logger, text_split
 
-logging = get_logger()
+logger = get_logger()
 
 class Header(BaseModel):
     """文件头类
@@ -21,9 +20,9 @@ class Header(BaseModel):
         recorder: 故障录波设备标识
         version: COMTRADE标准版本号
     """
-    station: Optional[str] = Field(default='变电站', description="变电站")
-    recorder: Optional[str] = Field(default='故障录波设备', description="故障录波设备")
-    version: Optional[Version] = Field(default=Version.V1991, description="版本")
+    station: str | None = Field(default="变电站", description="变电站")
+    recorder: str | None = Field(default="故障录波设备", description="故障录波设备")
+    version: Version | None = Field(default=Version.V1991, description="版本")
 
     def __str__(self):
         """序列化为逗号分隔的逗号分隔的字符串"""
@@ -41,7 +40,7 @@ class Header(BaseModel):
         返回:
             Header: 解析后的文件头对象
         """
-        logging.debug(f"正在解析配置文件第一行内容:{_str}")
+        logger.debug(f"正在解析配置文件第一行内容:{_str}")
         str_arr = text_split(_str)
         if len(str_arr) < 2:
             return cls()

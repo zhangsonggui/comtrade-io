@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import re
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from pydantic import BaseModel, Field
 
@@ -11,7 +11,7 @@ from comtrade_io.data import DataContent
 from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 
 class CffSection(BaseModel):
@@ -26,11 +26,13 @@ class CffSection(BaseModel):
         inf: INF 信息部分文本
         hdr: HDR 头部部分文本
     """
-    cfg: Optional[str] = Field(default=None, description="CFG 配置部分文本")
-    dat: Optional[str] = Field(default=None, description="DAT 数据部分文本(ASCII格式)")
-    dat_bytes: Optional[bytes] = Field(default=None, description="DAT 数据部分字节(二进制格式)")
-    inf: Optional[str] = Field(default=None, description="INF 信息部分文本")
-    hdr: Optional[str] = Field(default=None, description="HDR 头部部分文本")
+    cfg: str | None = Field(default=None, description="CFG 配置部分文本")
+    dat: str | None = Field(default=None, description="DAT 数据部分文本(ASCII格式)")
+    dat_bytes: bytes | None = Field(
+        default=None, description="DAT 数据部分字节(二进制格式)"
+    )
+    inf: str | None = Field(default=None, description="INF 信息部分文本")
+    hdr: str | None = Field(default=None, description="HDR 头部部分文本")
 
 
 def extract_sections(cff_path: Union[str, Path]) -> CffSection:
@@ -104,68 +106,68 @@ class CffFile:
         self.sections = extract_sections(self.file_path)
 
     @property
-    def cfg_text(self) -> Optional[str]:
+    def cfg_text(self) -> str | None:
         """返回 CFG 配置部分文本
 
         返回:
-            Optional[str]: CFG配置文本，不存在则返回None
+            str | None: CFG配置文本，不存在则返回None
         """
         return self.sections.cfg
 
     @property
-    def dat_text(self) -> Optional[str]:
+    def dat_text(self) -> str | None:
         """返回 DAT 数据部分文本
 
         返回:
-            Optional[str]: DAT数据文本(ASCII格式)，不存在则返回None
+            str | None: DAT数据文本(ASCII格式)，不存在则返回None
         """
         return self.sections.dat
 
     @property
-    def inf_text(self) -> Optional[str]:
+    def inf_text(self) -> str | None:
         """返回 INF 信息部分文本
 
         返回:
-            Optional[str]: INF信息文本，不存在则返回None
+            str | None: INF信息文本，不存在则返回None
         """
         return self.sections.inf
 
     @property
-    def hdr_text(self) -> Optional[str]:
+    def hdr_text(self) -> str | None:
         """返回 HDR 头部部分文本
 
         返回:
-            Optional[str]: HDR头部文本，不存在则返回None
+            str | None: HDR头部文本，不存在则返回None
         """
         return self.sections.hdr
 
-    def to_configure(self) -> Optional[Configure]:
+    def to_configure(self) -> Configure | None:
         """将 CFG 部分转换为 Configure 对象
 
         返回:
-            Optional[Configure]: 配置对象，解析失败返回None
+            Configure | None: 配置对象，解析失败返回None
         """
         if not self.cfg_text:
-            logging.error("CFF 文件中未找到 CFG 配置部分")
+            logger.error("CFF 文件中未找到 CFG 配置部分")
             return None
 
         try:
             return Configure.from_str(self.cfg_text)
         except Exception as e:
-            logging.error(f"解析 CFG 配置失败: {e}")
+            logger.error(f"解析 CFG 配置失败: {e}")
             return None
 
-    def to_data_content(self, cfg: Configure) -> Optional[DataContent]:
+    def to_data_content(self, cfg: Configure) -> DataContent | None:
         """将 DAT 部分转换为 DataContent 对象（不生成临时文件）
 
         参数:
             cfg: Configure 配置对象
 
         返回:
-            Optional[DataContent]: 数据内容对象，解析失败返回None
+            DataContent | None: 数据内容对象，解析失败返回None
         """
         if not self.dat_text and not self.sections.dat_bytes:
-            logging.error("CFF 文件中未找到 DAT 数据部分")
+            logger.error("CFF 文件中未找到 DAT 数据部分")
             return None
 
         try:
@@ -174,23 +176,23 @@ class CffFile:
             else:
                 return DataContent(cfg=cfg, dat_bytes=self.sections.dat_bytes)
         except Exception as e:
-            logging.error(f"解析 DAT 数据失败: {e}")
+            logger.error(f"解析 DAT 数据失败: {e}")
             return None
 
     def to_information(self):
         """将 INF 部分转换为 Information 对象（不生成临时文件）
 
         返回:
-            Optional[ComtradeModel]: 信息模型对象，解析失败返回None
+            ComtradeModel | None: 信息模型对象，解析失败返回None
         """
         if not self.inf_text:
-            logging.debug("CFF 文件中未找到 INF 信息部分")
+            logger.debug("CFF 文件中未找到 INF 信息部分")
             return None
 
         try:
             return Information.from_str(self.inf_text)
         except Exception as e:
-            logging.error(f"解析 INF 信息失败: {e}")
+            logger.error(f"解析 INF 信息失败: {e}")
             return None
 
     @classmethod

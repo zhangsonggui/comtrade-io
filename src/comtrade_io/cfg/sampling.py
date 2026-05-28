@@ -4,18 +4,18 @@
 描述：用于描述波形的采样信息，包含频率和采样段列表。
 """
 import json
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, Field
 
 from comtrade_io.cfg.segment import Segment
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 
 class Sampling(BaseModel):
-    freq: Optional[float] = Field(default=50.0, description="电网频率")
+    freq: float | None = Field(default=50.0, description="电网频率")
     segments: List[Segment] = Field(default_factory=list, description="采样段")
 
     def __len__(self):

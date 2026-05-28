@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -22,7 +21,7 @@ from comtrade_io.inf.status_section import StatusSection
 from comtrade_io.inf.transformer_section import TransformerSection
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 
 def parse_section_header(header_str: str):
@@ -56,20 +55,28 @@ def parse_section_header(header_str: str):
 
 class Information(BaseModel):
     """INF文件解析和序列化主类"""
-    record_info: Optional[list] = Field(default_factory=list, description="录波记录信息")
-    file_description: Optional[Description] = Field(default_factory=Description, description="文件描述信息")
-    analog_channels: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道信息")
-    status_channels: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道信息")
-    analog_channel_parameters: Optional[dict[int, Analog]] = Field(
+    record_info: list | None = Field(default_factory=list, description="录波记录信息")
+    file_description: Description | None = Field(
+        default_factory=Description, description="文件描述信息"
+    )
+    analog_channels: dict[int, Analog] | None = Field(
+        default_factory=dict, description="模拟通道信息"
+    )
+    status_channels: dict[int, Status] | None = Field(
+        default_factory=dict, description="状态量通道信息"
+    )
+    analog_channel_parameters: dict[int, Analog] | None = Field(
         default_factory=dict, description="模拟通道参数信息"
     )
-    status_channel_parameters: Optional[dict[int, Status]] = Field(
+    status_channel_parameters: dict[int, Status] | None = Field(
         default_factory=dict, description="状态量通道参数信息"
     )
-    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线信息")
-    lines: Optional[list[Line]] = Field(default_factory=list, description="线路信息")
-    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器信息")
-    channels_group: Optional[list] = Field(default_factory=list, description="通道组信息")
+    buses: list[Bus] | None = Field(default_factory=list, description="母线信息")
+    lines: list[Line] | None = Field(default_factory=list, description="线路信息")
+    transformers: list[Transformer] | None = Field(
+        default_factory=list, description="变压器信息"
+    )
+    channels_group: list | None = Field(default_factory=list, description="通道组信息")
 
     def _get_voltage_from_channel(self, channels: list[Analog]) -> tuple[int, list[Bus]]:
         """
@@ -209,15 +216,15 @@ class Information(BaseModel):
         if not cf.inf_path.is_enabled():
             return None
         inf_path = cf.inf_path.path
-        logging.debug(f"开始解析INF文件: {inf_path}")
+        logger.debug(f"开始解析INF文件: {inf_path}")
         try:
             inf_content = inf_path.read_text(encoding='gbk', errors='replace')
         except UnicodeDecodeError:
-            logging.warning(f"配置文件{inf_path}编码不是GBK编码，尝试使用UTF8解析")
+            logger.warning(f"配置文件{inf_path}编码不是GBK编码，尝试使用UTF8解析")
             try:
                 inf_content = inf_path.read_text(encoding="utf-8", errors='replace')
             except UnicodeDecodeError:
-                logging.error(f"无法解析INF文件: {inf_path}")
+                logger.error(f"无法解析INF文件: {inf_path}")
                 return None
         return cls.from_str(inf_content)
 

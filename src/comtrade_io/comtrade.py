@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 from pydantic import Field
@@ -23,12 +22,12 @@ from comtrade_io.exporters.json_exporter import _to_json
 from comtrade_io.inf import Information
 from comtrade_io.utils import get_logger
 
-logging = get_logger()
+logger = get_logger()
 
 
 class Comtrade(ComtradeModel):
     file: ComtradeFile = Field(default_factory=ComtradeFile, description="文件路径")
-    dat: Optional[DataContent] = Field(default=None, description="故障数据")
+    dat: DataContent | None = Field(default=None, description="故障数据")
 
     def model_dump_json(self, *, indent: int | None = None, **kwargs) -> str:
         """
@@ -42,23 +41,27 @@ class Comtrade(ComtradeModel):
     def get_data(self) -> pd.DataFrame:
         return self.dat.data
 
-    def get_analog_channel(self, index: int) -> Optional[Analog]:
+    def get_analog_channel(self, index: int) -> Analog | None:
         """
         根据通道标识获取模拟量通道，并加载通道数据
         """
         analog = self.get_analog_channel_info(index)
+        if analog is None:
+            return None
         analog.data = self.dat.data.iloc[:, index + 1].to_numpy()
         return analog
 
-    def get_status_channel(self, index: int) -> Optional[Status]:
+    def get_status_channel(self, index: int) -> Status | None:
         """
         根据通道标识获取状态量通道，并加载通道数据
         """
         digital = self.get_status_channel_info(index)
+        if digital is None:
+            return None
         digital.data = self.dat.data.iloc[:, index + self.channel_num.analog + 1].to_numpy()
         return digital
 
-    def _load_digital_data(self, channels: list, data: pd.DataFrame):
+    def _load_status_data(self, channels: list, data: pd.DataFrame):
         """加载数字量通道数据到通道对象列表"""
         for chn in channels:
             if chn and chn.index is not None:
@@ -101,7 +104,7 @@ class Comtrade(ComtradeModel):
                                        data)
 
         # 加载开关量通道数据
-        self._load_digital_data(line.stas, data)
+        self._load_status_data(line.stas, data)
 
         return line
 
@@ -128,8 +131,8 @@ class Comtrade(ComtradeModel):
                                    data)
 
         # 加载模拟通道和开关量通道数据
-        self._load_digital_data(bus.anas, data)
-        self._load_digital_data(bus.stas, data)
+        self._load_status_data(bus.anas, data)
+        self._load_status_data(bus.stas, data)
 
         return bus
 
@@ -161,8 +164,8 @@ class Comtrade(ComtradeModel):
                 self._load_analog_channels((current.ia, current.ib, current.ic, current.i0), data)
 
         # 加载模拟通道和开关量通道数据
-        self._load_digital_data(transformer.anas, data)
-        self._load_digital_data(transformer.stas, data)
+        self._load_status_data(transformer.anas, data)
+        self._load_status_data(transformer.stas, data)
 
         return transformer
 

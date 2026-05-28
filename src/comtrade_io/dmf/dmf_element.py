@@ -21,7 +21,7 @@ from comtrade_io.dmf.transformer_element import TransformerElement
 from comtrade_io.equipment.equipment_group import EquipmentGroup
 from comtrade_io.utils import get_logger
 
-logging = get_logger(__name__)
+logger = get_logger(__name__)
 
 
 class DmfElement(EquipmentGroup):
@@ -154,7 +154,7 @@ class DmfElement(EquipmentGroup):
         ns = {
             "scl": "http://www.iec.ch/61850/2003/SCL"
         }
-        logging.debug(f"正在解析{dmf_path}")
+        logger.debug(f"正在解析{dmf_path}")
         try:
             tree = ET.parse(dmf_path)
             root = tree.getroot()
@@ -169,7 +169,7 @@ class DmfElement(EquipmentGroup):
             )
         except ET.ParseError as e:
             error_str = f"文件{dmf_path}解析错误,{str(e)}"
-            logging.warning(error_str)
+            logger.warning(error_str)
             return None
 
 

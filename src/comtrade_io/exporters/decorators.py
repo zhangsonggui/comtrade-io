@@ -13,7 +13,7 @@ from .csv_exporter import export_csv
 from .json_exporter import export_json
 from .multi_file_exporter import export_multi_file
 
-logging = get_logger()
+logger = get_logger()
 
 
 class ExportFormat(str, Enum):
@@ -43,12 +43,6 @@ def export_format(func: Callable) -> Callable:
         except ValueError as e:
             raise ValueError(f"无效格式参数: {e}") from e
 
-        # 保存原始data_type
-        original_data_type = self.data_type
-
-        # 直接使用DataType枚举
-        self.data_type = data_fmt
-
         try:
             # 使用字典映射分发
             export_handlers = {
@@ -57,10 +51,9 @@ def export_format(func: Callable) -> Callable:
                 ExportFormat.JSON      : export_json,
                 ExportFormat.CSV       : export_csv,
             }
-            logging.debug(f"使用{export_fmt.value}格式导出")
+            logger.debug(f"使用{export_fmt.value}格式导出")
             return export_handlers[export_fmt](self, output_path, data_fmt.value, **kwargs)
         finally:
-            # 恢复原始data_type
-            self.data_type = original_data_type
+            pass
 
     return wrapper

@@ -12,7 +12,7 @@ from comtrade_io.channel.status import Status
 from comtrade_io.type import Contact, DigitalChannelFlag, DigitalChannelType
 from comtrade_io.utils import get_logger, parse_int
 
-logging = get_logger()
+logger = get_logger()
 
 
 class StatusElement:

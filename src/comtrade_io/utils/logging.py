@@ -8,7 +8,6 @@
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 from loguru import logger
 
@@ -47,6 +46,7 @@ def _load_env() -> dict:
                             k, v = line.split("=", 1)
                             env[k.strip()] = v.strip().strip('"').strip("'")
             except Exception:
+                # .env 文件加载失败不影响主流程，此时 logger 尚未初始化
                 pass
             break
     return env
@@ -118,7 +118,7 @@ class LoguruLoggerWrapper:
     兼容标准 logging.Logger 的常用接口，支持在 except 块中自动捕获并记录异常 traceback。
     """
 
-    def __init__(self, name: Optional[str] = None):
+    def __init__(self, name: str | None = None):
         self._name = name
         _configure_logger()
         self._logger = logger
@@ -160,7 +160,7 @@ class LoguruLoggerWrapper:
         self._logger.opt(depth=1, exception=True).error(msg, *args, **kwargs)
 
 
-def get_logger(name: Optional[str] = None):
+def get_logger(name: str | None = None):
     """获取日志记录器
 
     如果未指定名称，会自动尝试获取调用者的模块名。

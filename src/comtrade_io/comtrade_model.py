@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
-from typing import Optional
 
 from pydantic import Field, model_serializer
 
@@ -25,9 +24,11 @@ class ComtradeModel(Configure):
         statuses: 状态量通道字典，键为通道索引
     """
     description: Description = Field(default_factory=Description, description="描述文件")
-    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线")
-    lines: Optional[list[Line]] = Field(default_factory=list, description="线路")
-    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器")
+    buses: list[Bus] | None = Field(default_factory=list, description="母线")
+    lines: list[Line] | None = Field(default_factory=list, description="线路")
+    transformers: list[Transformer] | None = Field(
+        default_factory=list, description="变压器"
+    )
 
     @model_serializer(mode='wrap')
     def serialize_model(self, handler):
@@ -141,27 +142,27 @@ class ComtradeModel(Configure):
             return None
         return next((trans for trans in self.transformers if trans.name == name), None)
 
-    def get_analog_channel_info(self, index: int) -> Optional[Analog]:
+    def get_analog_channel_info(self, index: int) -> Analog | None:
         """根据索引获取模拟量通道
 
         参数:
             index: 通道索引
 
         返回:
-            Optional[Analog]: 模拟量通道，未找到返回 None
+            Analog | None: 模拟量通道，未找到返回 None
         """
         if self.analogs is None:
             return None
         return self.analogs.get(index)
 
-    def get_status_channel_info(self, index: int) -> Optional[Status]:
+    def get_status_channel_info(self, index: int) -> Status | None:
         """根据索引获取开关量通道
 
         参数:
             index: 通道索引
 
         返回:
-            Optional[Status]: 开关量通道，未找到返回 None
+            Status | None: 开关量通道，未找到返回 None
         """
         if self.statuses is None:
             return None

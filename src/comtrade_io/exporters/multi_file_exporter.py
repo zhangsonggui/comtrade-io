@@ -9,7 +9,7 @@ from comtrade_io.utils import get_logger
 if TYPE_CHECKING:
     from comtrade_io.comtrade import Comtrade
 
-logging = get_logger()
+logger = get_logger()
 
 
 def export_multi_file(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
