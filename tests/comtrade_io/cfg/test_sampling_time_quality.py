@@ -1,7 +1,6 @@
 import pytest
 
-from comtrade_io.cfg.sampling_time_quality import SamplingTimeQuality
-
+from comtrade_io.model.description import SamplingTimeQuality
 
 def test_decode_zero():
     stq = SamplingTimeQuality(tmq_code='0', lcapsec=0)

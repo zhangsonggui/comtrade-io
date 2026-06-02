@@ -7,8 +7,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from comtrade_io.cfg import Configure
-from comtrade_io.data.data_content import DataContent
+from comtrade_io.model.configure import Configure
+from comtrade_io.parser.cfg.cfg_file_parser import CfgFileParser
+from comtrade_io.parser.data import DataContent
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
@@ -18,7 +19,7 @@ CSV_FILE = DATA_DIR / "binary_1999.csv"
 @pytest.fixture(scope="module")
 def comtrade_cfg():
     """从binary_1999.cfg加载配置"""
-    return Configure.from_file(CFG_FILE)
+    return CfgFileParser.from_file(CFG_FILE)
 
 
 @pytest.fixture(scope="module")

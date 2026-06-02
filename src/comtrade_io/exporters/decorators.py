@@ -5,8 +5,8 @@ from functools import wraps
 from pathlib import Path
 from typing import Any, Callable
 
-from comtrade_io.comtrade_file import ComtradeFile
-from comtrade_io.type.data_type import DataType
+from comtrade_io.model.comtrade_file import ComtradeFile
+from comtrade_io.model.type.data_type import DataType
 from comtrade_io.utils import get_logger
 from .cff_exporter import export_cff
 from .csv_exporter import export_csv
@@ -43,17 +43,14 @@ def export_format(func: Callable) -> Callable:
         except ValueError as e:
             raise ValueError(f"无效格式参数: {e}") from e
 
-        try:
-            # 使用字典映射分发
-            export_handlers = {
-                ExportFormat.MULTI_FILE: export_multi_file,
-                ExportFormat.CFF       : export_cff,
-                ExportFormat.JSON      : export_json,
-                ExportFormat.CSV       : export_csv,
-            }
-            logger.debug(f"使用{export_fmt.value}格式导出")
-            return export_handlers[export_fmt](self, output_path, data_fmt.value, **kwargs)
-        finally:
-            pass
+        # 使用字典映射分发
+        export_handlers = {
+            ExportFormat.MULTI_FILE: export_multi_file,
+            ExportFormat.CFF: export_cff,
+            ExportFormat.JSON: export_json,
+            ExportFormat.CSV: export_csv,
+        }
+        logger.debug(f"使用{export_fmt.value}格式导出")
+        return export_handlers[export_fmt](self, output_path, data_fmt.value, **kwargs)
 
     return wrapper

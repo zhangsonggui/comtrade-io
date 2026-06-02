@@ -5,15 +5,16 @@ from pathlib import Path
 
 import pytest
 
-from comtrade_io.cfg import Configure
-from comtrade_io.type import Version
+from comtrade_io.model.configure import Configure
+from comtrade_io.model.type import Version
+from comtrade_io.parser.cfg.cfg_file_parser import CfgFileParser
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
 
 @pytest.fixture(scope="session")
 def config():
-    config = Configure.from_file(file_name=CFG_FILE)
+    config = CfgFileParser.from_file(file_name=CFG_FILE)
     return config
 
 def test_config_header(config):

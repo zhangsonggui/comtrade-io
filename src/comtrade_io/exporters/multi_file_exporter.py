@@ -3,11 +3,12 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.model.comtrade_file import ComtradeFile
+from comtrade_io.parser.data import DataContent
 from comtrade_io.utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.comtrade import Comtrade
+    from comtrade_io.model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -27,7 +28,9 @@ def export_multi_file(comtrade: "Comtrade", output_path: "str | Path | ComtradeF
     """
     cf = ComtradeFile.from_path(output_path)
     comtrade.write_cfg(str(cf.cfg_path.path))
-    comtrade.dat.write_file(cf, data_type=data_format)
+    DataContent(cfg=comtrade.cfg, data=comtrade.data).write_file(
+        cf, data_type=data_format
+    )
     if cf.inf_path.path:
         comtrade.write_inf(str(cf.inf_path.path))
     if cf.dmf_path.path:

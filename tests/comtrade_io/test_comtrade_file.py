@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from comtrade_io.comtrade_file import ComtradeFile, FilePath
-
+from comtrade_io.model.comtrade_file import ComtradeFile, FilePath
 
 class TestFilePath:
     """测试 FilePath 类"""

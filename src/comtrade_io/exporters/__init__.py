@@ -5,7 +5,7 @@ from comtrade_io.exporters.csv_exporter import export_csv
 from comtrade_io.exporters.decorators import ExportFormat, export_format
 from comtrade_io.exporters.json_exporter import export_json, save_json
 from comtrade_io.exporters.multi_file_exporter import export_multi_file
-from comtrade_io.type.data_type import DataType
+from comtrade_io.model.type.data_type import DataType
 
 __all__ = [
     "export_format", "ExportFormat", "DataType",

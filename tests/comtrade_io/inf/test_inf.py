@@ -3,12 +3,11 @@
 import tempfile
 from pathlib import Path
 
-from comtrade_io.inf import Information
-
+from comtrade_io.parser.inf import Information
 
 def test_parse_section_header():
     """测试节头解析函数"""
-    from comtrade_io.inf.information import parse_section_header
+    from comtrade_io.parser.inf import parse_section_header
 
     # 测试正常格式
     result = parse_section_header("[Public Analog_Channel_#1]")
@@ -71,7 +70,7 @@ Time_Multiplier=1
 
 def test_parse_analog_channels():
     """测试模拟通道解析"""
-    from comtrade_io.type import Phase, Unit
+    from comtrade_io.model.type import Phase, Unit
 
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
@@ -122,7 +121,7 @@ Channel_Units=A
 
 def test_parse_status_channels():
     """测试状态通道解析"""
-    from comtrade_io.type import Phase, Contact
+    from comtrade_io.model.type import Phase, Contact
 
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
@@ -299,7 +298,7 @@ def test_file_not_found():
 
 def test_empty_content():
     """测试空内容解析（直接测试 split_sections）"""
-    from comtrade_io.inf.information import Information
+    from comtrade_io.parser.inf import Information
 
     inf = Information()
     inf.split_sections("")
@@ -312,7 +311,7 @@ def test_empty_content():
 
 def test_comtrade_model_fields():
     """测试 ComtradeModel 字段类型正确"""
-    from comtrade_io.equipment import EquipmentGroup
+    from comtrade_io.model.equipment import EquipmentGroup
 
     model = EquipmentGroup()
     assert isinstance(model.analogs, dict)
@@ -324,7 +323,7 @@ def test_comtrade_model_fields():
 
 def test_from_str():
     """测试 from_str 方法直接解析字符串"""
-    from comtrade_io.type import Phase
+    from comtrade_io.model.type import Phase
 
     content = """
 [Public Analog_Channel_#1]
@@ -361,7 +360,7 @@ def test_from_str_empty():
 
 def test_kv_pairs():
     """测试键值对解析"""
-    from comtrade_io.inf.information import _kv_pairs
+    from comtrade_io.parser.inf import _kv_pairs
 
     lines = [
         "[Section]",
@@ -426,7 +425,8 @@ def test_read_real_binary_inf_file():
     assert model.description.rec_dev_name == "ZH3D-1"
 
     # 验证版本（Revision_Year=1999）
-    from comtrade_io.type import Version
+    from comtrade_io.model.type import Version
+
     assert model.description.version == Version.V1999
 
     # 验证文件类型为BINARY（File_Type=BINARY）
@@ -482,7 +482,7 @@ CHNL_INFO_#1=1, 1, Ia, TA, 50, 0.6, kA, 1, A, 1, 0,
         # 参数段中的 t2 应覆盖通道段中的 Channel_Ratio_Secondary
         assert ana1.secondary == 1.0
         # flag 应从参数段 type 解析
-        from comtrade_io.type import AnalogChannelFlag
+        from comtrade_io.model.type import AnalogChannelFlag
 
         assert ana1.flag == AnalogChannelFlag.TA
 
@@ -512,16 +512,16 @@ CHNL_INFO_#1=1, 1, Breaker1, Breaker_Pos, Unknown,
         assert sta1.index == 1
         assert sta1.name == "Breaker1"
         # type 应从参数段 level 解析
-        from comtrade_io.type import DigitalChannelType
+        from comtrade_io.model.type import DigitalChannelType
 
         assert sta1.type == DigitalChannelType.Breaker_Pos
 
 
 def test_comtrade_model_to_inf_with_parameters():
     """测试 ComtradeModel 的 to_inf 输出包含参数段"""
-    from comtrade_io.comtrade_model import ComtradeModel
-    from comtrade_io.channel import Analog, Status
-    from comtrade_io.type import (
+    from comtrade_io.model.comtrade_model import ComtradeModel
+    from comtrade_io.model.channel import Analog, Status
+    from comtrade_io.model.type import (
         AnalogChannelFlag,
         DigitalChannelType,
         DigitalChannelFlag,
@@ -529,8 +529,8 @@ def test_comtrade_model_to_inf_with_parameters():
         Unit,
         Contact,
     )
-    from comtrade_io.cfg.header import Header
-    from comtrade_io.cfg.channel_num import ChannelNum
+    from comtrade_io.model.header.header import Header
+    from comtrade_io.model.header.channel_num import ChannelNum
 
     # 构建一个包含参数信息的 ComtradeModel（使用 model_construct 避免验证）
     model = ComtradeModel.model_construct(

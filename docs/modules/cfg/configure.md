@@ -88,7 +88,7 @@ def from_file(cls, file_name: str | Path | ComtradeFile) -> 'Configure|None'
 
 ```python
 from pathlib import Path
-from comtrade_io.cfg import Configure
+from comtrade_io.parser.cfg import Configure
 
 configure = Configure.from_file("data/example.cfg")
 ```

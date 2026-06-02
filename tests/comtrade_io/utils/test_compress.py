@@ -34,7 +34,7 @@ class TestFileCompressor:
         # 在主目录创建文件
         (self.test_dir / "test1.cfg").write_text("config data")
         (self.test_dir / "test2.dat").write_text("data content")
-        (self.test_dir / "test3.hdr").write_text("header info")
+        (self.test_dir / "test3.hdr").write_text("description info")
 
         # 在子目录创建文件
         (subdir / "test4.cfg").write_text("subdir config")

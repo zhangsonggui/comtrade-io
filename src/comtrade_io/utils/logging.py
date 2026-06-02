@@ -8,6 +8,7 @@
 
 import sys
 from pathlib import Path
+from typing import Optional
 
 from loguru import logger
 
@@ -160,10 +161,33 @@ class LoguruLoggerWrapper:
         self._logger.opt(depth=1, exception=True).error(msg, *args, **kwargs)
 
 
+_logger_cache: dict[str, LoguruLoggerWrapper] = {}
+
+
+def _resolve_caller_name() -> Optional[str]:
+    """通过帧遍历获取调用者模块名（避免 inspect.stack() 全栈开销）
+
+    返回:
+        Optional[str]: 调用者的模块名，未找到返回 None
+    """
+    frame = sys._getframe(2)
+    try:
+        while frame:
+            filename = frame.f_globals.get("__file__", "")
+            mod = frame.f_globals.get("__name__")
+            if filename and __file__ not in filename.replace("\\", "/") and mod:
+                return mod
+            frame = frame.f_back
+    finally:
+        del frame
+    return None
+
+
 def get_logger(name: str | None = None):
     """获取日志记录器
 
     如果未指定名称，会自动尝试获取调用者的模块名。
+    相同名称的日志记录器会被缓存复用。
 
     参数:
         name: 日志记录器名称，可选
@@ -172,18 +196,8 @@ def get_logger(name: str | None = None):
         LoguruLoggerWrapper: 配置好的日志记录器包装器
     """
     if not name:
-        import inspect
-        try:
-            stack = inspect.stack()
-            for frame_info in stack[2:]:
-                mod = frame_info.frame.f_globals.get("__name__")
-                filename = frame_info.frame.f_globals.get("__file__")
-                if filename and __file__ not in filename and mod:
-                    name = mod
-                    break
-        except Exception:
-            pass
-        if not name:
-            name = "comtrade.unknown"
+        name = _resolve_caller_name() or "comtrade.unknown"
 
-    return LoguruLoggerWrapper(name)
+    if name not in _logger_cache:
+        _logger_cache[name] = LoguruLoggerWrapper(name)
+    return _logger_cache[name]

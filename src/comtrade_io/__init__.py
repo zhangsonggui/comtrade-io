@@ -4,8 +4,7 @@ from importlib.metadata import version
 
 __version__ = version("comtrade_io")
 
-from comtrade_io.comtrade import Comtrade
-
+from comtrade_io.model.comtrade import Comtrade
 
 def version():
     return __version__

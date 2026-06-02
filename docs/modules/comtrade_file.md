@@ -22,7 +22,7 @@ ComtradeFile 负责管理 COMTRADE 相关文件的路径，包括：
 ## 使用示例
 
 ```python
-from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.model.comtrade_file import ComtradeFile
 
 # 从 cfg 文件初始化
 cf = ComtradeFile.from_path("data/example.cfg")

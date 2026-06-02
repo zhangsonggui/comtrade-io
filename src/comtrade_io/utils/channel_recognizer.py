@@ -11,7 +11,7 @@
 from dataclasses import dataclass
 from typing import Tuple
 
-from comtrade_io.type import AnalogChannelFlag, AnalogChannelType
+from comtrade_io.model.type import AnalogChannelFlag, AnalogChannelType
 
 
 @dataclass

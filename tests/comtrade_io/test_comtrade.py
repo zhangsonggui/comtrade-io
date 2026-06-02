@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from comtrade_io.comtrade import Comtrade
+from comtrade_io.model.comtrade import Comtrade
+from comtrade_io.parser.comtrade_file_parser import ComtradeFileParser
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
@@ -14,7 +15,7 @@ CSV_FILE = DATA_DIR / "binary_1999.csv"
 @pytest.fixture(scope="session")
 def comtrade():
     """Global Comtrade instance for all tests"""
-    return Comtrade.from_file(file_name=CFG_FILE)
+    return ComtradeFileParser.from_file(file_name=CFG_FILE)
 
 
 @pytest.fixture(scope="session")

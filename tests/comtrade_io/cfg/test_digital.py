@@ -7,9 +7,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from comtrade_io.channel.status import Status
-from comtrade_io.type import Contact, Phase
-
+from comtrade_io.model.channel import Status
+from comtrade_io.parser.cfg.status_parser import StatusParser
+from comtrade_io.model.type import Contact, Phase
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
@@ -25,7 +25,7 @@ def test_digital_from_str_variants():
     for case in data.get('strings', []):
         s = case['input']
         expected = case['expected']
-        d = Status.from_str(s)
+        d = StatusParser.from_string(s)
         exp_phase = Phase.from_value(expected.get('phase',""))
         exp_contact = Contact.from_value(expected.get('contact',0))
         assert d.index == expected['index']

@@ -6,11 +6,12 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
 
-from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.model.comtrade_file import ComtradeFile
+from comtrade_io.parser.data import DataContent
 from comtrade_io.utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.comtrade import Comtrade
+    from comtrade_io.model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -46,25 +47,29 @@ def export_cff(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
         sections.append(inf_content)
 
     logger.debug(f"正在输出DAT部分")
-    sections.append("--- file type DAT ---")
+    text_parts = "\n".join(sections)
     if data_format == "ASCII":
         buffer = StringIO()
-
-        comtrade.dat.data.to_csv(buffer, header=False, index=False)
-        sections.append(buffer.getvalue())
+        comtrade.data.to_csv(buffer, header=False, index=False)
+        with open(cff_path, "w", encoding="gbk", errors="ignore") as f:
+            f.write(text_parts + "\n")
+            f.write("--- file type DAT ---\n")
+            f.write(buffer.getvalue())
     else:
-        buffer = BytesIO()
         with NamedTemporaryFile(delete=False, suffix='.dat') as tmp:
             tmp_path = tmp.name
         try:
             tmp_cf = ComtradeFile.from_path(tmp_path)
-            comtrade.dat.write_file(tmp_cf, data_type=data_format)
+            DataContent(cfg=comtrade.cfg, data=comtrade.data).write_file(
+                tmp_cf, data_type=data_format
+            )
             dat_bytes = Path(tmp_path).read_bytes()
-            sections.append(dat_bytes.decode('latin-1', errors='ignore'))
+            with open(cff_path, "wb") as f:
+                f.write((text_parts + "\n").encode("gbk", errors="ignore"))
+                f.write("--- file type DAT ---\n".encode("gbk", errors="ignore"))
+                f.write(dat_bytes)
         finally:
             os.unlink(tmp_path)
-    with open(cff_path, 'w', encoding='gbk', errors='ignore') as f:
-        f.write('\n'.join(sections))
 
     logger.info(f"CFF文件{cff_path}写入成功")
     return f"文件保存成功: {cff_path}"

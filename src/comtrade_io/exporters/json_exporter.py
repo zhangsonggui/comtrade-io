@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.model.comtrade_file import ComtradeFile
 from comtrade_io.utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.comtrade import Comtrade
+    from comtrade_io.model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -62,8 +62,8 @@ def save_json(comtrade: "Comtrade", output_file_path: "Path | str",
     data.pop("cfg", None)
     data.pop("file", None)
 
-    if comtrade.dat is not None and comtrade.dat.data is not None:
-        df = comtrade.dat.data
+    if comtrade.data is not None:
+        df = comtrade.data
         analog_list = data.get("analogs", [])
         for ch in analog_list:
             if isinstance(ch, dict) and ch.get("index") is not None:

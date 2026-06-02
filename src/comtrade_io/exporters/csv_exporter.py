@@ -3,11 +3,11 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.comtrade_file import ComtradeFile
+from comtrade_io.model.comtrade_file import ComtradeFile
 from comtrade_io.utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.comtrade import Comtrade
+    from comtrade_io.model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -41,6 +41,10 @@ def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
         s = comtrade.statuses[idx]
         headers.append(f"{s.name or f'D{idx}'}")
 
-    comtrade.dat.data.to_csv(path, header=headers if kwargs.get('include_headers', True) else False, index=False)
+    comtrade.data.to_csv(
+        path,
+        header=headers if kwargs.get("include_headers", True) else False,
+        index=False,
+    )
     logger.info(f"CSV文件{path}写入成功")
     return True
