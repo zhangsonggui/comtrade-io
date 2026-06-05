@@ -1,30 +1,34 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from pathlib import Path
-from typing import cast
+from typing import TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from comtrade_io.parser.comtrade_file import ComtradeFile
 
 from pydantic import BaseModel
 
-from comtrade_io.model.description import Sampling
+from comtrade_io.model.description import Description, Sampling
 from comtrade_io.model.configure import Configure
 from comtrade_io.parser.cfg.analog_parser import AnalogParser
 from comtrade_io.parser.description import (
-    HeaderParser,
     ChannelNumParser,
-    SegmentParser,
     PrecisionTimeParser,
+    SegmentParser,
     TimeInfoParser,
     SamplingTimeQualityParser,
+    HeaderParser
 )
 from comtrade_io.parser.cfg.status_parser import StatusParser
-from comtrade_io.model.comtrade_file import ComtradeFile
 from comtrade_io.model.type import DataType
 from comtrade_io.utils import get_logger, parse_float, text_split
 
 logger = get_logger()
 
 
-class CfgFileParser(BaseModel):
+class CfgFile(BaseModel):
     """CFG 配置文件解析器
     Cfg 配置文件包含 CFG 头部、数据质量、采样、采样时间、通道数、数据、注释等信息。
     """
@@ -91,35 +95,37 @@ class CfgFileParser(BaseModel):
         logger.debug(f"解析数据格式: {data_type}")
 
         configure = Configure(
-            header=header,
-            channel_num=channel_num,
-            sampling=sampling,
-            start_time=start_time,
-            fault_time=fault_time,
-            data_type=data_type,
+            description=Description(
+                header=header,
+                channel_num=channel_num,
+                sampling=sampling,
+                file_start_time=start_time,
+                trigger_time=fault_time,
+                data_type=data_type,
+            ),
         )
         cursor_row += 3
 
         # 可选字段: 时标倍率因子
         if (part_len := len(parts)) > cursor_row:
-            configure.timemult = parse_float(parts[cursor_row])
-            logger.debug(f"解析时标倍率因子: {configure.timemult}")
+            configure.description.timemult = parse_float(parts[cursor_row])
+            logger.debug(f"解析时标倍率因子: {configure.description.timemult}")
 
         # 可选字段: 时间信息
         if part_len > (cursor_row + 1):
-            configure.time_info = TimeInfoParser.from_str(parts[cursor_row + 1])
+            configure.description.time_info = TimeInfoParser.from_str(parts[cursor_row + 1])
             logger.debug(
-                f"解析时间信息: time_code={configure.time_info.time_code}, "
-                f"local_code={configure.time_info.local_code}"
+                f"解析时间信息: time_code={configure.description.time_info.time_code}, "
+                f"local_code={configure.description.time_info.local_code}"
             )
 
         # 可选字段: 采样时间品质
         if part_len > (cursor_row + 2):
-            configure.sampling_time_quality = SamplingTimeQualityParser.from_str(
+            configure.description.sampling_time_quality = SamplingTimeQualityParser.from_str(
                 parts[cursor_row + 2]
             )
             logger.debug(
-                f"解析采样时间品质: tmq_code={configure.sampling_time_quality.tmq_code}"
+                f"解析采样时间品质: tmq_code={configure.description.sampling_time_quality.tmq_code}"
             )
 
         # 解析模拟量通道
@@ -153,6 +159,7 @@ class CfgFileParser(BaseModel):
         返回:
             Configure: 解析后的配置对象；如果文件禁用则返回None
         """
+        from comtrade_io.parser.comtrade_file import ComtradeFile
         cf = ComtradeFile.from_path(file_path=file_name)
 
         if not cf.cfg_path.is_enabled():
@@ -170,7 +177,7 @@ class CfgFileParser(BaseModel):
                 logger.error(f"配置文件{cfg_path}编码不是UTF8编码，请检查文件编码")
                 raise
         try:
-            return CfgFileParser.from_str(cfg_content)
+            return CfgFile.from_str(cfg_content)
         except IndexError as e:
             error_str = f"配置文件{cfg_path}行数不对应,{str(e)}"
             logger.error(error_str)
@@ -185,6 +192,7 @@ class CfgFileParser(BaseModel):
         参数:
             output_file_path: 输出文件路径，可以是字符串或Path对象
         """
+        from comtrade_io.parser.comtrade_file import ComtradeFile
         output_file_path = ComtradeFile.from_path(output_file_path)
         cfg_path = output_file_path.cfg_path.path
 
