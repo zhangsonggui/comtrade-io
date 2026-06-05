@@ -9,22 +9,45 @@ from comtrade_io.model.equipment.line_param import (
     Impedance,
     MutualInductance,
 )
+from comtrade_io.model.type import CurrentBranchNum
 from comtrade_io.parser.inf.equipment_section import (
     EquipmentSection,
     parse_four_values,
     parse_number_with_unit,
     parse_two_values,
 )
-from comtrade_io.model.type import CurrentBranchNum
+from comtrade_io.utils import get_logger
+
+logger = get_logger()
 
 class LineSection(EquipmentSection):
-    """线路部件处理"""
+    """线路部件解析
+
+    继承 EquipmentSection，增加线路特有的属性解析：
+    - LENGTH: 线路长度
+    - RX: 阻抗参数（r1, x1, r0, x0）
+    - CG: 电容参数（c1, g1, c0, g0）
+    - MRX: 互感参数（mr0, mx0）
+    - 根据电流通道数推断分支数
+    """
 
     @classmethod
     def from_dict(cls,
                   data: dict,
                   analog_channels: dict[int, Analog],
                   status_channels: dict[int, Status]) -> 'Line':
+        """从字典生成线路模型
+
+        解析线路长度、阻抗、电容、互感等电气参数。
+
+        参数:
+            data: 线路节键值对
+            analog_channels: 模拟通道字典
+            status_channels: 开关量通道字典
+
+        返回:
+            Line: 线路对象，含完整的阻抗、电容、互感参数
+        """
         equipment = super().from_dict(data, analog_channels, status_channels)
         line = Line(index=equipment.index,
                     uuid=equipment.uuid,
@@ -69,4 +92,8 @@ class LineSection(EquipmentSection):
         if len(line.currents) > 1:
             line.current_bran_num = CurrentBranchNum.B2
 
+        logger.debug(
+            f"线路 {equipment.index}: {equipment.name}, "
+            f"长度={line.line_length}km, 阻抗段数={len(line.currents)}"
+        )
         return line

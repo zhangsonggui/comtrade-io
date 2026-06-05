@@ -7,12 +7,32 @@ from comtrade_io.model.type import (
     DigitalChannelType,
     Phase,
 )
+from comtrade_io.utils import get_logger
+
+logger = get_logger()
+
 
 class StatusSection(Status):
-    """模拟部件模型"""
+    """开关量通道解析模型
+
+    继承自 Status 模型，提供从 INF 字典数据创建 Status 对象的工厂方法。
+    同时支持通道定义段和通道参数段的字段映射。
+    """
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Status':
+        """从字典数据创建 Status 对象
+
+        支持两种数据来源:
+        1. 通道定义段: Channel_ID, Phase_ID, Normal_State, Monitored_Component
+        2. 通道参数段: level(type), type(flag), obj(equipment_no)
+
+        参数:
+            data: 包含通道字段的字典
+
+        返回:
+            Status: 创建的开关量通道对象
+        """
         index = data.get("index", None)
         name = data.get("Channel_ID") or data.get("name")
         phase = Phase.from_value(data.get("Phase_ID", "") or data.get("phase", ""))
@@ -54,4 +74,7 @@ class StatusSection(Status):
         if idx_org is not None:
             status_obj.idx_org = int(idx_org) if isinstance(idx_org, str) else idx_org
 
+        logger.debug(
+            f"开关量通道 {index}: {name}, {phase.value}, contact={contact_raw}"
+        )
         return status_obj

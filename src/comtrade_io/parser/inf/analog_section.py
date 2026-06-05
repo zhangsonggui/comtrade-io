@@ -2,12 +2,32 @@
 # -*- coding: utf-8 -*-
 from comtrade_io.model.channel.analog import Analog
 from comtrade_io.model.type import AnalogChannelFlag, Phase, TranSide, Unit
+from comtrade_io.utils import get_logger
+
+logger = get_logger()
+
 
 class AnalogSection(Analog):
-    """模拟部件模型"""
+    """模拟通道解析模型
+
+    继承自 Analog 模型，提供从 INF 字典数据创建 Analog 对象的工厂方法。
+    同时支持通道定义段和通道参数段的字段映射。
+    """
 
     @staticmethod
     def from_dict(data: dict) -> 'Analog':
+        """从字典数据创建 Analog 对象
+
+        支持两种数据来源:
+        1. 通道定义段: Channel_ID, Phase_ID, Channel_Units, Channel_Multiplier 等
+        2. 通道参数段: t1(primary), t2(secondary), ad(au), bd(bu), type(flag)
+
+        参数:
+            data: 包含通道字段的字典，键名兼容 INF 节格式和内部参数格式
+
+        返回:
+            Analog: 创建的模拟通道对象
+        """
         index = data.get("index", None)
         name = data.get("Channel_ID") or data.get("name")
         phase = Phase.from_value(data.get("Phase_ID", "") or data.get("phase", ""))
@@ -76,4 +96,5 @@ class AnalogSection(Analog):
             except ValueError:
                 pass
 
+        logger.debug(f"模拟通道 {index}: {name}, {phase.value}, {unit.value}")
         return analog_obj

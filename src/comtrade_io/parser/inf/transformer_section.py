@@ -11,19 +11,41 @@ from comtrade_io.model.equipment.transformer_winding import (
     TransformerWinding,
     WindGroup,
 )
+from comtrade_io.model.type import CurrentBranchNum, TransWindLocation
 from comtrade_io.parser.inf.equipment_section import (
     EquipmentSection,
     parse_number_with_unit,
     str2channel,
 )
-from comtrade_io.model.type import CurrentBranchNum, TransWindLocation
+from comtrade_io.utils import get_logger
+
+logger = get_logger()
 
 class TransformerWindingSection(BaseModel):
-    """变压器绕组部件模型"""
+    """变压器绕组部件解析
+
+    解析变压器单个绕组（高压 H_ / 中压 M_ / 低压 L_）的参数：
+    - PARAM: 绕组参数（接线组别、额定电压、档位）
+    - TV_CHNS: 电压通道引用
+    - TA_Id: 电流通道引用
+    """
 
     @classmethod
     def from_dict(cls, data: dict, analog_channels: dict[int, Analog],
                   location_prefix: str = 'H_') -> TransformerWinding:
+        """从字典创建变压器绕组对象
+
+        根据 location_prefix 确定绕组位置（H_ 高压 / M_ 中压 / L_ 低压），
+        解析该绕组的电压/电流通道和电气参数。
+
+        参数:
+            data: 变压器节键值对
+            analog_channels: 模拟通道字典
+            location_prefix: 绕组位置前缀，默认为 H_（高压侧）
+
+        返回:
+            TransformerWinding: 变压器绕组对象
+        """
         if location_prefix == 'M_':
             twl = TransWindLocation.MEDIUM
             current_1 = str2channel(data.get('TA_Id_#1', ""), analog_channels)
@@ -63,13 +85,32 @@ class TransformerWindingSection(BaseModel):
 
 
 class TransformerSection(EquipmentSection):
-    """主变部件模型"""
+    """主变压器部件解析
+
+    继承 EquipmentSection，增加变压器特有属性：
+    - CAPACITY: 额定容量
+    - WINDING_NUM: 绕组数量
+    - H_ / M_ / L_: 各绕组参数（委托 TransformerWindingSection 解析）
+    """
 
     @classmethod
     def from_dict(cls,
                   data: dict,
                   analog_channels: dict[int, Analog],
                   status_channels: dict[int, Status]) -> 'Transformer':
+        """从字典生成变压器模型
+
+        解析额定容量、绕组数量，并依次解析高压/中压/低压绕组的详细参数。
+        各绕组的电压和电流通道会自动合并到变压器的 acvs / accs 中。
+
+        参数:
+            data: 变压器节键值对
+            analog_channels: 模拟通道字典
+            status_channels: 开关量通道字典
+
+        返回:
+            Transformer: 变压器对象，含所有绕组信息
+        """
         equipment = super().from_dict(data, analog_channels, status_channels)
         transformer = Transformer(index=equipment.index,
                                   uuid=equipment.uuid,
@@ -97,4 +138,8 @@ class TransformerSection(EquipmentSection):
                         transformer.accs.append(cb)
             transformer.trans_winds.append(wind)
 
+        logger.debug(
+            f"变压器 {equipment.index}: {equipment.name}, "
+            f"容量={transformer.capacity}MVA, 绕组数={transformer.winding_num}"
+        )
         return transformer
