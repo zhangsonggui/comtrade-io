@@ -19,7 +19,7 @@ from comtrade_io.parser.description import (
     SegmentParser,
     TimeInfoParser,
     SamplingTimeQualityParser,
-    HeaderParser
+    HeaderParser,
 )
 from comtrade_io.parser.cfg.status_parser import StatusParser
 from comtrade_io.model.type import DataType
@@ -113,7 +113,9 @@ class CfgFile(BaseModel):
 
         # 可选字段: 时间信息
         if part_len > (cursor_row + 1):
-            configure.description.time_info = TimeInfoParser.from_str(parts[cursor_row + 1])
+            configure.description.time_info = TimeInfoParser.from_str(
+                parts[cursor_row + 1]
+            )
             logger.debug(
                 f"解析时间信息: time_code={configure.description.time_info.time_code}, "
                 f"local_code={configure.description.time_info.local_code}"
@@ -121,8 +123,8 @@ class CfgFile(BaseModel):
 
         # 可选字段: 采样时间品质
         if part_len > (cursor_row + 2):
-            configure.description.sampling_time_quality = SamplingTimeQualityParser.from_str(
-                parts[cursor_row + 2]
+            configure.description.sampling_time_quality = (
+                SamplingTimeQualityParser.from_str(parts[cursor_row + 2])
             )
             logger.debug(
                 f"解析采样时间品质: tmq_code={configure.description.sampling_time_quality.tmq_code}"
@@ -160,6 +162,7 @@ class CfgFile(BaseModel):
             Configure: 解析后的配置对象；如果文件禁用则返回None
         """
         from comtrade_io.parser.comtrade_file import ComtradeFile
+
         cf = ComtradeFile.from_path(file_path=file_name)
 
         if not cf.cfg_path.is_enabled():
@@ -193,6 +196,7 @@ class CfgFile(BaseModel):
             output_file_path: 输出文件路径，可以是字符串或Path对象
         """
         from comtrade_io.parser.comtrade_file import ComtradeFile
+
         output_file_path = ComtradeFile.from_path(output_file_path)
         cfg_path = output_file_path.cfg_path.path
 
