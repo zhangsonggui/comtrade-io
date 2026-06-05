@@ -26,4 +26,16 @@ class ChannelNum(BaseModel):
         """
         return f"{self.total},{self.analog}A,{self.status}D"
 
+    def to_inf(self) -> str:
+        """
+        将描述文件转换为INF格式字符串
 
+        返回:
+            INF格式字符串
+        """
+        attrs = [
+            f"Total_Channel_Count={self.total}",
+            f"Analog_Channel_Count={self.analog}",
+            f"Status_Channel_Count={self.status}",
+        ]
+        return "\n".join(attrs)

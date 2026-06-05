@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from comtrade_io.model.description.segment import Segment
 
+
 class Sampling(BaseModel):
     freq: float | None = Field(default=50.0, description="电网频率")
     segments: List[Segment] = Field(default_factory=list, description="采样段")
@@ -62,3 +63,19 @@ class Sampling(BaseModel):
         if segment_str:
             return f"{freq_str}\n{segments_len}\n{segment_str}"
         return freq_str
+
+    def to_inf(self) -> str:
+        """
+        将描述文件转换为INF格式字符串
+
+        返回:
+            INF格式字符串
+        """
+        attrs = [
+            f"Line_Frequency={self.freq}",
+            f"Sample_Rate_Count={len(self.segments)}",
+        ]
+        for idx, segment in enumerate(self.segments):
+            attrs.append(f"Sample_Rate_#{idx+1}={segment.samp}")
+            attrs.append(f"End_Sample_Rate_#{idx+1}={segment.end_point}")
+        return "\n".join(attrs)

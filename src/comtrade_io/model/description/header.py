@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from comtrade_io.model.type.version import Version
 
+
 class Header(BaseModel):
     """文件头类
 
@@ -24,3 +25,17 @@ class Header(BaseModel):
     def __str__(self):
         """序列化为逗号分隔的逗号分隔的字符串"""
         return f"{self.station},{self.recorder},{self.version.value}"
+
+    def to_inf(self) -> str:
+        """
+        将描述文件转换为INF格式字符串
+
+        返回:
+            INF格式字符串
+        """
+        attrs = [
+            f"Station_Name={self.station}",
+            f"Recording_Device_ID={self.recorder}",
+            f"Revision_Year={self.version.value}",
+        ]
+        return "\n".join(attrs)

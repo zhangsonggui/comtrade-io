@@ -3,51 +3,113 @@
 
 from pydantic import Field
 
-from comtrade_io.model.description import ReferenceBaseModel
-from comtrade_io.model.type import Version
+from comtrade_io.model.description.channel_num import ChannelNum
+from comtrade_io.model.description.header import Header
+from comtrade_io.model.description.index_base import ReferenceBaseModel
+from comtrade_io.model.description.precision_time import PrecisionTime
+from comtrade_io.model.description.sampling import Sampling
+from comtrade_io.model.description.sampling_time_quality import SamplingTimeQuality
+from comtrade_io.model.description.time_info import TimeInfo
+from comtrade_io.model.type import DataType
+
 
 class Description(ReferenceBaseModel):
-    """描述文件模型
-    """
-    xmlns_scl: str = Field(default="http://www.iec.ch/61850/2003/SCL", description="XML命名空间")
-    xmlns_xsi: str = Field(default="http://www.w3.org/2001/XMLSchema-instance", description="XML命名空间")
-    station_name: str = Field(default="", description="站点名称")
+    """描述文件模型"""
+
+    xmlns_scl: str = Field(
+        default="http://www.iec.ch/61850/2003/SCL", description="XML命名空间"
+    )
+    xmlns_xsi: str = Field(
+        default="http://www.w3.org/2001/XMLSchema-instance", description="XML命名空间"
+    )
     data_model_version: float = Field(default=1.0, description="数据模型版本")
-    rec_dev_name: str = Field(default="", description="录波设备")
-    version: Version | None = Field(default=Version.V1991, description="版本")
-    xsi_schema_location: str = Field(default="http://www.iec.ch/61850/2003/SCLcomtrade_mdl_v1.1.xsd",
-                                     description="XML架构")
+    xsi_schema_location: str = Field(
+        default="http://www.iec.ch/61850/2003/SCLcomtrade_mdl_v1.1.xsd",
+        description="XML架构",
+    )
+    header: Header | None = Field(default_factory=Header, description="文件头")
+    channel_num: ChannelNum | None = Field(
+        default_factory=lambda: ChannelNum(total=0, analog=0, status=0),
+        description="通道数量",
+    )
+    sampling: Sampling | None = Field(default_factory=Sampling, description="采样信息")
+    file_start_time: PrecisionTime | None = Field(
+        default_factory=PrecisionTime, description="文件开始时间"
+    )
+    trigger_time: PrecisionTime | None = Field(
+        default_factory=PrecisionTime, description="触发时间"
+    )
+    data_type: DataType | None = Field(default=DataType.BINARY, description="数据格式")
+    timemult: float | None = Field(default=1.0, description="时标倍率因子")
+    time_info: TimeInfo | None = Field(
+        default=None, description="时间信息及与UTC时间关系"
+    )
+    sampling_time_quality: SamplingTimeQuality | None = Field(
+        default=None, description="采样时间品质"
+    )
 
-    def __str__(self):
-        """
-        返回COMTRADE模型XML根元素的字符串表示
+    @property
+    def station_name(self) -> str:
+        """向后兼容：委托到 header.station"""
+        return self.header.station if self.header else ""
 
-        返回:
-            格式化的XML字符串，包含XML声明和根元素开始标签
-        """
+    @station_name.setter
+    def station_name(self, value: str):
+        if self.header is None:
+            self.header = Header(station=value)
+        else:
+            self.header.station = value
+
+    @property
+    def rec_dev_name(self) -> str:
+        """向后兼容：委托到 header.recorder"""
+        return self.header.recorder if self.header else ""
+
+    @rec_dev_name.setter
+    def rec_dev_name(self, value: str):
+        if self.header is None:
+            self.header = Header(recorder=value)
+        else:
+            self.header.recorder = value
+
+    @property
+    def version(self):
+        """向后兼容：委托到 header.version"""
+        return self.header.version if self.header else None
+
+    @version.setter
+    def version(self, value):
+        if self.header is None:
+            from comtrade_io.model.type import Version
+
+            self.header = Header(
+                version=Version(value) if isinstance(value, int) else value
+            )
+        else:
+            self.header.version = value
+
+    def to_dmf(self):
         attrs = [
             f'xmlns:scl="{self.xmlns_scl}"',
             f'xmlns:xsi="{self.xmlns_xsi}"',
-            f'stationName="{self.station_name}"',
-            f'version="{self.data_model_version}"',
-            f'recDevName="{self.rec_dev_name}"',
-            f'xsi:schemaLocation="{self.xsi_schema_location}"'
+            f'stationName="{self.header.station}"',
+            f'version="{self.header.version.value}"',
+            f'recDevName="{self.header.recorder}"',
+            f'xsi:schemaLocation="{self.xsi_schema_location}"',
         ]
         xml = f'<?xml version="1.0" encoding="UTF-8"?>'
         xml += "\n" + f'<scl:ComtradeModel {" ".join(attrs)}>'
         return xml
 
     def to_inf(self) -> str:
-        """
-        将描述文件转换为INF格式字符串
-
-        返回:
-            INF格式字符串
-        """
         attrs = [
             f"[Public File_Description]",
-            f"Station_Name={self.station_name}",
-            f"Recording_Device_ID={self.rec_dev_name}",
-            f"Revision_Year={self.version.value}"
+            self.header.to_inf(),
+            self.channel_num.to_inf(),
+            self.sampling.to_inf(),
+            f"File_Start_Time={self.file_start_time}",
+            f"Trigger_Time={self.trigger_time}",
+            f"File_Type={self.data_type.value}",
+            f"Time_Multiplier={self.timemult}",
         ]
         return "\n".join(attrs)

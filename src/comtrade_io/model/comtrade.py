@@ -7,14 +7,14 @@ from pathlib import Path
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field, model_serializer
 
+from comtrade_io.exporters import export_format
+from comtrade_io.exporters.json_exporter import _to_json
 from comtrade_io.model.channel.analog import Analog
 from comtrade_io.model.channel.status import Status
-from comtrade_io.model.comtrade_file import ComtradeFile
 from comtrade_io.model.configure import Configure
 from comtrade_io.model.description import Description
 from comtrade_io.model.equipment import Bus, EquipmentGroup, Line, Transformer
-from comtrade_io.exporters import export_format
-from comtrade_io.exporters.json_exporter import _to_json
+from comtrade_io.parser.comtrade_file import ComtradeFile
 from comtrade_io.utils import get_logger
 
 logger = get_logger()
@@ -71,39 +71,39 @@ class Comtrade(BaseModel):
 
     @property
     def channel_num(self):
-        return self.cfg.channel_num
+        return self.cfg.description.channel_num
 
     @property
     def sampling(self):
-        return self.cfg.sampling
+        return self.cfg.description.sampling
 
     @property
     def start_time(self):
-        return self.cfg.start_time
+        return self.cfg.description.file_start_time
 
     @property
     def fault_time(self):
-        return self.cfg.fault_time
+        return self.cfg.description.trigger_time
 
     @property
     def data_type(self):
-        return self.cfg.data_type
+        return self.cfg.description.data_type
 
     @property
     def timemult(self):
-        return self.cfg.timemult
+        return self.cfg.description.timemult
 
     @property
     def header(self):
-        return self.cfg.header
+        return self.cfg.description.header
 
     @property
     def time_info(self):
-        return self.cfg.time_info
+        return self.cfg.description.time_info
 
     @property
     def sampling_time_quality(self):
-        return self.cfg.sampling_time_quality
+        return self.cfg.description.sampling_time_quality
 
     # -- 序列化 --
 
@@ -118,7 +118,7 @@ class Comtrade(BaseModel):
         return data
 
     def model_dump_json(self, *, indent: int | None = None, **kwargs) -> str:
-        data = self.model_dump(mode='python')
+        data = self.model_dump(mode="python")
         data.pop("data", None)
         data.pop("file", None)
         return _to_json(data, indent)
@@ -146,14 +146,22 @@ class Comtrade(BaseModel):
         for chn in channels:
             if chn and chn.index is not None:
                 col_index = self.channel_num.analog + chn.index + 1
-                chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
+                chn.data = (
+                    data.iloc[:, col_index].to_numpy()
+                    if col_index < data.shape[1]
+                    else None
+                )
 
     @staticmethod
     def _load_analog_channels(channels: tuple, data: pd.DataFrame):
         for chn in channels:
             if chn:
                 col_index = chn.index + 1
-                chn.data = data.iloc[:, col_index].to_numpy() if col_index < data.shape[1] else None
+                chn.data = (
+                    data.iloc[:, col_index].to_numpy()
+                    if col_index < data.shape[1]
+                    else None
+                )
 
     # -- 设备拓扑查询 --
 
