@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from comtrade_io.parser.comtrade_file import ComtradeFile
-
-from pydantic import BaseModel
 
 from comtrade_io.model.description import Description, Sampling
 from comtrade_io.model.configure import Configure
@@ -23,12 +22,12 @@ from comtrade_io.parser.description import (
 )
 from comtrade_io.parser.cfg.status_parser import StatusParser
 from comtrade_io.model.type import DataType
-from comtrade_io.utils import get_logger, parse_float, text_split
+from comtrade_io.utils import FilePath, get_logger, parse_float, text_split
 
 logger = get_logger()
 
-
-class CfgFile(BaseModel):
+@dataclass
+class CfgFile:
     """CFG 配置文件解析器
     Cfg 配置文件包含 CFG 头部、数据质量、采样、采样时间、通道数、数据、注释等信息。
     """
@@ -161,14 +160,12 @@ class CfgFile(BaseModel):
         返回:
             Configure: 解析后的配置对象；如果文件禁用则返回None
         """
-        from comtrade_io.parser.comtrade_file import ComtradeFile
+        fp = FilePath.from_name(file_name)
 
-        cf = ComtradeFile.from_path(file_path=file_name)
-
-        if not cf.cfg_path.is_enabled():
-            logger.warning(f"CFG配置文件不可用: {cf.cfg_path.path}")
+        if not fp.is_enabled():
+            logger.warning(f"CFG配置文件不可用: {fp.path}")
             return None
-        cfg_path = cf.cfg_path.path
+        cfg_path = fp.path
         logger.debug(f"正在读取配置文件: {cfg_path}")
         try:
             cfg_content = cfg_path.read_text(encoding="GBK", errors="replace")
@@ -187,7 +184,7 @@ class CfgFile(BaseModel):
             raise ValueError(f"配置文件{cfg_path}行数不对应,{e}")
 
     @staticmethod
-    def write_file(config: Configure, output_file_path: ComtradeFile | Path | str):
+    def write_file(config: Configure, output_file_path: Path | str):
         """将配置写入文件
 
         将当前Configure对象序列化,使用GBK编码写入指定的CFG配置文件。
@@ -195,12 +192,8 @@ class CfgFile(BaseModel):
         参数:
             output_file_path: 输出文件路径，可以是字符串或Path对象
         """
-        from comtrade_io.parser.comtrade_file import ComtradeFile
 
-        output_file_path = ComtradeFile.from_path(output_file_path)
-        cfg_path = output_file_path.cfg_path.path
-
-        with open(cfg_path, "w", encoding="gbk", errors="ignore") as f:
+        with open(output_file_path, "w", encoding="gbk", errors="ignore") as f:
             f.write(config.__str__())
-        logger.info(f"配置文件{cfg_path}写入成功")
+        logger.info(f"配置文件{output_file_path}写入成功")
         return True
