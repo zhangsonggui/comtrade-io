@@ -6,7 +6,7 @@
 import tempfile
 from pathlib import Path
 
-from comtrade_io.utils.file_compressor import compress_files, FileCompressor
+from comtrade_io.utils.file_compressor import FileCompressor, compress_files
 
 
 class TestFileCompressor:
@@ -32,8 +32,8 @@ class TestFileCompressor:
         subdir.mkdir()
 
         # 在主目录创建文件
-        (self.test_dir / "test1.cfg").write_text("config data")
-        (self.test_dir / "test2.dat").write_text("data content")
+        (self.test_dir / "test1.cfg").write_text("config dat")
+        (self.test_dir / "test2.dat").write_text("dat content")
         (self.test_dir / "test3.hdr").write_text("description info")
 
         # 在子目录创建文件

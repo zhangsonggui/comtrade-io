@@ -18,13 +18,13 @@ logger = get_logger()
 class StatusElement:
     """
     开关量通道类
-    
+
     表示电力系统中的开关量通道，用于采集断路器、隔离开关、保护装置等设备
     的分合状态和告警信息。继承自Digital和DmfChannel。
-    
+
     属性:
         reference: IEC61850参引，用于关联到IEC61850数据模型中的相应数据对象
-        data: 通道数据，一维数组
+        dat: 通道数据，一维数组
     """
 
     @classmethod

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from comtrade_io.utils.error_messages import ErrorMessage
 from comtrade_io.utils.file_compressor import FileCompressor, compress_files
+from comtrade_io.utils.file_path import FilePath
 from comtrade_io.utils.logging import get_logger
 from comtrade_io.utils.numeric_utils import parse_float, parse_int
 from comtrade_io.utils.text_utils import text_split

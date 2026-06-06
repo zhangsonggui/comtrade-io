@@ -8,10 +8,9 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from comtrade_io.parser.cfg.cfg_file_parser import CfgFileParser
-from comtrade_io.model.description import PrecisionTime
 from comtrade_io.model.configure import Configure
-from comtrade_io.parser.data import DataContent
+from comtrade_io.model.description import PrecisionTime
+from comtrade_io.parser.cfg.cfg import CfgFile
 from comtrade_io.utils import get_logger
 
 logger = get_logger()
@@ -188,7 +187,7 @@ class DfrFile:
         try:
             file_mtime = datetime.fromtimestamp(self.file_path.stat().st_mtime)
             cfg_text = wndr_to_cfg(self.sections.cfg_text, file_mtime)
-            return CfgFileParser.from_str(cfg_text)
+            return CfgFile.from_str(cfg_text)
         except Exception as e:
             logger.error(f"解析 DFR 配置失败: {e}")
             return None
@@ -207,11 +206,11 @@ class DfrFile:
         raw = self.sections.dat_bytes
         frame_count = len(raw) // FRAME_SIZE
 
-        if cfg.sampling.segments:
-            cfg.sampling.segments[0].end_point = frame_count
+        if cfg.description.sampling.segments:
+            cfg.description.sampling.segments[0].end_point = frame_count
 
-        analog_count = cfg.channel_num.analog
-        status_count = cfg.channel_num.status
+        analog_count = cfg.description.channel_num.analog
+        status_count = cfg.description.channel_num.status
         status_word_count = (status_count + 15) // 16
         if status_word_count < STATUS_WORDS:
             status_word_count = STATUS_WORDS
@@ -229,7 +228,7 @@ class DfrFile:
 
         index_data = np.arange(1, frame_count + 1, dtype=np.int32)
 
-        timemult = cfg.timemult if cfg.timemult else 1.0
+        timemult = cfg.description.timemult if cfg.description.timemult else 1.0
         timestamp_data = (index_data - 1) * 833
         timestamp_data = timestamp_data.astype(np.int32)
 
@@ -263,5 +262,5 @@ class DfrFile:
         return df
 
     @classmethod
-    def from_file(cls, file_path: Union[str, Path]) -> "DfrFile":
+    def from_file(cls, file_path: str | Path) -> "DfrFile":
         return cls(file_path)

@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from enum import Enum
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, TYPE_CHECKING
 
-from comtrade_io.model.comtrade_file import ComtradeFile
 from comtrade_io.model.type.data_type import DataType
 from comtrade_io.utils import get_logger
 from .cff_exporter import export_cff
 from .csv_exporter import export_csv
 from .json_exporter import export_json
 from .multi_file_exporter import export_multi_file
+
+if TYPE_CHECKING:
+    from comtrade_io.parser.comtrade_file import ComtradeFile
 
 logger = get_logger()
 

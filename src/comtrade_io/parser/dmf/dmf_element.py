@@ -11,23 +11,22 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.etree.ElementTree import Element
 
-from comtrade_io.model.comtrade_file import ComtradeFile
+from comtrade_io.model.equipment import EquipmentGroup
 from comtrade_io.parser.dmf.analog_element import AnalogElement
 from comtrade_io.parser.dmf.bus_element import BusElement
 from comtrade_io.parser.dmf.description_element import DescriptionElement
 from comtrade_io.parser.dmf.line_element import LineElement
 from comtrade_io.parser.dmf.status_element import StatusElement
 from comtrade_io.parser.dmf.transformer_element import TransformerElement
-from comtrade_io.model.equipment import EquipmentGroup
-from comtrade_io.utils import get_logger
+from comtrade_io.utils import FilePath, get_logger
 
 logger = get_logger(__name__)
 
 
-class DmfElement(EquipmentGroup):
+class DmfFile(EquipmentGroup):
 
     @classmethod
-    def from_xml(cls, element: Element, ns: dict) -> 'DmfElement':
+    def from_xml(cls, element: Element, ns: dict) -> "DmfFile":
         """
         从XML元素中解析数据模型
 
@@ -135,7 +134,7 @@ class DmfElement(EquipmentGroup):
                         break
 
     @classmethod
-    def from_file(cls, file_name: Path | ComtradeFile | str) -> 'EquipmentGroup|None':
+    def from_file(cls, file_name: Path | str) -> "EquipmentGroup|None":
         """
         从文件路径中加载并解析数据模型
 
@@ -145,11 +144,11 @@ class DmfElement(EquipmentGroup):
         返回:
             ComtradeModel: 数据模型实例，如果文件不存在或禁用则返回None
         """
-        cf = ComtradeFile.from_path(file_path=file_name)
+        fp = FilePath.from_name(file_name)
 
-        if not cf.dmf_path.is_enabled():
+        if not fp.is_enabled():
             return None
-        dmf_path = cf.dmf_path.path
+        dmf_path = fp.path
 
         ns = {
             "scl": "http://www.iec.ch/61850/2003/SCL"
@@ -174,6 +173,6 @@ class DmfElement(EquipmentGroup):
 
 
 if __name__ == '__main__':
-    file_name = r"/example/data/GHBZ_220kV线路故障_20230512_194525.dmf"
-    dmf = DmfElement.from_file(file_name)
+    file_name = r"/example/dat/GHBZ_220kV线路故障_20230512_194525.dmf"
+    dmf = DmfFile.from_file(file_name)
     print(dmf)

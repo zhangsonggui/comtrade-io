@@ -117,7 +117,7 @@ def from_file(cls, file_path: Union[str, Path]) -> "CffFile"
 ```python
 from comtrade_io.parser.cff import CffFile
 
-cff_file = CffFile.from_file("data/example.cff")
+cff_file = CffFile.from_file("dat/example.cff")
 ```
 
 ---
@@ -237,7 +237,7 @@ if information:
 from comtrade_io.parser.cff import CffFile
 
 # 创建 CffFile 对象
-cff_file = CffFile.from_file("data/example.cff")
+cff_file = CffFile.from_file("dat/example.cff")
 
 # 解析 CFG 配置
 configure = cff_file.to_configure()
@@ -266,10 +266,10 @@ if information:
 from comtrade_io import Comtrade
 
 # 直接通过 Comtrade 类解析 CFF 文件
-comtrade = Comtrade.from_file("data/example.cff")
+comtrade = Comtrade.from_file("dat/example.cff")
 
 # 访问数据
-print(comtrade.cfg.header.station)
+print(comtrade.config.header.station)
 print(comtrade.dat.data.head())
 ```
 

@@ -60,10 +60,10 @@ def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None"
 from comtrade_io import Comtrade
 
 # 通过 cfg 文件加载
-comtrade = Comtrade.from_file("data/example.cfg")
+comtrade = Comtrade.from_file("dat/example.cfg")
 
 # 通过 cff 文件加载
-comtrade = Comtrade.from_file("data/example.cff")
+comtrade = Comtrade.from_file("dat/example.cff")
 ```
 
 ---
