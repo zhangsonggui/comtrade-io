@@ -3,19 +3,20 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field, model_serializer
 
-from comtrade_io.exporters import export_format
 from comtrade_io.exporters.json_exporter import _to_json
 from comtrade_io.model.channel.analog import Analog
 from comtrade_io.model.channel.status import Status
 from comtrade_io.model.configure import Configure
-from comtrade_io.model.description import Description
 from comtrade_io.model.equipment import Bus, EquipmentGroup, Line, Transformer
-from comtrade_io.parser.comtrade_file import ComtradeFile
 from comtrade_io.utils import get_logger
+
+if TYPE_CHECKING:
+    from comtrade_io.parser.comtrade_file import ComtradeFile
 
 logger = get_logger()
 
@@ -47,12 +48,8 @@ class Comtrade(BaseModel):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    cfg: Configure = Field(default_factory=Configure, description="CFG配置")
-    file: ComtradeFile = Field(default_factory=ComtradeFile, description="文件路径")
+    config: Configure = Field(default_factory=Configure, description="CFG配置")
     data: pd.DataFrame | None = Field(default=None, description="故障数据")
-    description: Description = Field(
-        default_factory=Description, description="描述文件"
-    )
     buses: list[Bus] | None = Field(default_factory=list, description="母线")
     lines: list[Line] | None = Field(default_factory=list, description="线路")
     transformers: list[Transformer] | None = Field(
@@ -63,47 +60,47 @@ class Comtrade(BaseModel):
 
     @property
     def analogs(self) -> dict[int, Analog]:
-        return self.cfg.analogs
+        return self.config.analogs
 
     @property
     def statuses(self) -> dict[int, Status]:
-        return self.cfg.statuses
+        return self.config.statuses
 
     @property
     def channel_num(self):
-        return self.cfg.description.channel_num
+        return self.config.description.channel_num
 
     @property
     def sampling(self):
-        return self.cfg.description.sampling
+        return self.config.description.sampling
 
     @property
     def start_time(self):
-        return self.cfg.description.file_start_time
+        return self.config.description.file_start_time
 
     @property
     def fault_time(self):
-        return self.cfg.description.trigger_time
+        return self.config.description.trigger_time
 
     @property
     def data_type(self):
-        return self.cfg.description.data_type
+        return self.config.description.data_type
 
     @property
     def timemult(self):
-        return self.cfg.description.timemult
+        return self.config.description.timemult
 
     @property
     def header(self):
-        return self.cfg.description.header
+        return self.config.description.header
 
     @property
     def time_info(self):
-        return self.cfg.description.time_info
+        return self.config.description.time_info
 
     @property
     def sampling_time_quality(self):
-        return self.cfg.description.sampling_time_quality
+        return self.config.description.sampling_time_quality
 
     # -- 序列化 --
 
@@ -111,9 +108,9 @@ class Comtrade(BaseModel):
     def serialize_model(self, handler, info):
         data = handler(self)
         data.pop("cfg", None)
-        if self.cfg:
+        if self.config:
             mode = "json" if info.mode == "json" else "python"
-            cfg_data = self.cfg.model_dump(mode=mode)
+            cfg_data = self.config.model_dump(mode=mode)
             data.update(cfg_data)
         return data
 
@@ -258,7 +255,7 @@ class Comtrade(BaseModel):
     # -- 导出 --
 
     def to_cfg(self):
-        return str(self.cfg)
+        return str(self.config)
 
     def to_dmf(self) -> str:
         attrs = [f"{str(self.description)}"]
@@ -325,7 +322,7 @@ class Comtrade(BaseModel):
 
     def write_cfg(self, path: str) -> None:
         with open(path, "w", encoding="gbk", errors="ignore") as f:
-            f.write(str(self.cfg))
+            f.write(str(self.config))
 
     def write_dmf(self, path: str) -> None:
         with open(path, "w", encoding="utf-8", errors="ignore") as f:
@@ -335,6 +332,11 @@ class Comtrade(BaseModel):
         with open(path, "w", encoding="gbk", errors="ignore") as f:
             f.write(self.to_inf())
 
-    @export_format
     def save_comtrade(self, output_file_path: ComtradeFile | Path | str, **kwargs):
         pass
+
+
+# 延迟导入 export_format 装饰器以打破循环导入
+from comtrade_io.exporters import export_format  # noqa: E402
+
+Comtrade.save_comtrade = export_format(Comtrade.save_comtrade)  # type: ignore[arg-type]
