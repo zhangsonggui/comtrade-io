@@ -26,6 +26,7 @@ from comtrade_io.utils import FilePath, get_logger, parse_float, text_split
 
 logger = get_logger()
 
+
 @dataclass
 class CfgFile:
     """CFG 配置文件解析器

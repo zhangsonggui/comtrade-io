@@ -5,27 +5,26 @@ from pathlib import Path
 
 import pytest
 
-from comtrade_io.model.configure import Configure
 from comtrade_io.model.type import Version
-from comtrade_io.parser.cfg.cfg_file_parser import CfgFileParser
+from comtrade_io.parser.cfg.cfg import CfgFile
 
-DATA_DIR = Path(__file__).parent.parent.parent / "data"
+DATA_DIR = Path(__file__).parent.parent.parent / "dat"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
 
 @pytest.fixture(scope="session")
 def config():
-    config = CfgFileParser.from_file(file_name=CFG_FILE)
+    config = CfgFile.from_file(file_name=CFG_FILE)
     return config
 
 def test_config_header(config):
-    assert config.header.station == "GHBZ"
-    assert config.header.recorder == "220kV线路故障"
-    assert config.header.version == Version.V1999
+    assert config.description.header.station == "GHBZ"
+    assert config.description.header.recorder == "220kV线路故障"
+    assert config.description.header.version == Version.V1999
 
 def test_config_channel_num(config):
-    assert config.channel_num.analog == 96
-    assert config.channel_num.status == 192
-    assert config.channel_num.total == 288
+    assert config.description.channel_num.analog == 96
+    assert config.description.channel_num.status == 192
+    assert config.description.channel_num.total == 288
 
 
 def test_config_analog(config):
@@ -45,16 +44,20 @@ def test_config_digital(config):
     assert dn.contact.value == "0"
 
 def test_config_sampling(config):
-    samp = config.sampling
+    samp = config.description.sampling
     assert len(samp.segments) == 1
     assert samp.segments[0].end_point == 45600
 
 def test_config_time(config):
-    assert config.start_time.time == datetime.datetime(year=2023,month=5,day=12,hour=19,minute=45,second=25,microsecond=600000)
-    assert config.fault_time.time == datetime.datetime(year=2023,month=5,day=12,hour=19,minute=45,second=25,microsecond=814600)
+    assert config.description.file_start_time.time == datetime.datetime(
+        year=2023, month=5, day=12, hour=19, minute=45, second=25, microsecond=600000
+    )
+    assert config.description.trigger_time.time == datetime.datetime(
+        year=2023, month=5, day=12, hour=19, minute=45, second=25, microsecond=814600
+    )
 
 def test_config_data_type(config):
-    assert config.data_type.value == "BINARY"
+    assert config.description.data_type.value == "BINARY"
 
 def test_config_timemult(config):
-    assert config.timemult == 1
+    assert config.description.timemult == 1

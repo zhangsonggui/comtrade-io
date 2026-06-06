@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Analog CFG tests using JSON test data."""
+"""Analog CFG tests using JSON test dat."""
 
 from __future__ import annotations
 
@@ -8,13 +8,14 @@ import json
 from pathlib import Path
 
 from comtrade_io.model.channel import Analog
-from comtrade_io.parser.cfg.analog_parser import AnalogParser
 from comtrade_io.model.type import Phase, Unit
 from comtrade_io.model.type.tran_side import TranSide
+from comtrade_io.parser.cfg.analog_parser import AnalogParser
+
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
-    data_path = repo_root / 'data' / 'analog_test_data.json'
+    data_path = repo_root / "dat" / "analog_test_data.json"
     if not data_path.exists():
         return {"strings": [], "dicts": []}
     with open(data_path, 'r', encoding='utf-8') as f:

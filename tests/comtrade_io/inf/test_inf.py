@@ -3,7 +3,8 @@
 import tempfile
 from pathlib import Path
 
-from comtrade_io.parser.inf import Information
+from comtrade_io.parser.inf import InfFile
+
 
 def test_parse_section_header():
     """测试节头解析函数"""
@@ -35,6 +36,12 @@ def test_parse_section_header():
     assert parse_section_header("[MissingSpace]") is None
 
 
+def _eg_from_file(p):
+    inf = InfFile.from_file(p)
+    assert inf is not None
+    return inf.to_equipment_group()
+
+
 def test_parse_basic_sections():
     """测试基础节解析"""
     with tempfile.TemporaryDirectory() as tmp:
@@ -64,8 +71,8 @@ Time_Multiplier=1
             """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        inf = InfFile.from_file(p)
+        assert inf is not None
 
 
 def test_parse_analog_channels():
@@ -97,8 +104,7 @@ Channel_Units=A
             """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.analogs) == 2
 
         # 检查第一个通道
@@ -140,8 +146,7 @@ Normal_State=1
             """.strip(),
                 encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.statuses) == 2
 
         sta1 = model.statuses[1]
@@ -225,8 +230,7 @@ def test_parse_equipment_sections():
                 """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
 
         # 检查母线
         assert len(model.buses) == 1
@@ -266,8 +270,7 @@ Name=BusDirect
             """.strip(),
                 encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.buses) == 1
         assert model.buses[0].name == "BusDirect"
 
@@ -283,8 +286,7 @@ def test_parse_empty_name():
                 """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.buses) == 1
         assert model.buses[0].name == "Equipment_5"
 
@@ -292,21 +294,20 @@ def test_parse_empty_name():
 def test_file_not_found():
     """测试文件不存在的情况"""
     # 当前实现返回None而不是抛出异常
-    model = Information.from_file(Path("no_such_file.inf"))
+    model = InfFile.from_file(Path("no_such_file.inf"))
     assert model is None
 
 
 def test_empty_content():
     """测试空内容解析（直接测试 split_sections）"""
-    from comtrade_io.parser.inf import Information
+    from comtrade_io.parser.inf.text_splitter import split_sections
 
-    inf = Information()
-    inf.split_sections("")
-    assert len(inf.analog_channels) == 0
-    assert len(inf.status_channels) == 0
-    assert len(inf.buses) == 0
-    assert len(inf.lines) == 0
-    assert len(inf.transformers) == 0
+    sections = split_sections("")
+    assert len(sections.analog_channels) == 0
+    assert len(sections.status_channels) == 0
+    assert len(sections.buses) == 0
+    assert len(sections.lines) == 0
+    assert len(sections.transformers) == 0
 
 
 def test_comtrade_model_fields():
@@ -340,8 +341,7 @@ Channel_Units=A
 DEV_ID=,Bus1
     """.strip()
 
-    model = Information.from_str(content)
-    assert model is not None
+    model = InfFile.from_str(content).to_equipment_group()
     assert len(model.analogs) == 2
     assert model.analogs[1].name == "Ia"
     assert model.analogs[1].phase == Phase.PHASE_A
@@ -352,7 +352,7 @@ DEV_ID=,Bus1
 
 def test_from_str_empty():
     """测试 from_str 解析空字符串"""
-    model = Information.from_str("")
+    model = InfFile.from_str("").to_equipment_group()
     assert len(model.analogs) == 0
     assert len(model.statuses) == 0
     assert len(model.buses) == 0
@@ -390,24 +390,21 @@ def test_encoding_handling():
                 """.strip(),
                 encoding="gbk"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        inf = InfFile.from_file(p)
+        assert inf is not None
 
 
 def test_read_real_binary_inf_file():
     """测试读取实际的binary_inf.inf文件"""
     # 获取测试数据文件的路径
-    test_dir = Path(__file__).parent.parent.parent / "data"
+    test_dir = Path(__file__).parent.parent.parent / "dat"
     inf_file = test_dir / "binary_inf.inf"
 
     # 确保文件存在
     assert inf_file.exists(), f"测试文件不存在: {inf_file}"
 
     # 读取并解析INF文件
-    model = Information.from_file(inf_file)
-
-    # 验证解析成功
-    assert model is not None, "INF文件解析失败"
+    model = _eg_from_file(inf_file)
 
     # 验证基本属性 - 根据binary_inf.inf文件内容
     # 文件中有Total_Channel_Count=356, Analog_Channel_Count=155, Status_Channel_Count=201
@@ -470,8 +467,7 @@ CHNL_INFO_#1=1, 1, Ia, TA, 50, 0.6, kA, 1, A, 1, 0,
             """.strip(),
             encoding="utf-8",
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.analogs) == 1
 
         ana1 = model.analogs[1]
@@ -504,8 +500,7 @@ CHNL_INFO_#1=1, 1, Breaker1, Breaker_Pos, Unknown,
             """.strip(),
             encoding="utf-8",
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.statuses) == 1
 
         sta1 = model.statuses[1]

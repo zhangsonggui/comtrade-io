@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Digital CFG tests using JSON test data."""
+"""Digital CFG tests using JSON test dat."""
 
 from __future__ import annotations
 
@@ -8,12 +8,13 @@ import json
 from pathlib import Path
 
 from comtrade_io.model.channel import Status
-from comtrade_io.parser.cfg.status_parser import StatusParser
 from comtrade_io.model.type import Contact, Phase
+from comtrade_io.parser.cfg.status_parser import StatusParser
+
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
-    data_path = repo_root / 'data' / 'digital_test_data.json'
+    data_path = repo_root / "dat" / "digital_test_data.json"
     if not data_path.exists():
         return {"strings": [], "dicts": []}
     with open(data_path, 'r', encoding='utf-8') as f:
