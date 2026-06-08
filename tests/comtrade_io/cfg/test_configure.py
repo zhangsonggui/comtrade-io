@@ -8,7 +8,7 @@ import pytest
 from comtrade_io.model.type import Version
 from comtrade_io.parser.cfg.cfg import CfgFile
 
-DATA_DIR = Path(__file__).parent.parent.parent / "dat"
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
 
 @pytest.fixture(scope="session")

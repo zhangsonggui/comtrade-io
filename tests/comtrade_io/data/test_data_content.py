@@ -11,7 +11,7 @@ import pytest
 from comtrade_io.parser.cfg.cfg import CfgFile
 from comtrade_io.parser.dat import DatFile
 
-DATA_DIR = Path(__file__).parent.parent.parent / "dat"
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
 DAT_FILE = DATA_DIR / "binary_1999.dat"
 CSV_FILE = DATA_DIR / "binary_1999.csv"

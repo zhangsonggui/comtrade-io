@@ -6,7 +6,7 @@ import pytest
 
 from comtrade_io.parser.comtrade_file import ComtradeFile
 
-DATA_DIR = Path(__file__).parent.parent / "dat"
+DATA_DIR = Path(__file__).parent.parent / "data"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
 CSV_FILE = DATA_DIR / "binary_1999.csv"
 

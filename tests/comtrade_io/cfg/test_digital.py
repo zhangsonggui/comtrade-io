@@ -14,7 +14,7 @@ from comtrade_io.parser.cfg.status_parser import StatusParser
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
-    data_path = repo_root / "dat" / "digital_test_data.json"
+    data_path = repo_root / "data" / "digital_test_data.json"
     if not data_path.exists():
         return {"strings": [], "dicts": []}
     with open(data_path, 'r', encoding='utf-8') as f:

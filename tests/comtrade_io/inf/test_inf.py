@@ -397,7 +397,7 @@ def test_encoding_handling():
 def test_read_real_binary_inf_file():
     """测试读取实际的binary_inf.inf文件"""
     # 获取测试数据文件的路径
-    test_dir = Path(__file__).parent.parent.parent / "dat"
+    test_dir = Path(__file__).parent.parent.parent / "data"
     inf_file = test_dir / "binary_inf.inf"
 
     # 确保文件存在
