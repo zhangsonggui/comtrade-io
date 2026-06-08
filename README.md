@@ -1,16 +1,18 @@
 # comtrade-io
 
-Python library for loading waveform data from COMTRADE specification CFG/DAT/INF/DMF/HDR file sequences, providing a convenient Pandas DataFrame interface.
+Python library for loading and writing waveform data from COMTRADE specification files (CFG/DAT/CFF/DFR/INF/DMF/HDR),
+providing a convenient Pandas DataFrame interface.
 
 ## Features
 
-- **Single File API**: Load a COMTRADE instance directly from `Comtrade.from_file(file_name)`
+- **Single File API**: Load a COMTRADE instance directly from `ComtradeFile.from_file(file_name)`
+- **Multi-Format Reading**: Supports CFG+DAT (multi-file), CFF single file, and DFR (WNDR) format
 - **Auto-Location**: Automatically locate related files (cfg/dat/dmf/hdr/inf) in the same directory
-- **Multi-Format Support**: Supports both ASCII and binary DAT data formats (BINARY, BINARY32, FLOAT32)
-- **Data Conversion**: Transform analog data to real values using coefficients (multiply by multiplier plus offset)
-- **Data Model**: Supports DMF data model parsing, including power system equipment models (buses, lines, transformers)
-- **INF Support**: INF information optionally parsed as `InfInfo` object, preserving original field mappings
-- **Read/Write**: Support writing Comtrade objects to CFG/DAT files
+- **Data Formats**: Supports ASCII and binary DAT data (BINARY, BINARY32, FLOAT32)
+- **Data Conversion**: Transform analog data to real values using coefficients
+- **Equipment Model**: Parse DMF data model and INF information into power system equipment (buses, lines, transformers)
+- **Multiple Export Formats**: Export to multi-file (CFG+DAT), CFF single file, JSON, and CSV formats
+- **Write Support**: Save Comtrade objects to CFG/DAT/INF/DMF/CFF files
 - **Pandas Integration**: Returns data as Pandas DataFrame for easy analysis
 - **Pure Python**: Lightweight implementation with minimal dependencies
 
@@ -18,8 +20,9 @@ Python library for loading waveform data from COMTRADE specification CFG/DAT/INF
 
 - Python 3.10+
 - pandas >= 2.3.3
+- numpy >= 1.26.0
 - pydantic >= 2.12.5
-- openpyxl >= 3.1.5
+- loguru >= 0.7.3
 
 ## Installation
 
@@ -49,138 +52,213 @@ uv sync
 ## Quick Start
 
 ```python
-from comtrade_io import Comtrade
+from comtrade_io.parser.comtrade_file import ComtradeFile
 
 # Load COMTRADE file (automatically finds cfg/dat/dmf/hdr/inf files)
-wave = Comtrade.from_file("dat/D51_RCD_2346_20150917_105253_065_F.cfg")
+wave = ComtradeFile.from_file("tests/data/binary_1999.cfg")
 
-# Access model methods (without sample dat)
-wave.get_bus_info("Bus Name")  # Returns model for specified bus name, including voltage and status channels
-wave.get_line_info("Line Name")  # Returns model for specified line name, including voltage and status channels
-wave.get_transformer_info("Transformer Name")  # Returns model for specified transformer/winding name, including voltage and status channels
-wave.get_analog_channel_info("Analog Ch ID")  # Returns model for specified analog channel
-wave.get_status_channel_info("Status Ch ID")  # Returns model for specified status channel
+# Access configuration
+wave.config.description.header.station      # Station name
+wave.config.description.header.recorder     # Recording device ID
+wave.channel_num.analog                      # Analog channel count
+wave.channel_num.status                      # Status channel count
+wave.sampling.segments[0].samp               # Sample rate (Hz)
 
-# Access DAT dat (DataFrame column structure: col 1 is timestamp, col 2+ are analog dat, then status dat)
-data = wave.get_data()  # or wave.dat.dat - returns pandas DataFrame with all sample dat
+# Access channel definitions
+wave.analogs[1]                               # Analog channel by index
+wave.statuses[1]                              # Status channel by index
 
-# Access specific analog channel dat
-wave.get_analog_channel(1)  # Get analog channel by index, includes instantaneous sample dat
-wave.get_status_channel(1)  # Get status channel by index, includes instantaneous sample dat
+# Access equipment model (from DMF/INF)
+wave.get_bus_info("Bus Name")                 # Bus model by name
+wave.get_line_info("Line Name")               # Line model by name
+wave.get_transformer_info("Transformer Name") # Transformer model by name
 
-# Access specific line, bus, transformer channel dat
-wave.get_bus("Bus Name")  # Get bus parameters and associated voltage channels with instantaneous dat by bus name
-wave.get_line("Line Name")  # Get line parameters and associated current channels with instantaneous dat, bus parameters and voltage channel dat by line name
-wave.get_transformer("Transformer Name")  # Get transformer and winding parameters with associated voltage/current channels and instantaneous dat by transformer name
+# Access DAT data (DataFrame: col 1 = timestamp, col 2+ = analog then status)
+data = wave.get_data()
 
+# Access specific channel data
+wave.get_analog_channel(1)                    # Analog channel with sample data
+wave.get_status_channel(1)                    # Status channel with sample data
 
+# Access equipment with instantaneous data
+wave.get_bus("Bus Name")                      # Bus with voltage channel data
+wave.get_line("Line Name")                    # Line with current/voltage data
+wave.get_transformer("Transformer Name")      # Transformer with winding data
 ```
 
 ## Advanced Usage
 
-### Write Files
+### Multi-Format Loading
 
 ```python
-# Save Comtrade object to files
-wave.save_comtrade("output.cfg", data_type="BINARY")  # Binary format
-wave.save_comtrade("output.cfg", data_type="ASCII")  # ASCII format
+# From CFF single file
+cf = ComtradeFile.from_file("recording.cff")
 
-# Export to JSON file
-wave.save_json("output.json")
-
+# From DFR (WNDR) file
+cf = ComtradeFile.from_file("recording.dfr")
 ```
 
+### Export Files
+
+```python
+# Save as multi-file (CFG+DAT+INF+DMF) - default
+wave.save_comtrade("output.cfg")
+
+# Save as CFF single file
+wave.save_comtrade("output.cff", format="cff")
+
+# Export to JSON
+wave.save_comtrade("output.json", format="json")
+
+# Export to CSV
+wave.save_comtrade("output.csv", format="csv")
+
+# Choose data format
+wave.save_comtrade("output.cfg", data_format="ASCII")   # ASCII
+wave.save_comtrade("output.cfg", data_format="BINARY")   # Binary (default)
+wave.save_comtrade("output.cfg", data_format="BINARY32") # 32-bit binary
+wave.save_comtrade("output.cfg", data_format="FLOAT32")  # 32-bit float
+
+# Direct JSON export
+wave.save_json("output.json")
+```
+
+### Write Individual Files
+
+```python
+wave.write_cfg("output.cfg")    # Write CFG configuration
+wave.write_dmf("output.dmf")    # Write DMF data model
+wave.write_inf("output.inf")    # Write INF information
+```
+
+### CFF Single File Format
+
+```python
+from comtrade_io.parser.cff import CffFile
+
+cff = CffFile.from_file("recording.cff")
+cfg = cff.to_configure()             # Parse CFG section
+data = cff.to_data_content(cfg)      # Parse DAT section
+inf = cff.to_information()           # Parse INF section (optional)
+```
 
 ## Project Structure
 
 ```
 comtrade_io/
 ├── src/comtrade_io/
-│   ├── __init__.py           # Entry point, exports Comtrade class
-│   ├── comtrade.py           # Main Comtrade class
-│   ├── comtrade_file.py      # File path wrapper
-│   ├── cfg/                  # CFG configuration module
-│   │   ├── configure.py      # Configuration parser
-│   │   ├── analog.py         # Analog channel class
-│   │   ├── digital.py        # Digital channel class
-│   │   ├── header.py         # File header
-│   │   └── sampling.py       # Sampling info
-│   ├── dmf/                  # DMF data model module
-│   │   ├── comtrade_model.py # Data model main class
-│   │   ├── bus.py            # Bus class
-│   │   ├── line.py           # Line class
-│   │   ├── transformer.py    # Transformer class
-│   │   └── ...
-│   ├── inf/                  # INF info module
-│   ├── data/                 # DAT data parser
-│   └── utils/                # Utility functions
-├── tests/                    # Test files
-└── example/                  # Example scripts
+│   ├── __init__.py               # Entry point, exports Comtrade class
+│   ├── model/                    # Data models (Pydantic)
+│   │   ├── comtrade.py           # Main Comtrade class
+│   │   ├── configure/            # CFG configuration model
+│   │   ├── description/          # File description (header, sampling, time)
+│   │   ├── channel/              # Analog and status channel models
+│   │   ├── equipment/            # Power system equipment (Bus, Line, Transformer)
+│   │   └── type/                 # Enumerations and type definitions
+│   ├── parser/                   # File parsers
+│   │   ├── comtrade_file.py      # ComtradeFile path wrapper
+│   │   ├── cfg/                  # CFG configuration parser
+│   │   ├── dat/                  # DAT data parser (ASCII/Binary)
+│   │   ├── cff/                  # CFF single file parser
+│   │   ├── dfr/                  # DFR (WNDR) format parser
+│   │   ├── dmf/                  # DMF data model parser (XML)
+│   │   ├── inf/                  # INF information file parser
+│   │   └── description/         # Parser helpers (time, header, sampling)
+│   ├── exporters/               # Export functionality
+│   │   ├── cff_exporter.py       # CFF single file export
+│   │   ├── csv_exporter.py       # CSV export
+│   │   ├── json_exporter.py      # JSON export
+│   │   ├── multi_file_exporter.py # Multi-file (CFG+DAT) export
+│   │   └── decorators.py         # @export_format decorator
+│   └── utils/                    # Utility functions
+│       ├── file_path.py          # FilePath smart path class
+│       ├── logging.py            # Loguru-based logging
+│       ├── text_utils.py         # Text splitting utilities
+│       └── numeric_utils.py      # Numeric parsing utilities
+├── tests/                        # Test files
+└── docs/                         # Documentation
 ```
 
 ## Core Classes
 
 ### Comtrade
-**Note**: All models in this module are constrained by pydantic. For object to JSON/dict conversion, use pydantic's model_dump_json method.
 
 Main class encapsulating complete COMTRADE file data.
 
-**Main Attributes:**
-- `file`: ComtradeFile - contains all file path information
-- `cfg`: Configure - CFG configuration information
-- `dat`: DataContent - DAT data content
-- `buses`: List[Bus] - Bus list
-- `lines`: List[Line] - Line list
-- `transformers`: List[Transformer] - Transformer list
+**Attributes:**
 
-**Main Methods:**
-- `from_file(file_name)`: Load Comtrade from file
-- `to_file(filename, data_type)`: Save as COMTRADE file
-- `to_json_file(filename)`: Export to JSON
-- `get_bus(name)`: Get bus and instantaneous data of associated voltage channels by name
-- `get_line(name)`: Get line and instantaneous data of associated bus voltage and current channels by name
-- `get_transformer(name)`: Get transformer and instantaneous data of associated voltage/current channels by name
-- `get_analog_channel(index)`: Get analog channel and instantaneous data by index
-- `get_status_channel(index)`: Get status channel and instantaneous data by index
-- `get_bus_info()`: Get bus model by name
-- `get_line_info()`: Get line model by name
-- `get_transformers_info()`: Get transformer model by name
-- `get_analog_channel_info()`: Get analog channel model by name
-- `get_status_channel_info()`: Get status channel model by name
+- `config`: Configure - CFG configuration (header, channel definitions, sampling)
+- `data`: pd.DataFrame | None - Sample data
+- `buses`: List[Bus] - Bus list (from DMF/INF)
+- `lines`: List[Line] - Line list (from DMF/INF)
+- `transformers`: List[Transformer] - Transformer list (from DMF/INF)
+
+**Properties (delegated to `config`):**
+
+- `analogs` / `statuses` - Channel dictionaries
+- `channel_num` - Channel count
+- `sampling` - Sampling information
+- `start_time` / `fault_time` - Time information
+- `data_type` - Data format
+- `header` - File header
+
+**Key Methods:**
+
+- `get_data()`: Return sample data as DataFrame
+- `get_bus(name)`: Get bus with voltage channel data
+- `get_line(name)`: Get line with current/voltage channel data
+- `get_transformer(name)`: Get transformer with winding data
+- `get_analog_channel(index)`: Get analog channel with data
+- `get_status_channel(index)`: Get status channel with data
+- `save_comtrade(path, format, data_format)`: Export to file
+- `save_json(path)`: Export to JSON
+- `write_cfg(path)` / `write_dmf(path)` / `write_inf(path)`: Write individual files
 
 ### Configure
 
-CFG configuration file parser.
+CFG configuration model.
 
-**Main Attributes:**
-- `header`: Header information
-- `channel_num`: Channel count
-- `analogs`: Analog channel dictionary
-- `digitals`: Digital channel dictionary
-- `sampling`: Sampling information
+**Attributes:**
+
+- `description`: Description - Header, channel count, sampling, time
+- `analogs`: Dict[int, Analog] - Analog channel definitions
+- `statuses`: Dict[int, Status] - Status channel definitions
 
 ### ComtradeFile
 
-File path wrapper, auto-locates related files.
+File path wrapper with auto-location and format detection.
 
-**Main Attributes:**
-- `cfg_path`: CFG file path
-- `dat_path`: DAT file path
-- `dmf_path`: DMF file path (optional)
-- `hdr_path`: HDR file path (optional)
-- `inf_path`: INF file path (optional)
+**Supported Formats:**
+
+- **Multi-file**: CFG+DAT (traditional), optionally DMF, INF, HDR
+- **CFF single file**: `.cff` combines CFG, INF, DAT in one file
+- **DFR**: `.dfr` WNDR proprietary single file format
+
+**Key Methods:**
+
+- `from_path(path)`: Create from any COMTRADE file path
+- `from_file(path)`: Parse and return a `Comtrade` instance
+
+### Equipment Model
+
+- **Bus**: Voltage channels, status/alarm channels
+- **Line**: Current branches, bus references, impedance parameters
+- **Transformer**: Windings with individual voltage/current channels
+- **EquipmentGroup**: Aggregate container for equipment + channel overrides
 
 ## COMTRADE File Format
 
 Standard format for power system fault recording data:
 
-| File | Required | Description |
-|------|----------|-------------|
-| .cfg | Yes | Configuration file - defines channels, sampling rate and other metadata |
-| .dat | Yes | Data file - contains sample point data |
-| .dmf | No | Data model file - defines power system equipment models |
-| .hdr | No | Header file - contains recorder device information |
-| .inf | No | Information file - contains additional configuration information |
+| File | Required | Description                                                             |
+|------|----------|-------------------------------------------------------------------------|
+| .cfg | Yes      | Configuration file - defines channels, sampling rate and other metadata |
+| .dat | Yes      | Data file - contains sample point data                                  |
+| .dmf | No       | Data model file (XML) - defines power system equipment models           |
+| .hdr | No       | Header file - contains recorder device information                      |
+| .inf | No       | Information file - contains additional configuration in INI-like format |
+| .cff | No       | CFF single file format - combines CFG, INF, DAT into one file           |
+| .dfr | No       | DFR (WNDR) proprietary single file format                               |
 
 ## Module Documentation
 
@@ -188,12 +266,11 @@ Detailed module documentation is available at [docs/modules/README.md](docs/modu
 
 ### Main Modules
 
-- [Comtrade Class](docs/modules/comtrade.md) - Main entry class, encapsulates complete COMTRADE data
-- [Configure (CFG Config)](docs/modules/cfg/configure.md) - CFG configuration file parser
+- [Comtrade Class](docs/modules/comtrade.md) - Main entry class
+- [Configure (CFG Config)](docs/modules/cfg/configure.md) - CFG configuration parser
 - [DataContent (DAT Data)](docs/modules/data/data_content.md) - DAT data file parser
 - [CffFile (CFF Single File)](docs/modules/cff/cff.md) - CFF single file format parser
 - [ComtradeFile](docs/modules/comtrade_file.md) - File path wrapper class
-- [ComtradeModel](docs/modules/comtrade_model.md) - Data model base class
 - [Information (INF Info)](docs/modules/inf/information.md) - INF information file parser
 
 ## License
@@ -206,3 +283,15 @@ MIT License
 - 0.1.1: Added support for DMF data model files
 - 0.1.2: Same as version 0.1.1
 - 0.1.3: Added support for CFF single file and INF information files
+- **0.2.0**: Major refactoring and new features
+    - Package restructured into `model/`, `parser/`, `exporters/`, `utils/` modules
+    - Comtrade model refactored: `cfg` → `config`, equipment model integration
+    - New export system with `@export_format` decorator (multi-file, CFF, JSON, CSV)
+    - CFF single file format parser and writer
+    - DFR (WNDR) format parser
+    - Full INF file parsing with equipment group generation
+    - DMF data model enhancements (Bus, Line, Transformer with windings)
+    - `FilePath` smart path class with file status detection
+    - Logging migrated to loguru
+    - All models migrated to Pydantic v2
+    - Improved GBK/UTF-8 encoding handling
