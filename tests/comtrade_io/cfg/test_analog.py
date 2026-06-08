@@ -15,7 +15,7 @@ from comtrade_io.parser.cfg.analog_parser import AnalogParser
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
-    data_path = repo_root / "dat" / "analog_test_data.json"
+    data_path = repo_root / "data" / "analog_test_data.json"
     if not data_path.exists():
         return {"strings": [], "dicts": []}
     with open(data_path, 'r', encoding='utf-8') as f:

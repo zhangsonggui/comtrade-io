@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import re
 from datetime import datetime
 
 from pydantic import BaseModel, Field
@@ -42,6 +43,8 @@ def format_time(str_time: str) -> datetime:
         return str_time
 
     str_time = str_time.strip()
+    # 规整冒号周围的空格（如 "19 : 45" → "19:45"）
+    str_time = re.sub(r'(\d)\s*:\s*(\d)', r'\1:\2', str_time)
     if "." in str_time:
         parts = str_time.split(".")
         base = parts[0]

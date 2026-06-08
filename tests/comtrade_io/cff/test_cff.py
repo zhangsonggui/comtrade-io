@@ -8,7 +8,7 @@ import pytest
 from comtrade_io.parser.cff import CffFile, extract_sections
 from comtrade_io.parser.comtrade_file import ComtradeFile
 
-DATA_DIR = Path(__file__).parent.parent.parent / "dat"
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 CFF_FILE = DATA_DIR / "ascii_cff_2013.cff"
 
 
