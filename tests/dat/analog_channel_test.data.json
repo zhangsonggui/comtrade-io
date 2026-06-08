@@ -1,0 +1,42 @@
+[
+  {
+    "name": "bare_xml_case",
+    "xml": "<AnalogChannel idx_cfg=\"1\" idx_org=\"10\" type=\"A\" flag=\"ACC\" p_min=\"0.0\" p_max=\"100.0\" s_min=\"0.0\" s_max=\"10.0\" freq=\"50.0\" au=\"1.0\" bu=\"0.0\" ph=\"A\" sIUnit=\"V\" multiplier=\"1.0\" primary=\"110.0\" secondary=\"100.0\" ps=\"PRIMARY\"/>",
+    "expected": {
+      "index": 1,
+      "idx_org": 10,
+      "type": "A",
+      "flag": "ACC",
+      "p_min": 0.0,
+      "p_max": 100.0,
+      "s_min": 0.0,
+      "s_max": 10.0,
+      "freq": 50.0,
+      "au": 1.0,
+      "bu": 0.0,
+      "unit": "V",
+      "primary": 110.0,
+      "secondary": 100.0
+    }
+  },
+  {
+    "name": "namespace_style_case",
+    "xml": "<scl:AnalogChannel idx_cfg=\"2\" idx_org=\"20\" type=\"D\" flag=\"ACC\" p_min=\"0.0\" p_max=\"50.0\" s_min=\"0.0\" s_max=\"5.0\" freq=\"60.0\" au=\"2.0\" bu=\"0.0\" ph=\"A\" sIUnit=\"A\" multiplier=\"1.0\" primary=\"20.0\" secondary=\"10.0\" ps=\"PRIMARY\"/>",
+    "expected": {
+      "index": 2,
+      "idx_org": 20,
+      "type": "D",
+      "flag": "ACC",
+      "p_min": 0.0,
+      "p_max": 50.0,
+      "s_min": 0.0,
+      "s_max": 5.0,
+      "freq": 60.0,
+      "au": 2.0,
+      "bu": 0.0,
+      "unit": "A",
+      "primary": 20.0,
+      "secondary": 10.0
+    }
+  }
+]

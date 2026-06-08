@@ -1,6 +1,6 @@
-from comtrade_io.cfg.header import Header
-from comtrade_io.type.version import Version
-
+from comtrade_io.model.description import Header
+from comtrade_io.model.type.version import Version
+from comtrade_io.parser.description import HeaderParser
 
 def test_str_case_full_params():
     header = Header(
@@ -23,23 +23,22 @@ def test_str_case_defaults():
 
 def test_from_str_case_full_params():
     _str = "变电站,故障录波设备,1999"
-    header = Header.from_str(_str)
+    header = HeaderParser.from_str(_str)
     assert header.station == "变电站"
     assert header.recorder == "故障录波设备"
     assert header.version.value == "1999"
 
 def test_from_str_case_version_params():
     _str = "变电站,故障录波设备,2005"
-    header = Header.from_str(_str)
+    header = HeaderParser.from_str(_str)
     assert header.station == "变电站"
     assert header.recorder == "故障录波设备"
     assert header.version.value == "1991"
 
 
-
 def test_from_str_case_params():
     _str = "变电站,故障录波设备"
-    header = Header.from_str(_str)
+    header = HeaderParser.from_str(_str)
     assert header.station == "变电站"
     assert header.recorder == "故障录波设备"
     assert header.version.value == "1991"
@@ -51,7 +50,7 @@ def test_from_dict_case():
         "recorder": "故障录波设备",
         "version" : "1999"
     }
-    header = Header.from_dict(data)
+    header = HeaderParser.from_dict(data)
     assert header.station == "变电站"
     assert header.recorder == "故障录波设备"
     assert header.version.value == "1999"
@@ -59,7 +58,7 @@ def test_from_dict_case():
 
 def test_from_json_case():
     json_str = '{"station":"变电站","recorder":"故障录波设备","version":"1999"}'
-    header = Header.from_json(json_str)
+    header = HeaderParser.from_json(json_str)
     assert header.station == "变电站"
     assert header.recorder == "故障录波设备"
     assert header.version.value == "1999"

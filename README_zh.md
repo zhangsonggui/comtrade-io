@@ -52,7 +52,7 @@ uv sync
 from comtrade_io import Comtrade
 
 # 加载 COMTRADE 文件（自动查找 cfg/dat/dmf/hdr/inf 文件）
-wave = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
+wave = Comtrade.from_file("dat/D51_RCD_2346_20150917_105253_065_F.cfg")
 
 # 访问模型方法（不含采样数据）
 wave.get_bus_info("母线名称")  # 返回指定母线名称的模型包含电压通道、开关量通道
@@ -62,7 +62,7 @@ wave.get_analog_channel_info("模拟量an")  # 返回指定模拟量标识的模
 wave.get_status_channel_info("开关量dn")  # 返回指定开关量标识的模型
 
 # 访问 DAT 数据（DataFrame列结构：第1列为时间戳，第2列开始为模拟量，之后为开关量）
-data = wave.get_data()  # 或wave.dat.data 返回包含所有采样数据的 pandas DataFrame，
+data = wave.get_data()  # 或wave.dat.dat 返回包含所有采样数据的 pandas DataFrame，
 
 # 访问指定模拟通道数据
 wave.get_analog_channel(1)  # 按通道标识获取模拟量通道包含瞬时值采样数据

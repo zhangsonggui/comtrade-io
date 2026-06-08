@@ -5,12 +5,12 @@
 包含通用的数据类型转换和解析功能
 """
 import re
-from typing import Any, Optional
+from typing import Any
 
 _NUMERIC_PATTERN = re.compile(r'[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?')
 
 
-def _convert_to_float(value: Any, default: float = 0.0, key: Optional[str] = None, strip_chars: str = ",") -> float:
+def _convert_to_float(value: Any, default: float = 0.0, key: str | None = None, strip_chars: str = ",") -> float:
     """
     内部通用浮点数转换函数
 
@@ -43,7 +43,7 @@ def _convert_to_float(value: Any, default: float = 0.0, key: Optional[str] = Non
             raise ValueError(f"无法将'{value}' 转换为浮点数")
 
 
-def _convert_to_int(value: Any, default: int = 0, key: Optional[str] = None) -> int:
+def _convert_to_int(value: Any, default: int = 0, key: str | None = None) -> int:
     """
     内部通用整数转换函数
 

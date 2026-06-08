@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.comtrade_file import ComtradeFile
 from comtrade_io.utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.comtrade import Comtrade
+    from comtrade_io.model.comtrade import Comtrade
 
-logging = get_logger()
+logger = get_logger()
 
 
-def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
-               data_format: str, **kwargs) -> bool:
+def export_csv(
+    comtrade: "Comtrade", output_path: "str | Path", data_format: str, **kwargs
+) -> bool:
     """导出CSV格式
 
     参数:
@@ -25,22 +24,22 @@ def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
     返回:
         成功与否
     """
-    path = Path(output_path) if not isinstance(output_path, ComtradeFile) else \
-        (output_path.cfg_path.path.parent / (
-                output_path.cfg_path.path.stem + '.csv') if output_path.cfg_path.path else None)
-    if not path:
-        raise ValueError("无法确定CSV输出路径")
-    if path.suffix.lower() != '.csv':
-        path = path.with_suffix('.csv')
+    from comtrade_io.exporters import _resolve_export_path
+
+    path = _resolve_export_path(output_path, ".csv")
 
     headers = ['Point', 'Time']
-    for idx in sorted(comtrade.cfg.analogs.keys()):
-        a = comtrade.cfg.analogs[idx]
+    for idx in sorted(comtrade.analogs.keys()):
+        a = comtrade.analogs[idx]
         headers.append(f"{a.name or f'A{idx}'}")
-    for idx in sorted(comtrade.cfg.statuses.keys()):
-        s = comtrade.cfg.statuses[idx]
+    for idx in sorted(comtrade.statuses.keys()):
+        s = comtrade.statuses[idx]
         headers.append(f"{s.name or f'D{idx}'}")
 
-    comtrade.dat.data.to_csv(path, header=headers if kwargs.get('include_headers', True) else False, index=False)
-    logging.info(f"CSV文件{path}写入成功")
+    comtrade.data.to_csv(
+        path,
+        header=headers if kwargs.get("include_headers", True) else False,
+        index=False,
+    )
+    logger.info(f"CSV文件{path}写入成功")
     return True

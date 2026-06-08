@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Digital CFG tests using JSON test data."""
+"""Digital CFG tests using JSON test dat."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from comtrade_io.channel.status import Status
-from comtrade_io.type import Contact, Phase
+from comtrade_io.model.channel import Status
+from comtrade_io.model.type import Contact, Phase
+from comtrade_io.parser.cfg.status_parser import StatusParser
 
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
-    data_path = repo_root / 'data' / 'digital_test_data.json'
+    data_path = repo_root / "dat" / "digital_test_data.json"
     if not data_path.exists():
         return {"strings": [], "dicts": []}
     with open(data_path, 'r', encoding='utf-8') as f:
@@ -25,7 +26,7 @@ def test_digital_from_str_variants():
     for case in data.get('strings', []):
         s = case['input']
         expected = case['expected']
-        d = Status.from_str(s)
+        d = StatusParser.from_string(s)
         exp_phase = Phase.from_value(expected.get('phase',""))
         exp_contact = Contact.from_value(expected.get('contact',0))
         assert d.index == expected['index']

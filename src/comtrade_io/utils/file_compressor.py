@@ -8,7 +8,7 @@ from __future__ import annotations
 import zipfile
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Union
 
 from comtrade_io.utils.logging import get_logger
 
@@ -46,7 +46,7 @@ class FileCompressor:
     def compress_files(
         files: List[Union[str, Path]],
         output_dir: Union[str, Path],
-        zip_name: Optional[str] = None,
+        zip_name: str | None = None,
         preserve_structure: bool = True,
     ) -> Path:
         """
@@ -152,7 +152,7 @@ class FileCompressor:
 def compress_files(
     files: List[Union[str, Path]],
     output_dir: Union[str, Path],
-    zip_name: Optional[str] = None,
+    zip_name: str | None = None,
     preserve_structure: bool = True,
 ) -> Path:
     """

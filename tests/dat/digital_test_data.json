@@ -1,0 +1,99 @@
+{
+  "note": "Recommended JSON format for Digital.from_str and Digital(dict) tests. Contains two sections: strings for parsing from strings and dicts for constructing from dictionaries.",
+  "strings": [
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1991格式的数字量描述 (最小参数)",
+      "input": "1,Dn1,,,0",
+      "expected": {
+        "index": 1,
+        "name": "Dn1",
+        "phase": "",
+        "equip": "",
+        "contact": "0"
+      }
+    },
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1999格式的数字量描述 (带相别和设备)",
+      "input": "2,Dn2,A,breaker1,0",
+      "expected": {
+        "index": 2,
+        "name": "Dn2",
+        "phase": "A",
+        "equip": "breaker1",
+        "contact": "0"
+      }
+    },
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1999格式的数字量描述 (带相别、设备和闭合触点)",
+      "input": "3,Dn3,B,breaker2,1",
+      "expected": {
+        "index": 3,
+        "name": "Dn3",
+        "phase": "B",
+        "equip": "breaker2",
+        "contact": "1"
+      }
+    },
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1991格式的数字量描述 (无相别和设备)",
+      "input": "4,Dn4,,,1",
+      "expected": {
+        "index": 4,
+        "name": "Dn4",
+        "phase": "",
+        "equip": "",
+        "contact": "1"
+      }
+    },
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1999格式的数字量描述 (带所有字段)",
+      "input": "5,Dn5,C,transformer,0",
+      "expected": {
+        "index": 5,
+        "name": "Dn5",
+        "phase": "C",
+        "equip": "transformer",
+        "contact": "0"
+      }
+    }
+  ],
+  "dicts": [
+    {
+      "input": {
+        "index": 1,
+        "name": "Dn1",
+        "phase": "A",
+        "equip": "breaker1",
+        "contact": "0"
+      },
+      "expected": {
+        "index": 1,
+        "name": "Dn1",
+        "phase": "A",
+        "equip": "breaker1",
+        "contact": "0"
+      }
+    },
+    {
+      "input": {
+        "index": 2,
+        "name": "Dn2",
+        "phase": "B",
+        "equip": "",
+        "contact": "1"
+      },
+      "expected": {
+        "index": 2,
+        "name": "Dn2",
+        "phase": "B",
+        "equip": "",
+        "contact": "1"
+      }
+    }
+  ]
+}

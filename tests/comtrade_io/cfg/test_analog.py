@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Analog CFG tests using JSON test data."""
+"""Analog CFG tests using JSON test dat."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from comtrade_io.channel.analog import Analog
-from comtrade_io.type import Phase, Unit
-from comtrade_io.type.tran_side import TranSide
+from comtrade_io.model.channel import Analog
+from comtrade_io.model.type import Phase, Unit
+from comtrade_io.model.type.tran_side import TranSide
+from comtrade_io.parser.cfg.analog_parser import AnalogParser
 
 
 def _load_test_data() -> dict:
     repo_root = Path(__file__).resolve().parents[3]  # tests directory
-    data_path = repo_root / 'data' / 'analog_test_data.json'
+    data_path = repo_root / "dat" / "analog_test_data.json"
     if not data_path.exists():
         return {"strings": [], "dicts": []}
     with open(data_path, 'r', encoding='utf-8') as f:
@@ -26,7 +27,7 @@ def test_analog_from_str_variants():
     for case in data.get('strings', []):
         s = case['input']
         expected = case['expected']
-        a = Analog.from_str(s)
+        a = AnalogParser.from_string(s)
         exp_phase = Phase.from_value(expected.get('phase'), Phase.NONE)
         exp_unit = Unit.from_value(expected.get('unit'), Unit.NONE)
         exp_tran = TranSide.from_value(expected.get('tran_side'), TranSide.S)

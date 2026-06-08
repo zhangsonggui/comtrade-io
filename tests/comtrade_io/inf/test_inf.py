@@ -3,12 +3,12 @@
 import tempfile
 from pathlib import Path
 
-from comtrade_io.inf import Information
+from comtrade_io.parser.inf import InfFile
 
 
 def test_parse_section_header():
     """测试节头解析函数"""
-    from comtrade_io.inf.information import parse_section_header
+    from comtrade_io.parser.inf import parse_section_header
 
     # 测试正常格式
     result = parse_section_header("[Public Analog_Channel_#1]")
@@ -34,6 +34,12 @@ def test_parse_section_header():
     # 测试无效格式
     assert parse_section_header("Invalid Format") is None
     assert parse_section_header("[MissingSpace]") is None
+
+
+def _eg_from_file(p):
+    inf = InfFile.from_file(p)
+    assert inf is not None
+    return inf.to_equipment_group()
 
 
 def test_parse_basic_sections():
@@ -65,13 +71,13 @@ Time_Multiplier=1
             """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        inf = InfFile.from_file(p)
+        assert inf is not None
 
 
 def test_parse_analog_channels():
     """测试模拟通道解析"""
-    from comtrade_io.type import Phase, Unit
+    from comtrade_io.model.type import Phase, Unit
 
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
@@ -98,8 +104,7 @@ Channel_Units=A
             """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.analogs) == 2
 
         # 检查第一个通道
@@ -122,7 +127,7 @@ Channel_Units=A
 
 def test_parse_status_channels():
     """测试状态通道解析"""
-    from comtrade_io.type import Phase, Contact
+    from comtrade_io.model.type import Phase, Contact
 
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
@@ -141,8 +146,7 @@ Normal_State=1
             """.strip(),
                 encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.statuses) == 2
 
         sta1 = model.statuses[1]
@@ -226,8 +230,7 @@ def test_parse_equipment_sections():
                 """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
 
         # 检查母线
         assert len(model.buses) == 1
@@ -267,8 +270,7 @@ Name=BusDirect
             """.strip(),
                 encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.buses) == 1
         assert model.buses[0].name == "BusDirect"
 
@@ -284,8 +286,7 @@ def test_parse_empty_name():
                 """.strip(),
             encoding="utf-8"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        model = _eg_from_file(p)
         assert len(model.buses) == 1
         assert model.buses[0].name == "Equipment_5"
 
@@ -293,26 +294,25 @@ def test_parse_empty_name():
 def test_file_not_found():
     """测试文件不存在的情况"""
     # 当前实现返回None而不是抛出异常
-    model = Information.from_file(Path("no_such_file.inf"))
+    model = InfFile.from_file(Path("no_such_file.inf"))
     assert model is None
 
 
 def test_empty_content():
     """测试空内容解析（直接测试 split_sections）"""
-    from comtrade_io.inf.information import Information
+    from comtrade_io.parser.inf.text_splitter import split_sections
 
-    inf = Information()
-    inf.split_sections("")
-    assert len(inf.analog_channels) == 0
-    assert len(inf.status_channels) == 0
-    assert len(inf.buses) == 0
-    assert len(inf.lines) == 0
-    assert len(inf.transformers) == 0
+    sections = split_sections("")
+    assert len(sections.analog_channels) == 0
+    assert len(sections.status_channels) == 0
+    assert len(sections.buses) == 0
+    assert len(sections.lines) == 0
+    assert len(sections.transformers) == 0
 
 
 def test_comtrade_model_fields():
     """测试 ComtradeModel 字段类型正确"""
-    from comtrade_io.equipment import EquipmentGroup
+    from comtrade_io.model.equipment import EquipmentGroup
 
     model = EquipmentGroup()
     assert isinstance(model.analogs, dict)
@@ -324,7 +324,7 @@ def test_comtrade_model_fields():
 
 def test_from_str():
     """测试 from_str 方法直接解析字符串"""
-    from comtrade_io.type import Phase
+    from comtrade_io.model.type import Phase
 
     content = """
 [Public Analog_Channel_#1]
@@ -341,8 +341,7 @@ Channel_Units=A
 DEV_ID=,Bus1
     """.strip()
 
-    model = Information.from_str(content)
-    assert model is not None
+    model = InfFile.from_str(content).to_equipment_group()
     assert len(model.analogs) == 2
     assert model.analogs[1].name == "Ia"
     assert model.analogs[1].phase == Phase.PHASE_A
@@ -353,7 +352,7 @@ DEV_ID=,Bus1
 
 def test_from_str_empty():
     """测试 from_str 解析空字符串"""
-    model = Information.from_str("")
+    model = InfFile.from_str("").to_equipment_group()
     assert len(model.analogs) == 0
     assert len(model.statuses) == 0
     assert len(model.buses) == 0
@@ -361,7 +360,7 @@ def test_from_str_empty():
 
 def test_kv_pairs():
     """测试键值对解析"""
-    from comtrade_io.inf.information import _kv_pairs
+    from comtrade_io.parser.inf import _kv_pairs
 
     lines = [
         "[Section]",
@@ -391,24 +390,21 @@ def test_encoding_handling():
                 """.strip(),
                 encoding="gbk"
         )
-        model = Information.from_file(p)
-        assert model is not None
+        inf = InfFile.from_file(p)
+        assert inf is not None
 
 
 def test_read_real_binary_inf_file():
     """测试读取实际的binary_inf.inf文件"""
     # 获取测试数据文件的路径
-    test_dir = Path(__file__).parent.parent.parent / "data"
+    test_dir = Path(__file__).parent.parent.parent / "dat"
     inf_file = test_dir / "binary_inf.inf"
 
     # 确保文件存在
     assert inf_file.exists(), f"测试文件不存在: {inf_file}"
 
     # 读取并解析INF文件
-    model = Information.from_file(inf_file)
-
-    # 验证解析成功
-    assert model is not None, "INF文件解析失败"
+    model = _eg_from_file(inf_file)
 
     # 验证基本属性 - 根据binary_inf.inf文件内容
     # 文件中有Total_Channel_Count=356, Analog_Channel_Count=155, Status_Channel_Count=201
@@ -426,7 +422,8 @@ def test_read_real_binary_inf_file():
     assert model.description.rec_dev_name == "ZH3D-1"
 
     # 验证版本（Revision_Year=1999）
-    from comtrade_io.type import Version
+    from comtrade_io.model.type import Version
+
     assert model.description.version == Version.V1999
 
     # 验证文件类型为BINARY（File_Type=BINARY）
@@ -443,3 +440,126 @@ def test_read_real_binary_inf_file():
     print(f"站点名称: {model.description.station_name}")
     print(f"录波设备: {model.description.rec_dev_name}")
     print(f"版本: {model.description.version}")
+
+
+def test_parse_analog_channel_parameters():
+    """测试模拟量通道参数段解析"""
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "sample.inf"
+        p.write_text(
+            """
+[Public Analog_Channel_#1]
+Channel_ID=Ia
+Phase_ID=A
+Monitored_Component=TCTR$MX$Amp$
+Channel_Units=A
+Channel_Multiplier=0.01
+Channel_Offset=0.0
+Channel_Skew=0.0
+Range_Minimum_Limit_Value=-32767
+Range_Maximum_Limit_Value=32767
+Channel_Ratio_Primary=600
+Channel_Ratio_Secondary=1
+Data_Primary_Secondary=S
+
+[ZYHD Analog_Channels_Parameter]
+CHNL_INFO_#1=1, 1, Ia, TA, 50, 0.6, kA, 1, A, 1, 0,
+            """.strip(),
+            encoding="utf-8",
+        )
+        model = _eg_from_file(p)
+        assert len(model.analogs) == 1
+
+        ana1 = model.analogs[1]
+        assert ana1.index == 1
+        assert ana1.name == "Ia"
+        # 参数段中的 t1 应覆盖通道段中的 Channel_Ratio_Primary
+        assert ana1.primary == 0.6
+        # 参数段中的 t2 应覆盖通道段中的 Channel_Ratio_Secondary
+        assert ana1.secondary == 1.0
+        # flag 应从参数段 type 解析
+        from comtrade_io.model.type import AnalogChannelFlag
+
+        assert ana1.flag == AnalogChannelFlag.TA
+
+
+def test_parse_status_channel_parameters():
+    """测试开关量通道参数段解析"""
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "sample.inf"
+        p.write_text(
+            """
+[Public Status_Channel_#1]
+Channel_ID=Breaker1
+Phase_ID=A
+Monitored_Component=XCBR$ST$Pos$
+Normal_State=0
+
+[ZYHD Status_Channels_Parameter]
+CHNL_INFO_#1=1, 1, Breaker1, Breaker_Pos, Unknown,
+            """.strip(),
+            encoding="utf-8",
+        )
+        model = _eg_from_file(p)
+        assert len(model.statuses) == 1
+
+        sta1 = model.statuses[1]
+        assert sta1.index == 1
+        assert sta1.name == "Breaker1"
+        # type 应从参数段 level 解析
+        from comtrade_io.model.type import DigitalChannelType
+
+        assert sta1.type == DigitalChannelType.Breaker_Pos
+
+
+def test_comtrade_model_to_inf_with_parameters():
+    """测试 ComtradeModel 的 to_inf 输出包含参数段"""
+    from comtrade_io.model.comtrade import Comtrade
+    from comtrade_io.model.configure import Configure
+    from comtrade_io.model.channel import Analog, Status
+    from comtrade_io.model.type import (
+        AnalogChannelFlag,
+        DigitalChannelType,
+        DigitalChannelFlag,
+        Phase,
+        Unit,
+        Contact,
+    )
+
+    # 构建一个包含参数信息的 Comtrade 对象
+    cfg = Configure()
+    cfg.analogs[1] = Analog(
+        index=1,
+        name="Ia",
+        phase=Phase.PHASE_A,
+        reference="TCTR$MX$Amp$",
+        unit=Unit.A,
+        primary=0.6,
+        secondary=1.0,
+        flag=AnalogChannelFlag.TA,
+        au=1.0,
+        bu=0.0,
+    )
+    cfg.statuses[1] = Status(
+        index=1,
+        name="Breaker1",
+        phase=Phase.PHASE_A,
+        reference="XCBR$ST$Pos$",
+        contact=Contact.NormallyOpen,
+        type=DigitalChannelType.Breaker_Pos,
+        flag=DigitalChannelFlag.GENERAL,
+        equipment_no="Breaker_#1",
+    )
+
+    model = Comtrade(config=cfg)
+    inf_output = model.to_inf()
+
+    # 验证输出包含参数段头
+    assert "[ZYHD Analog_Channels_Parameter]" in inf_output
+    assert "[ZYHD Status_Channels_Parameter]" in inf_output
+
+    # 验证模拟量参数段格式
+    assert "CHNL_INFO_#1=1, 0, Ia, TA, 50.0, 0.6, kA, 1.0, A, 1.0, 0.0" in inf_output
+
+    # 验证开关量参数段格式（flag.name 为 GENERAL）
+    assert "CHNL_INFO_#1=1, 0, Breaker1, Breaker_Pos, GENERAL, Breaker_#1" in inf_output

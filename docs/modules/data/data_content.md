@@ -30,9 +30,9 @@ class DataContent(BaseModel):
 ### 从文件读取
 
 ```python
-from comtrade_io.data import DataContent
+from comtrade_io.parser.dat import DataContent
 
-data_content = DataContent(cfg=configure, file_name="data/example.dat")
+data_content = DataContent(cfg=configure, file_name="dat/example.dat")
 ```
 
 ### 从内存读取（ASCII）

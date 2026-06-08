@@ -52,26 +52,26 @@ uv sync
 from comtrade_io import Comtrade
 
 # Load COMTRADE file (automatically finds cfg/dat/dmf/hdr/inf files)
-wave = Comtrade.from_file("data/D51_RCD_2346_20150917_105253_065_F.cfg")
+wave = Comtrade.from_file("dat/D51_RCD_2346_20150917_105253_065_F.cfg")
 
-# Access model methods (without sample data)
+# Access model methods (without sample dat)
 wave.get_bus_info("Bus Name")  # Returns model for specified bus name, including voltage and status channels
 wave.get_line_info("Line Name")  # Returns model for specified line name, including voltage and status channels
 wave.get_transformer_info("Transformer Name")  # Returns model for specified transformer/winding name, including voltage and status channels
 wave.get_analog_channel_info("Analog Ch ID")  # Returns model for specified analog channel
 wave.get_status_channel_info("Status Ch ID")  # Returns model for specified status channel
 
-# Access DAT data (DataFrame column structure: col 1 is timestamp, col 2+ are analog data, then status data)
-data = wave.get_data()  # or wave.dat.data - returns pandas DataFrame with all sample data
+# Access DAT dat (DataFrame column structure: col 1 is timestamp, col 2+ are analog dat, then status dat)
+data = wave.get_data()  # or wave.dat.dat - returns pandas DataFrame with all sample dat
 
-# Access specific analog channel data
-wave.get_analog_channel(1)  # Get analog channel by index, includes instantaneous sample data
-wave.get_status_channel(1)  # Get status channel by index, includes instantaneous sample data
+# Access specific analog channel dat
+wave.get_analog_channel(1)  # Get analog channel by index, includes instantaneous sample dat
+wave.get_status_channel(1)  # Get status channel by index, includes instantaneous sample dat
 
-# Access specific line, bus, transformer channel data
-wave.get_bus("Bus Name")  # Get bus parameters and associated voltage channels with instantaneous data by bus name
-wave.get_line("Line Name")  # Get line parameters and associated current channels with instantaneous data, bus parameters and voltage channel data by line name
-wave.get_transformer("Transformer Name")  # Get transformer and winding parameters with associated voltage/current channels and instantaneous data by transformer name
+# Access specific line, bus, transformer channel dat
+wave.get_bus("Bus Name")  # Get bus parameters and associated voltage channels with instantaneous dat by bus name
+wave.get_line("Line Name")  # Get line parameters and associated current channels with instantaneous dat, bus parameters and voltage channel dat by line name
+wave.get_transformer("Transformer Name")  # Get transformer and winding parameters with associated voltage/current channels and instantaneous dat by transformer name
 
 
 ```

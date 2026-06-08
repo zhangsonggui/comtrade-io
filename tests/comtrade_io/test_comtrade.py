@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from comtrade_io.comtrade import Comtrade
+from comtrade_io.parser.comtrade_file import ComtradeFile
 
-DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = Path(__file__).parent.parent / "dat"
 CFG_FILE = DATA_DIR / "binary_1999.cfg"
 CSV_FILE = DATA_DIR / "binary_1999.csv"
 
@@ -14,7 +14,7 @@ CSV_FILE = DATA_DIR / "binary_1999.csv"
 @pytest.fixture(scope="session")
 def comtrade():
     """Global Comtrade instance for all tests"""
-    return Comtrade.from_file(file_name=CFG_FILE)
+    return ComtradeFile.from_file(file_name=CFG_FILE)
 
 
 @pytest.fixture(scope="session")
@@ -29,7 +29,7 @@ class TestComtradeInitialization:
 
     def test_comtrade_initialization(self, comtrade):
         """测试Comtrade类初始化"""
-        assert comtrade.file.cfg_path.path == CFG_FILE
+        assert comtrade.header is not None
         assert comtrade.header.station == "GHBZ"
         assert comtrade.channel_num.analog == 96
         assert comtrade.channel_num.status == 192
