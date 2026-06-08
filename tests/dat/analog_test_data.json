@@ -1,0 +1,135 @@
+{
+  "note": "Recommended JSON format for Analog.from_str and Analog(dict) tests. Contains two sections: strings for parsing from strings and dicts for constructing from dictionaries.",
+  "strings": [
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1991格式的模拟量描述",
+      "input": "1,Ia1,A,,A,0.001,0,0,-1000000,1000000",
+      "expected": {
+        "index": 1,
+        "name": "Ia1",
+        "phase": "A",
+        "equip": "",
+        "unit": "A",
+        "multiplier": 0.001,
+        "offset": 0.0,
+        "delay": 0.0,
+        "min_value": -1000000.0,
+        "max_value": 1000000.0,
+        "primary": 1.0,
+        "secondary": 1.0,
+        "tran_side": "S"
+      }
+    },
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1999格式的模拟量描述",
+      "input": "3,Ic1,A,,A,1.5,0,0,-100000,100000,2.0,3.0,S",
+      "expected": {
+        "index": 3,
+        "name": "Ic1",
+        "phase": "A",
+        "equip": "",
+        "unit": "A",
+        "multiplier": 1.5,
+        "offset": 0.0,
+        "delay": 0.0,
+        "min_value": -100000.0,
+        "max_value": 100000.0,
+        "primary": 2.0,
+        "secondary": 3.0,
+        "tran_side": "S"
+      }
+    },
+    {
+      "type": "ok",
+      "note": "IEEE Std C37.111-1991格式的模拟量描述",
+      "input": "2,Ib1,B,,V,0.5,0.0,0.0,-2000,2000,0.5,0.5,P",
+      "expected": {
+        "index": 2,
+        "name": "Ib1",
+        "phase": "B",
+        "equip": "",
+        "unit": "V",
+        "multiplier": 0.5,
+        "offset": 0.0,
+        "delay": 0.0,
+        "min_value": -2000.0,
+        "max_value": 2000.0,
+        "primary": 0.5,
+        "secondary": 0.5,
+        "tran_side": "P"
+      }
+    },
+    {
+      "input": "4,Ib2,B,,A,1.0,0,0,-1000,1000,1.0,1.0,S",
+      "expected": {
+        "index": 4,
+        "name": "Ib2",
+        "phase": "B",
+        "equip": "",
+        "unit": "A",
+        "multiplier": 1.0,
+        "offset": 0.0,
+        "delay": 0.0,
+        "min_value": -1000.0,
+        "max_value": 1000.0,
+        "primary": 1.0,
+        "secondary": 1.0,
+        "tran_side": "S"
+      }
+    },
+    {
+      "input": "5,Ic2,C,,V,0.8,0.1,0.0,-500,500,0.8,1.0,P",
+      "expected": {
+        "index": 5,
+        "name": "Ic2",
+        "phase": "C",
+        "equip": "",
+        "unit": "V",
+        "multiplier": 0.8,
+        "offset": 0.1,
+        "delay": 0.0,
+        "min_value": -500.0,
+        "max_value": 500.0,
+        "primary": 0.8,
+        "secondary": 1.0,
+        "tran_side": "P"
+      }
+    }
+  ],
+  "dicts": [
+    {
+      "input": {
+        "index": 2,
+        "name": "Ib1",
+        "phase": "B",
+        "equip": "",
+        "unit": "A",
+        "multiplier": 2.0,
+        "offset": 0.0,
+        "delay": 0.0,
+        "min_value": -50000.0,
+        "max_value": 50000.0,
+        "primary": 1.0,
+        "secondary": 1.0,
+        "tran_side": "P"
+      },
+      "expected": {
+        "index": 2,
+        "name": "Ib1",
+        "phase": "B",
+        "equip": "",
+        "unit": "A",
+        "multiplier": 2.0,
+        "offset": 0.0,
+        "delay": 0.0,
+        "min_value": -50000.0,
+        "max_value": 50000.0,
+        "primary": 1.0,
+        "secondary": 1.0,
+        "tran_side": "P"
+      }
+    }
+  ]
+}

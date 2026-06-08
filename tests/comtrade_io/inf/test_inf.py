@@ -514,7 +514,8 @@ CHNL_INFO_#1=1, 1, Breaker1, Breaker_Pos, Unknown,
 
 def test_comtrade_model_to_inf_with_parameters():
     """测试 ComtradeModel 的 to_inf 输出包含参数段"""
-    from comtrade_io.model.comtrade_model import ComtradeModel
+    from comtrade_io.model.comtrade import Comtrade
+    from comtrade_io.model.configure import Configure
     from comtrade_io.model.channel import Analog, Status
     from comtrade_io.model.type import (
         AnalogChannelFlag,
@@ -524,17 +525,10 @@ def test_comtrade_model_to_inf_with_parameters():
         Unit,
         Contact,
     )
-    from comtrade_io.model.header.header import Header
-    from comtrade_io.model.header.channel_num import ChannelNum
 
-    # 构建一个包含参数信息的 ComtradeModel（使用 model_construct 避免验证）
-    model = ComtradeModel.model_construct(
-        header=Header(),
-        channel_num=ChannelNum(total=2, analog=1, status=1),
-        analogs={},
-        statuses={},
-    )
-    model.analogs[1] = Analog(
+    # 构建一个包含参数信息的 Comtrade 对象
+    cfg = Configure()
+    cfg.analogs[1] = Analog(
         index=1,
         name="Ia",
         phase=Phase.PHASE_A,
@@ -546,7 +540,7 @@ def test_comtrade_model_to_inf_with_parameters():
         au=1.0,
         bu=0.0,
     )
-    model.statuses[1] = Status(
+    cfg.statuses[1] = Status(
         index=1,
         name="Breaker1",
         phase=Phase.PHASE_A,
@@ -557,6 +551,7 @@ def test_comtrade_model_to_inf_with_parameters():
         equipment_no="Breaker_#1",
     )
 
+    model = Comtrade(config=cfg)
     inf_output = model.to_inf()
 
     # 验证输出包含参数段头

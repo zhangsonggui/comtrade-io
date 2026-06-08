@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from dataclasses import dataclass
-from io import StringIO
+from io import BytesIO, StringIO
 from pathlib import Path
 from typing import Optional
 
@@ -73,22 +73,25 @@ class DatFile:
 
     def write(
         self,
-        output_path: str | Path,
+        output_path: str | Path | BytesIO,
         data: pd.DataFrame,
         data_type: str | DataType = "BINARY",
     ) -> bool:
-        path = Path(output_path)
+        if isinstance(output_path, BytesIO):
+            buf = output_path
+        else:
+            buf = Path(output_path)
         if isinstance(data_type, DataType):
             dt_value = data_type
         else:
             dt_value = DataType.from_value(data_type.upper())
 
-        logger.info(f"开始写入数据文件: {path}, 格式: {dt_value.value}")
+        logger.info(f"开始写入数据文件: {buf}, 格式: {dt_value.value}")
 
         if dt_value == DataType.ASCII:
-            self._write_ascii(data, path)
+            self._write_ascii(data, buf)
         else:
-            self._write_binary(data, path, dt_value)
+            self._write_binary(data, buf, dt_value)
         return True
 
     def _parse_ascii(self, text: str) -> Optional[pd.DataFrame]:
@@ -310,14 +313,17 @@ class DatFile:
         )
         return config.description.sampling
 
-    def _write_ascii(self, data: pd.DataFrame, output_path: Path):
-        data.to_csv(str(output_path), header=False, index=False)
-        logger.info(f"数据文件{output_path}写入成功")
+    def _write_ascii(self, data: pd.DataFrame, output: Path | BytesIO):
+        if isinstance(output, BytesIO):
+            data.to_csv(output, header=False, index=False)
+        else:
+            data.to_csv(str(output), header=False, index=False)
+        logger.info(f"数据文件{output}写入成功")
 
     def _write_binary(
         self,
         data: pd.DataFrame,
-        output_path: Path,
+        output: Path | BytesIO,
         data_type: DataType = DataType.BINARY,
     ):
         config = self.config
@@ -376,5 +382,8 @@ class DatFile:
                 packed[:, w] = bits.dot(weights)
             records["status"] = packed
 
-        records.tofile(str(output_path))
-        logger.info(f"数据文件{output_path}写入成功")
+        if isinstance(output, BytesIO):
+            output.write(records.tobytes())
+        else:
+            records.tofile(str(output))
+        logger.info(f"数据文件{output}写入成功")

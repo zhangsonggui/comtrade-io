@@ -258,7 +258,7 @@ class Comtrade(BaseModel):
         return str(self.config)
 
     def to_dmf(self) -> str:
-        attrs = [f"{str(self.description)}"]
+        attrs = [f"{str(self.config.description.to_dmf())}"]
         for analog in self.analogs.values():
             attrs.append(analog.to_dmf())
         for status in self.statuses.values():
@@ -273,21 +273,7 @@ class Comtrade(BaseModel):
         return "\n".join(attrs)
 
     def to_inf(self) -> str:
-        inf_str = self.description.to_inf()
-        attrs = [
-            f"Total_Channel_Count={self.channel_num.total}",
-            f"Analog_Channel_Count={self.channel_num.analog}",
-            f"Status_Channel_Count={self.channel_num.status}",
-            f"Line_Frequency={self.sampling.freq}",
-            f"Sample_Rate_Count={len(self.sampling)}",
-        ]
-        for idx, segment in enumerate(self.sampling.segments):
-            attrs.append(f"Sample_Rate_#{idx + 1}={segment.samp}")
-            attrs.append(f"End_Sample_Rate_#{idx + 1}={segment.end_point}")
-        attrs.append(f"File_Start_Time={str(self.start_time)}")
-        attrs.append(f"Trigger_Time={str(self.fault_time)}")
-        attrs.append(f"File_Type={self.data_type.value}")
-        attrs.append(f"Time_Multiplier={self.timemult}")
+        attrs = [self.config.description.to_inf()]
 
         for analog in self.analogs.values():
             attrs.append(f"\n")
@@ -317,8 +303,7 @@ class Comtrade(BaseModel):
         for transformer in self.transformers:
             attrs.append(f"\n")
             attrs.append(transformer.to_inf())
-        attr_str = "\n".join(attrs)
-        return inf_str + "\n" + attr_str
+        return "\n".join(attrs)
 
     def write_cfg(self, path: str) -> None:
         with open(path, "w", encoding="gbk", errors="ignore") as f:

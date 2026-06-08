@@ -184,17 +184,4 @@ class CfgFile:
             logger.error(error_str)
             raise ValueError(f"配置文件{cfg_path}行数不对应,{e}")
 
-    @staticmethod
-    def write_file(config: Configure, output_file_path: Path | str):
-        """将配置写入文件
 
-        将当前Configure对象序列化,使用GBK编码写入指定的CFG配置文件。
-
-        参数:
-            output_file_path: 输出文件路径，可以是字符串或Path对象
-        """
-
-        with open(output_file_path, "w", encoding="gbk", errors="ignore") as f:
-            f.write(config.__str__())
-        logger.info(f"配置文件{output_file_path}写入成功")
-        return True

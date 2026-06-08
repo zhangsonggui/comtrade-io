@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.model.comtrade_file import ComtradeFile
 from comtrade_io.utils import get_logger
 
 if TYPE_CHECKING:
@@ -12,8 +10,9 @@ if TYPE_CHECKING:
 logger = get_logger()
 
 
-def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
-               data_format: str, **kwargs) -> bool:
+def export_csv(
+    comtrade: "Comtrade", output_path: "str | Path", data_format: str, **kwargs
+) -> bool:
     """导出CSV格式
 
     参数:
@@ -25,13 +24,9 @@ def export_csv(comtrade: "Comtrade", output_path: "str | Path | ComtradeFile",
     返回:
         成功与否
     """
-    path = Path(output_path) if not isinstance(output_path, ComtradeFile) else \
-        (output_path.cfg_path.path.parent / (
-                output_path.cfg_path.path.stem + '.csv') if output_path.cfg_path.path else None)
-    if not path:
-        raise ValueError("无法确定CSV输出路径")
-    if path.suffix.lower() != '.csv':
-        path = path.with_suffix('.csv')
+    from comtrade_io.exporters import _resolve_export_path
+
+    path = _resolve_export_path(output_path, ".csv")
 
     headers = ['Point', 'Time']
     for idx in sorted(comtrade.analogs.keys()):
