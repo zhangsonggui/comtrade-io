@@ -8,13 +8,11 @@ from pydantic import BaseModel, Field
 
 from comtrade_io.model.configure import Configure
 from comtrade_io.parser.dfr.constants import (
-    ANALOG_WORDS,
     DATA_MARKER,
     DEFAULT_HEADER_SIZE,
-    FRAME_SIZE,
     KNOWN_DEVICES,
-    STATUS_WORDS,
     WNDR_TEXT_SIZE,
+    calc_frame_params,
 )
 from comtrade_io.utils import get_logger
 
@@ -68,11 +66,18 @@ class BinarySection(BaseModel):
 
     def to_dataframe(self, cfg: Configure) -> pd.DataFrame:
         raw = self.frame_data
-        raw_size = len(raw) // FRAME_SIZE * FRAME_SIZE
+        analog_count = cfg.description.channel_num.analog
+        status_count = cfg.description.channel_num.status
+        fp = calc_frame_params(analog_count, status_count)
+        frame_size = fp["frame_size"]
+        analog_words = fp["analog_words"]
+        status_word_count = fp["status_word_count"]
+
+        raw_size = len(raw) // frame_size * frame_size
         if raw_size == 0:
             return pd.DataFrame()
 
-        frame_count = raw_size // FRAME_SIZE
+        frame_count = raw_size // frame_size
 
         # 使用配置中的总采样点数（如果小于实际帧数则截断）
         if (
@@ -81,24 +86,20 @@ class BinarySection(BaseModel):
             and cfg.description.sampling.segments[0].end_point > 0
         ):
             frame_count = cfg.description.sampling.segments[0].end_point
-            raw_size = frame_count * FRAME_SIZE
+            raw_size = frame_count * frame_size
 
-        analog_count = cfg.description.channel_num.analog
-        status_count = cfg.description.channel_num.status
-        status_word_count = max((status_count + 15) // 16, STATUS_WORDS)
-
-        words_per_frame = FRAME_SIZE // 2
+        words_per_frame = frame_size // 2
         frames = np.frombuffer(raw[:raw_size], dtype=np.int16).reshape(
             -1, words_per_frame
         )
 
-        if frames.shape[1] < ANALOG_WORDS:
+        if frames.shape[1] < analog_words:
             raise ValueError(
-                f"帧大小异常，期望 {ANALOG_WORDS} 个16位字，实际 {frames.shape[1]}"
+                f"帧大小异常，期望 {analog_words} 个16位字，实际 {frames.shape[1]}"
             )
 
-        analog_data = frames[:, :ANALOG_WORDS].astype(np.float64)
-        status_data = frames[:, ANALOG_WORDS : ANALOG_WORDS + STATUS_WORDS].astype(
+        analog_data = frames[:, :analog_words].astype(np.float64)
+        status_data = frames[:, analog_words : analog_words + status_word_count].astype(
             np.uint16
         )
 
