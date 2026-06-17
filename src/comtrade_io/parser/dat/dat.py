@@ -314,10 +314,29 @@ class DatFile:
         return config.description.sampling
 
     def _write_ascii(self, data: pd.DataFrame, output: Path | BytesIO):
-        if isinstance(output, BytesIO):
-            data.to_csv(output, header=False, index=False)
+        config = self.config
+        analog_count = config.description.channel_num.analog
+        if analog_count > 0:
+            analog_list = list(config.analogs.values())[:analog_count]
+            multipliers = np.array([a.multiplier for a in analog_list])
+            offsets = np.array([a.offset for a in analog_list])
+            analog_values = data.iloc[:, 2 : 2 + analog_count].to_numpy(
+                dtype=np.float64
+            )
+            mask = multipliers != 0
+            raw_values = np.zeros_like(analog_values)
+            raw_values[:, mask] = (
+                analog_values[:, mask] - offsets[mask]
+            ) / multipliers[mask]
+            out = data.copy()
+            out.iloc[:, 2 : 2 + analog_count] = np.round(raw_values)
         else:
-            data.to_csv(str(output), header=False, index=False)
+            out = data
+
+        if isinstance(output, BytesIO):
+            out.to_csv(output, header=False, index=False)
+        else:
+            out.to_csv(str(output), header=False, index=False)
         logger.info(f"数据文件{output}写入成功")
 
     def _write_binary(

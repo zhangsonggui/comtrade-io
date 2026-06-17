@@ -263,11 +263,11 @@ class Comtrade(BaseModel):
             attrs.append(analog.to_dmf())
         for status in self.statuses.values():
             attrs.append(status.to_dmf())
-        for bus in self.buses:
+        for bus in self.buses or []:
             attrs.append(bus.to_dmf())
-        for line in self.lines:
+        for line in self.lines or []:
             attrs.append(line.to_dmf())
-        for trans in self.transformers:
+        for trans in self.transformers or []:
             attrs.append(trans.to_dmf())
         attrs.append(f"</scl:ComtradeModel>")
         return "\n".join(attrs)
@@ -294,13 +294,13 @@ class Comtrade(BaseModel):
             for status in self.statuses.values():
                 attrs.append(f"CHNL_INFO_#{status.index}={status.to_inf_parameter()}")
 
-        for bus in self.buses:
+        for bus in self.buses or []:
             attrs.append(f"\n")
             attrs.append(bus.to_inf())
-        for line in self.lines:
+        for line in self.lines or []:
             attrs.append(f"\n")
             attrs.append(line.to_inf())
-        for transformer in self.transformers:
+        for transformer in self.transformers or []:
             attrs.append(f"\n")
             attrs.append(transformer.to_inf())
         return "\n".join(attrs)
