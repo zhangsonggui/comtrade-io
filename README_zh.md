@@ -282,6 +282,14 @@ MIT 许可证
 - 0.1.1: 添加对 DMF 数据模型文件的支持
 - 0.1.2: 和 0.1.1 版本一致
 - 0.1.3: 添加对 CFF 单文件、INF 信息文件的支持
+- **0.2.1**: 增强 DFR 格式兼容性和 Bug 修复
+  - 支持多型号 DFR 装置（2704V042、2704V072）
+  - DFR 帧大小根据通道配置动态计算
+  - 修复数据中模拟量未转换为瞬时值的问题
+  - 修复 ASCII 导出未反向转换为 ADC 计数值的问题
+  - 修复 INF/DMF 导出时母线/线路/变压器为 None 的崩溃问题
+  - DFR 解析器重构为模块化子模块（wndr_section、binary_section、converter）
+  - 添加批量 DFR→COMTRADE 转换脚本
 - **0.2.0**: 重大重构和新功能
   - 包结构重构为 `model/`、`parser/`、`exporters/`、`utils/` 模块
   - Comtrade 模型重构：`cfg` → `config`，集成设备模型

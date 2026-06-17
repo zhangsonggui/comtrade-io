@@ -283,6 +283,14 @@ MIT License
 - 0.1.1: Added support for DMF data model files
 - 0.1.2: Same as version 0.1.1
 - 0.1.3: Added support for CFF single file and INF information files
+- **0.2.1**: Enhanced DFR format support and bug fixes
+    - Added support for multiple DFR device types (2704V042, 2704V072)
+    - Dynamic DFR frame size calculation based on channel configuration
+    - Fixed analog scaling to physical instantaneous values in data
+    - Fixed ASCII export by reversing physical values back to ADC counts
+    - Fixed INF/DMF export crash on None buses/lines/transformers
+    - DFR parser refactored into modular sub-modules (wndr_section, binary_section, converter)
+    - Batch DFR→COMTRADE conversion script added
 - **0.2.0**: Major refactoring and new features
     - Package restructured into `model/`, `parser/`, `exporters/`, `utils/` modules
     - Comtrade model refactored: `cfg` → `config`, equipment model integration
