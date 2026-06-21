@@ -156,13 +156,16 @@ class ComtradeFile(BaseModel):
         """组装 Comtrade 对象"""
         from comtrade_io.model.comtrade import Comtrade
 
-        return Comtrade(
+        comtrade = Comtrade(
             config=cfg,
             data=data,
             buses=eg.buses if eg else None,
             lines=eg.lines if eg else None,
             transformers=eg.transformers if eg else None,
         )
+        if eg is not None:
+            comtrade.from_equipment_group(eg)
+        return comtrade
 
     def __str__(self) -> str:
         return (

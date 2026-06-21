@@ -13,6 +13,7 @@ from comtrade_io.model.type import (
     DigitalChannelType,
     Phase,
 )
+from comtrade_io.model.type.base_enum import BaseEnum
 from comtrade_io.utils import text_split
 
 
@@ -112,12 +113,26 @@ class ChannelBaseModel(ChannelType):
             channel.equip = str_arr[3]
         return channel
 
+    def _other_is_default(self, field_name: str, other_value) -> bool:
+        """判断 other 的值是否为该字段的模型默认值"""
+        field_info = self.__class__.model_fields.get(field_name)
+        if field_info is None:
+            return False
+        default = field_info.default
+        if isinstance(other_value, BaseEnum):
+            try:
+                return other_value == default
+            except Exception:
+                return other_value.name == getattr(default, 'name', None)
+        return other_value == default
+
     def sync_from(self, other) -> bool:
         """从另一个通道对象同步属性
 
         同步规则：
-        - 如果 self 的属性为 None，用 other 的值更新（不管 other 的值是否为 None）
-        - 如果 other 的属性为 None，不进行更新
+        - 如果 self 的属性为 None，用 other 的值更新
+        - 如果 other 的值为 None，不进行更新
+        - 如果 other 是该字段的模型默认值，不覆盖 self
         - 其他情况，如果值不同则更新
 
         参数:
@@ -125,21 +140,17 @@ class ChannelBaseModel(ChannelType):
         """
         if self.index != other.index:
             return False
-        # 从类而不是实例访问 model_fields 以避免 Pydantic 警告
         for field_name in other.__class__.model_fields:
             self_value = getattr(self, field_name)
             other_value = getattr(other, field_name)
 
-            # 如果 other 的值为 None，不更新
             if other_value is None:
                 continue
-
-            # 如果 self 的值为 None，直接用 other 的值更新
             if self_value is None:
                 setattr(self, field_name, other_value)
                 continue
-
-            # 其他情况，如果值不同则更新
             if self_value != other_value:
+                if self._other_is_default(field_name, other_value):
+                    continue
                 setattr(self, field_name, other_value)
         return True
