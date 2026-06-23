@@ -74,7 +74,7 @@ class DescriptionSection:
                     end = data.get(f"End_Sample_Rate_#{i}")
                     if samp and end:
                         sampling.segments.append(
-                            Segment(samp=int(samp), end_point=int(end))
+                            Segment(samp=int(float(samp)), end_point=int(float(end)))
                         )
             description.sampling = sampling
 
