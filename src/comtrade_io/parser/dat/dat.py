@@ -284,7 +284,12 @@ class DatFile:
         timestamps_us = df.iloc[:, 1].to_numpy() * config.description.timemult
         time_diffs_us = np.diff(timestamps_us)
 
-        change_indices = np.where(np.diff(time_diffs_us) != 0)[0] + 1
+        change_threshold = 0.05  # 5% 变化才视为真实的采样率切换
+        diff_diffs = np.diff(time_diffs_us)
+        abs_prev = np.abs(time_diffs_us[:-1])
+        abs_prev[abs_prev == 0] = 1
+        significant_changes = np.abs(diff_diffs) / abs_prev > change_threshold
+        change_indices = np.where(significant_changes)[0] + 1
         segment_starts = np.concatenate([[0], change_indices])
         segment_ends = np.concatenate([change_indices, [len(timestamps_us)]])
 
