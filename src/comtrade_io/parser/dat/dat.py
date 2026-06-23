@@ -258,12 +258,6 @@ class DatFile:
         if df is None:
             return
 
-        # 应用时标倍率因子
-        timemult = config.description.timemult
-        if timemult is not None and timemult != 1.0:
-            df.iloc[:, 1] = df.iloc[:, 1] * timemult
-            logger.debug(f"时标倍率因子 {timemult} 已应用到时间戳列")
-
         if (
             config.description.sampling.segments
             and df.shape[0] != config.description.sampling.segments[-1].end_point
@@ -273,7 +267,14 @@ class DatFile:
                 f"{config.description.sampling.segments[-1].end_point}不一致，"
                 "根据采样点时间进行修正"
             )
+
         self._verify_and_recalculate_sampling(df)
+
+        # 应用时标倍率因子（在采样率重算之后，避免重复乘 timemult）
+        timemult = config.description.timemult
+        if timemult is not None and timemult != 1.0:
+            df.iloc[:, 1] = df.iloc[:, 1] * timemult
+            logger.debug(f"时标倍率因子 {timemult} 已应用到时间戳列")
 
     def _verify_and_recalculate_sampling(self, df: pd.DataFrame) -> Sampling:
         config = self.config
