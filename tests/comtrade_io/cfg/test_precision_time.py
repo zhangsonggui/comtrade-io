@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from comtrade_io.parser.description import DateTimeParser
-from comtrade_io.parser.description.date_time_parser import (
+from comtrade_io.parser.description.data_time_parser import (
     format_datetime_for_cfg,
 )
 

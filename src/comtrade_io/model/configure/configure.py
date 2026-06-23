@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, model_serializer
 from comtrade_io.model.channel.analog import Analog
 from comtrade_io.model.channel.status import Status
 from comtrade_io.model.description import Description, Segment
-from comtrade_io.parser.description.date_time_parser import format_datetime_for_cfg
+from comtrade_io.parser.description.data_time_parser import format_datetime_for_cfg
 
 
 class Configure(BaseModel):

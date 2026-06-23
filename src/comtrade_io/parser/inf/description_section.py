@@ -9,7 +9,7 @@ from comtrade_io.model.description import (
     Segment,
 )
 from comtrade_io.model.type import DataType, Version
-from comtrade_io.parser.description.date_time_parser import format_time
+from comtrade_io.parser.description.data_time_parser import format_time
 from comtrade_io.utils import get_logger
 
 logger = get_logger()

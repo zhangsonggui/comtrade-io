@@ -103,7 +103,7 @@ class Description(ReferenceBaseModel):
         return xml
 
     def to_inf(self) -> str:
-        from comtrade_io.parser.description.date_time_parser import (
+        from comtrade_io.parser.description.data_time_parser import (
             format_datetime_for_cfg,
         )
 
