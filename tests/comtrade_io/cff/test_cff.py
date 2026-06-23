@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """CFF模块测试"""
+
 from pathlib import Path
 
 import pytest
@@ -116,23 +117,39 @@ class TestCffFile:
 
 
 class TestComtradeFromCff:
-    """测试通过Comtrade.from_file读取CFF文件"""
+    """测试通过Comtrade.from_cff读取CFF文件"""
+
+    def test_from_file_skips_cff(self, cff_file_path):
+        """验证from_file不再读取CFF单文件"""
+        assert ComtradeFile.from_file(cff_file_path) is None
+
+    def test_from_file_skips_dfr(self):
+        """验证from_file不再读取DFR单文件"""
+        assert ComtradeFile.from_file(DATA_DIR / "missing.dfr") is None
+
+    def test_from_cff_missing_file_returns_none(self):
+        """验证from_cff读取失败时返回None"""
+        assert ComtradeFile.from_cff(DATA_DIR / "missing.cff") is None
+
+    def test_from_dfr_missing_file_returns_none(self):
+        """验证from_dfr读取失败时返回None"""
+        assert ComtradeFile.from_dfr(DATA_DIR / "missing.dfr") is None
 
     def test_comtrade_from_cff(self, cff_file_path):
         """验证从CFF文件创建Comtrade对象"""
-        comtrade = ComtradeFile.from_file(cff_file_path)
+        comtrade = ComtradeFile.from_cff(cff_file_path)
         assert comtrade is not None
         assert comtrade.data is not None
 
     def test_comtrade_cfg_from_cff(self, cff_file_path):
         """验证从CFF文件解析的配置"""
-        comtrade = ComtradeFile.from_file(cff_file_path)
+        comtrade = ComtradeFile.from_cff(cff_file_path)
         assert comtrade.channel_num.analog == 96
         assert comtrade.channel_num.status == 192
 
     def test_comtrade_dat_from_cff(self, cff_file_path):
         """验证从CFF文件解析的数据"""
-        comtrade = ComtradeFile.from_file(cff_file_path)
+        comtrade = ComtradeFile.from_cff(cff_file_path)
         assert comtrade.data is not None
         rows, cols = comtrade.data.shape
         assert rows > 0
@@ -140,7 +157,7 @@ class TestComtradeFromCff:
 
     def test_comtrade_analog_channels(self, cff_file_path):
         """验证模拟通道信息"""
-        comtrade = ComtradeFile.from_file(cff_file_path)
+        comtrade = ComtradeFile.from_cff(cff_file_path)
         assert len(comtrade.analogs) == 96
         # 检查第一个模拟通道
         first_analog = comtrade.analogs.get(1)
@@ -149,7 +166,7 @@ class TestComtradeFromCff:
 
     def test_comtrade_status_channels(self, cff_file_path):
         """验证状态通道信息"""
-        comtrade = ComtradeFile.from_file(cff_file_path)
+        comtrade = ComtradeFile.from_cff(cff_file_path)
         assert len(comtrade.statuses) == 192
         # 检查第一个状态通道
         first_status = comtrade.statuses.get(1)
@@ -166,7 +183,7 @@ class TestNoTempFiles:
         initial_files = set(tmp_path.iterdir())
 
         # 解析CFF文件
-        comtrade = ComtradeFile.from_file(cff_file_path)
+        comtrade = ComtradeFile.from_cff(cff_file_path)
         assert comtrade is not None
 
         # 检查tmp_path没有新文件

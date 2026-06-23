@@ -26,7 +26,8 @@ def extract_sections(cff_path: Union[str, Path]) -> CffSection:
     content = content_bytes.decode("gbk", errors="replace")
 
     section_pattern = re.compile(
-        r"^--{1,2}\s*file\s+type\s+(\w+)\s*---", re.IGNORECASE | re.MULTILINE
+        r"^--{1,2}\s*file\s+type\s*:?\s+(\w+)(?:\s+[^-]*)?\s*---",
+        re.IGNORECASE | re.MULTILINE,
     )
 
     sections = {}

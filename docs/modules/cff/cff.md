@@ -260,13 +260,13 @@ if information:
     print(f"变压器: {len(information.transformers)}")
 ```
 
-### 通过 Comtrade.from_file 解析
+### 通过 ComtradeFile.from_cff 解析
 
 ```python
-from comtrade_io import Comtrade
+from comtrade_io.parser.comtrade_file import ComtradeFile
 
-# 直接通过 Comtrade 类解析 CFF 文件
-comtrade = Comtrade.from_file("dat/example.cff")
+# 直接解析 CFF 文件
+comtrade = ComtradeFile.from_cff("dat/example.cff")
 
 # 访问数据
 print(comtrade.config.header.station)

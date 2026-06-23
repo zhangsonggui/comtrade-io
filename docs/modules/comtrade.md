@@ -57,13 +57,13 @@ def from_file(cls, file_name: str | Path | ComtradeFile) -> "Comtrade|None"
 **示例：**
 
 ```python
-from comtrade_io import Comtrade
+from comtrade_io.parser.comtrade_file import ComtradeFile
 
 # 通过 cfg 文件加载
-comtrade = Comtrade.from_file("dat/example.cfg")
+comtrade = ComtradeFile.from_file("dat/example.cfg")
 
 # 通过 cff 文件加载
-comtrade = Comtrade.from_file("dat/example.cff")
+comtrade = ComtradeFile.from_cff("dat/example.cff")
 ```
 
 ---

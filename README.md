@@ -92,10 +92,10 @@ wave.get_transformer("Transformer Name")      # Transformer with winding data
 
 ```python
 # From CFF single file
-cf = ComtradeFile.from_file("recording.cff")
+cf = ComtradeFile.from_cff("recording.cff")
 
 # From DFR (WNDR) file
-cf = ComtradeFile.from_file("recording.dfr")
+cf = ComtradeFile.from_dfr("recording.dfr")
 ```
 
 ### Export Files

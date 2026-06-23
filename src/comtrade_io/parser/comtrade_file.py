@@ -89,26 +89,27 @@ class ComtradeFile(BaseModel):
 
     @classmethod
     def from_file(cls, file_name: str | Path) -> Comtrade | None:
-        """从 COMTRADE 文件解析为 Comtrade 对象
+        """从传统 COMTRADE 多文件解析为 Comtrade 对象
 
-        自动检测文件类型：.cff / .dfr / 传统多文件格式。
+        仅处理以 CFG/DAT 为核心的多文件格式；CFF 和 DFR 单文件请分别使用
+        from_cff() 与 from_dfr()。
 
         参数:
-            file_name: COMTRADE 文件路径（CFG / CFF / DFR 均可）
+            file_name: 传统 COMTRADE 文件路径（通常为 CFG / DAT / INF / DMF）
 
         返回:
             Comtrade | None: 解析成功返回 Comtrade 对象，失败返回 None
         """
         cf = cls.from_path(file_name)
 
-        if cf.cff_path.is_enabled():
-            return cls._from_cff(cf.cff_path.path)
+        if cf.cff_path.path is not None or cf.dfr_path.path is not None:
+            logger.info("from_file 跳过单文件格式，请使用 from_cff 或 from_dfr 读取")
+            return None
 
-        if cf.dfr_path.is_enabled():
-            return cls._from_dfr(cf.dfr_path.path)
-
+        logger.info(f"开始读取传统 COMTRADE 多文件: {file_name}")
         configure = CfgFile.from_file(cf.cfg_path.path)
         if configure is None:
+            logger.warning(f"未能读取 CFG 配置文件: {cf.cfg_path.path}")
             return None
 
         from comtrade_io.parser import DmfFile, InfFile
@@ -121,29 +122,52 @@ class ComtradeFile(BaseModel):
         from comtrade_io.parser.dat import DatFile
 
         data = DatFile.from_file(configure, cf.dat_path.path)
+        logger.info(f"传统 COMTRADE 多文件读取完成: {file_name}")
         return cls._create_comtrade(cfg=configure, eg=eg, data=data)
 
     @classmethod
-    def _from_cff(cls, file_name: str | Path) -> Comtrade | None:
+    def from_cff(cls, file_name: str | Path) -> Comtrade | None:
+        """从 CFF 单文件解析为 Comtrade 对象"""
         from comtrade_io.parser.cff import CffFile
 
-        cff_file = CffFile.from_file(file_name)
-        configure = cff_file.to_configure()
-        if configure is None:
+        logger.info(f"开始读取 CFF 单文件: {file_name}")
+        try:
+            cff_file = CffFile.from_file(file_name)
+            configure = cff_file.to_configure()
+            if configure is None:
+                logger.warning(f"未能从 CFF 解析配置: {file_name}")
+                return None
+            eg = cff_file.to_information()
+            data = cff_file.to_data_content(configure)
+            if data is None:
+                logger.warning(f"未能从 CFF 解析数据: {file_name}")
+                return None
+        except Exception as e:
+            logger.error(f"读取 CFF 单文件失败: {file_name}, {e}")
             return None
-        eg = cff_file.to_information()
-        data = cff_file.to_data_content(configure)
+        logger.info(f"CFF 单文件读取完成: {file_name}")
         return cls._create_comtrade(cfg=configure, eg=eg, data=data)
 
     @classmethod
-    def _from_dfr(cls, file_name: str | Path) -> Comtrade | None:
+    def from_dfr(cls, file_name: str | Path) -> Comtrade | None:
+        """从 DFR 单文件解析为 Comtrade 对象"""
         from comtrade_io.parser.dfr import DfrFile
 
-        dfr_file = DfrFile.from_file(file_name)
-        configure = dfr_file.to_configure()
-        if configure is None:
+        logger.info(f"开始读取 DFR 单文件: {file_name}")
+        try:
+            dfr_file = DfrFile.from_file(file_name)
+            configure = dfr_file.to_configure()
+            if configure is None:
+                logger.warning(f"未能从 DFR 解析配置: {file_name}")
+                return None
+            data = dfr_file.to_data_content(configure)
+            if data is None:
+                logger.warning(f"未能从 DFR 解析数据: {file_name}")
+                return None
+        except Exception as e:
+            logger.error(f"读取 DFR 单文件失败: {file_name}, {e}")
             return None
-        data = dfr_file.to_data_content(configure)
+        logger.info(f"DFR 单文件读取完成: {file_name}")
         return cls._create_comtrade(cfg=configure, eg=None, data=data)
 
     @classmethod

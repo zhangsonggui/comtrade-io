@@ -91,10 +91,10 @@ wave.get_transformer("主变名称")  # 获取主变及各绕组通道数据
 
 ```python
 # 从 CFF 单文件加载
-cf = ComtradeFile.from_file("recording.cff")
+cf = ComtradeFile.from_cff("recording.cff")
 
 # 从 DFR（WNDR）文件加载
-cf = ComtradeFile.from_file("recording.dfr")
+cf = ComtradeFile.from_dfr("recording.dfr")
 ```
 
 ### 导出文件
