@@ -24,7 +24,7 @@ class HeaderParser:
             Header: 解析后的文件头对象
         """
         logger.debug(f"正在解析配置文件第一行内容:{_str}")
-        str_arr = text_split(_str)
+        str_arr = text_split(_str, filter_empty=False)
         if len(str_arr) < 2:
             return Header()
         if len(str_arr) < 3:

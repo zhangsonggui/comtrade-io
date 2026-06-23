@@ -42,10 +42,10 @@ class Description(ReferenceBaseModel):
     data_type: DataType | None = Field(default=DataType.BINARY, description="数据格式")
     timemult: float | None = Field(default=1.0, description="时标倍率因子")
     time_info: TimeInfo | None = Field(
-        default=None, description="时间信息及与UTC时间关系"
+        default_factory=TimeInfo, description="时间信息及与UTC时间关系"
     )
     sampling_time_quality: SamplingTimeQuality | None = Field(
-        default=None, description="采样时间品质"
+        default_factory=SamplingTimeQuality, description="采样时间品质"
     )
 
     @property
