@@ -49,10 +49,10 @@ def test_config_sampling(config):
     assert samp.segments[0].end_point == 45600
 
 def test_config_time(config):
-    assert config.description.file_start_time.time == datetime.datetime(
+    assert config.description.file_start_time == datetime.datetime(
         year=2023, month=5, day=12, hour=19, minute=45, second=25, microsecond=600000
     )
-    assert config.description.trigger_time.time == datetime.datetime(
+    assert config.description.trigger_time == datetime.datetime(
         year=2023, month=5, day=12, hour=19, minute=45, second=25, microsecond=814600
     )
 

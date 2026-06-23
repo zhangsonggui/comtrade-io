@@ -337,22 +337,22 @@ class DatFile:
     def _write_ascii(self, data: pd.DataFrame, output: Path | BytesIO):
         config = self.config
         analog_count = config.description.channel_num.analog
+        out = data.copy()
+
         if analog_count > 0:
             analog_list = list(config.analogs.values())[:analog_count]
             multipliers = np.array([a.multiplier for a in analog_list])
             offsets = np.array([a.offset for a in analog_list])
-            analog_values = data.iloc[:, 2 : 2 + analog_count].to_numpy(
-                dtype=np.float64
-            )
+            analog_values = out.iloc[:, 2 : 2 + analog_count].to_numpy(dtype=np.float64)
             mask = multipliers != 0
             raw_values = np.zeros_like(analog_values)
             raw_values[:, mask] = (
                 analog_values[:, mask] - offsets[mask]
             ) / multipliers[mask]
-            out = data.copy()
             out.iloc[:, 2 : 2 + analog_count] = np.round(raw_values)
-        else:
-            out = data
+
+        # 全部列转为整型，确保无小数输出
+        out = out.astype(np.int64)
 
         if isinstance(output, BytesIO):
             out.to_csv(output, header=False, index=False)

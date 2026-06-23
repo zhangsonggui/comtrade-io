@@ -11,7 +11,6 @@ from comtrade_io.model.description import (
     ChannelNum,
     Description,
     Header,
-    PrecisionTime,
     Sampling,
     Segment,
 )
@@ -118,12 +117,12 @@ def wndr_to_configure(
     )
 
     if file_mtime:
-        file_start_time = PrecisionTime(time=file_mtime)
-        trigger_time = PrecisionTime(time=file_mtime)
+        file_start_time = file_mtime
+        trigger_time = file_mtime
     else:
         now = datetime.now()
-        file_start_time = PrecisionTime(time=now)
-        trigger_time = PrecisionTime(time=now)
+        file_start_time = now
+        trigger_time = now
 
     description = Description(
         header=header,
