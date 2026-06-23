@@ -288,7 +288,14 @@ class DatFile:
             if time_diffs_us[start] <= 0 or not np.isfinite(time_diffs_us[start]):
                 continue
 
-            samp = int(np.ceil(1_000_000.0 / time_diffs_us[start]))
+            n_intervals = end - start - 1
+            if n_intervals > 0:
+                avg_interval = (
+                    timestamps_us[end - 1] - timestamps_us[start]
+                ) / n_intervals
+                samp = int(np.round(1_000_000.0 / avg_interval))
+            else:
+                samp = int(np.round(1_000_000.0 / time_diffs_us[start]))
             count = end - start
             cycle_point_num = samp / frequency
 
