@@ -255,9 +255,17 @@ class DatFile:
 
     def _post_process(self, df: pd.DataFrame):
         config = self.config
+        if df is None:
+            return
+
+        # 应用时标倍率因子
+        timemult = config.description.timemult
+        if timemult is not None and timemult != 1.0:
+            df.iloc[:, 1] = df.iloc[:, 1] * timemult
+            logger.debug(f"时标倍率因子 {timemult} 已应用到时间戳列")
+
         if (
-            df is not None
-            and config.description.sampling.segments
+            config.description.sampling.segments
             and df.shape[0] != config.description.sampling.segments[-1].end_point
         ):
             logger.warning(
