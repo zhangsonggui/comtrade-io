@@ -3,8 +3,8 @@
 
 from pydantic import Field
 
-from comtrade_io.model.description import ReferenceBaseModel
 from comtrade_io.model.channel.channel import ChannelBaseModel
+from comtrade_io.model.description import ReferenceBaseModel
 from comtrade_io.model.type import TranSide, Unit
 from comtrade_io.utils import get_logger
 
@@ -105,7 +105,7 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f'ph="{self.phase.value}"'
         ]
 
-        return f'\t<scl:Analog {" ".join(attrs)} />'
+        return f'\t<scl:AnalogChannel {" ".join(attrs)} />'
 
     def to_inf(self) -> str:
         """将模拟量通道对象转换为模拟部件模型字符串

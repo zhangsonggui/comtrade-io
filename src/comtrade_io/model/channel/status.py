@@ -3,9 +3,10 @@
 
 from pydantic import ConfigDict, Field
 
-from comtrade_io.model.description import ReferenceBaseModel
 from comtrade_io.model.channel.channel import ChannelBaseModel
+from comtrade_io.model.description import ReferenceBaseModel
 from comtrade_io.model.type import Contact
+
 
 class Status(ChannelBaseModel, ReferenceBaseModel):
     """数字量通道类
@@ -21,8 +22,11 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         contact: 状态通道正常状态，默认为常开
         data: 通道数据，一维数组
     """
+
     model_config = ConfigDict(extra="allow")
-    contact: Contact = Field(default=Contact.NormallyOpen, description="状态通道正常状态")
+    contact: Contact = Field(
+        default=Contact.NormallyOpen, description="状态通道正常状态"
+    )
     equipment_no: str | None = Field(
         default=None, description="保护/断路器/刀闸序号，如Relay_#1、Breaker_#1"
     )
@@ -35,7 +39,14 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
         返回:
             str: 逗号分隔的通道信息字符串
         """
-        return super().__str__() + f",{self.contact.value}"
+        attrs = [
+            f"{self.index}",
+            f"{self.name}",
+            f"{self.phase.value}",
+            f"{self.equip if self.equip else ''}",
+            f"{self.contact.value}",
+        ]
+        return ",".join(attrs)
 
     def to_dmf(self):
         """将数字量通道对象转换为DMF格式字符串
@@ -49,7 +60,7 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
             f'type="{self.type.value if self.type else ""}"',
             f'flag="{self.flag.value if self.flag else ""}"',
             f'contact="{self.contact.name}"',
-            f'srcRef="{self.reference}"'
+            f'srcRef="{self.reference if self.reference else ""}"',
         ]
         return f"\t<scl:StatusChannel {' '.join(attrs)} />"
 
@@ -64,7 +75,7 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
             f"Channel_ID={self.name}",
             f"Phase_ID={self.phase.value}",
             f"Monitored_Component={self.reference}",
-            f"Normal_State={self.contact.value}"
+            f"Normal_State={self.contact.value}",
         ]
         return "\n".join(attrs)
 
