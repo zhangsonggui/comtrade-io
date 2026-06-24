@@ -69,7 +69,7 @@ class AnalogParser:
     """
 
     @staticmethod
-    def from_string(_str: str):
+    def from_string(_str: str) -> Analog:
         """
         从字符串中解析模拟量数据
         """

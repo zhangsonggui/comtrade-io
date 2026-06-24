@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from comtrade_io.model.channel.channel import ChannelBaseModel
 from comtrade_io.model.description import ReferenceBaseModel
@@ -41,8 +41,11 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
         unit_multiplier: 模拟量增益系数
         data: 通道数据，一维数组
     """
+
     unit: Unit = Field(default=Unit.NONE, description="通道单位")
-    multiplier: float = Field(default=1.0, ge=0.0, description="通道增益系数(实数,可使用标准浮点标记法)")
+    multiplier: float = Field(
+        default=1.0, ge=0.0, description="通道增益系数(实数,可使用标准浮点标记法)"
+    )
     offset: float = Field(default=0.0, description="通道偏移量")
     delay: float = Field(default=0.0, description="通道时滞（μs）")
     min_value: float = Field(default=0.0, description="数值最小值")
@@ -66,6 +69,23 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
     au: float | None = Field(default=None, description="模拟量标幺")
     bu: float | None = Field(default=None, description="模拟量标幺")
 
+    @model_validator(mode="after")
+    def _auto_recognize(self):
+        if self.type is not None and self.flag is not None:
+            return self
+        if not self.name:
+            return self
+        from comtrade_io.utils.recognition.channel_recognizer import (
+            recognize_analog_channel,
+        )
+
+        result = recognize_analog_channel(self.name)
+        if self.type is None:
+            self.type = result.channel_type
+        if self.flag is None:
+            self.flag = result.channel_flag
+        return self
+
     def __str__(self):
         """返回对象的字符串表示形式
 
@@ -76,10 +96,10 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             str: 包含父类字符串表示和当前对象所有属性信息的完整字符串
         """
         return (
-                super().__str__()
-                + f",{self.unit.value},{self.multiplier},{self.offset},{self.delay}"
-                + f",{self.min_value},{self.max_value},{self.primary},{self.secondary}"
-                + f",{self.tran_side.value}"
+            super().__str__()
+            + f",{self.unit.value},{self.multiplier},{self.offset},{self.delay}"
+            + f",{self.min_value},{self.max_value},{self.primary},{self.secondary}"
+            + f",{self.tran_side.value}"
         )
 
     def to_dmf(self):
@@ -101,8 +121,8 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f'primary="{self.primary}"',
             f'secondary="{self.secondary}"',
             f'ps="{self.tran_side.value}"',
-            f'idx_rl="0"',
-            f'ph="{self.phase.value}"'
+            'idx_rl="0"',
+            f'ph="{self.phase.value}"',
         ]
 
         return f'\t<scl:AnalogChannel {" ".join(attrs)} />'
@@ -126,7 +146,7 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             f"Range_Maximum_Limit_Value={self.max_value}",
             f"Channel_Ratio_Primary={self.primary}",
             f"Channel_Ratio_Secondary={self.secondary}",
-            f"Data_Primary_Secondary={self.tran_side.value}"
+            f"Data_Primary_Secondary={self.tran_side.value}",
         ]
         return "\n".join(attrs)
 

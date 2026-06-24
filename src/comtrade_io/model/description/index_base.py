@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel, Field, model_validator
 
 class IndexBaseModel(BaseModel):
     """索引基类
@@ -37,3 +36,9 @@ class IdxOrgBaseModel(IndexBaseModel, ReferenceBaseModel):
         idx_org: 端子排号，非负整数
     """
     idx_org: int | None = Field(default=0, ge=0, description="端子排号")
+
+    @model_validator(mode="after")
+    def _fill_idx_org(self):
+        if not self.idx_org:
+            self.idx_org = self.index
+        return self

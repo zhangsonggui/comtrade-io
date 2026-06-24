@@ -177,7 +177,16 @@ class ComtradeFile(BaseModel):
         eg: EquipmentGroup = None,
         data: pd.DataFrame = None,
     ) -> Comtrade | None:
-        """组装 Comtrade 对象"""
+        """组装 Comtrade 对象，DMF/INF信息缺失时由CfgToEquipment自动生成设备模型"""
+
+        if eg is None:
+            from comtrade_io.utils.cfg_to_equipment import CfgToEquipment
+
+            eg = CfgToEquipment.convert(cfg)
+            logger.info(
+                "设备信息文件不存在或为空，已通过CfgToEquipment从CFG自动生成设备模型"
+            )
+
         from comtrade_io.model.comtrade import Comtrade
 
         comtrade = Comtrade(
