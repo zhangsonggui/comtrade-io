@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import re
 
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.equipment import Bus
-from comtrade_io.model.type import TvInstallSite
-from comtrade_io.parser.inf.equipment_section import EquipmentSection
-from comtrade_io.utils import get_logger
+from ...model.channel import Analog, Status
+from ...model.equipment import Bus
+from ...model.type import TvInstallSite
+from .equipment_section import EquipmentSection
+from ...utils import get_logger
 
 logger = get_logger()
 

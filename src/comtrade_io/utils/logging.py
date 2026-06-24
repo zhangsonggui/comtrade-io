@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """日志管理模块
 
 基于 loguru 提供统一的日志配置和获取功能，支持环境变量配置、控制台输出和文件输出。
@@ -86,13 +84,14 @@ def _configure_logger():
     )
 
     # 控制台输出
-    logger.add(
-        sys.stderr,
-        level=_LOG_LEVEL,
-        format=log_format,
-        colorize=True,
-        enqueue=True,
-    )
+    if sys.stderr is not None:
+        logger.add(
+            sys.stderr,
+            level=_LOG_LEVEL,
+            format=log_format,
+            colorize=True,
+            enqueue=True,
+        )
 
     # 文件输出（可选）
     if _LOG_TO_FILE:

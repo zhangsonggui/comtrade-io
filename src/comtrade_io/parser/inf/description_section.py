@@ -1,17 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.description import (
+from ...model.description import (
     ChannelNum,
     Description,
     Header,
-    PrecisionTime,
     Sampling,
     Segment,
 )
-from comtrade_io.model.description.precision_time import format_time
-from comtrade_io.model.type import DataType, Version
-from comtrade_io.utils import get_logger
+from ...model.type import DataType, Version
+from ..description.data_time_parser import format_time
+from ...utils import get_logger
 
 logger = get_logger()
 
@@ -24,7 +20,7 @@ class DescriptionSection:
         - Station_Name / Recording_Device_ID / Revision_Year → header / 顶层字段
         - Total_Channel_Count / Analog_Channel_Count / Status_Channel_Count → channel_num
         - Line_Frequency / Sample_Rate_#N / End_Sample_Rate_#N → sampling
-        - File_Start_Time / Trigger_Time → PrecisionTime
+        - File_Start_Time / Trigger_Time → datetime
         - File_Type → DataType
         - Time_Multiplier → timemult
     """
@@ -74,7 +70,7 @@ class DescriptionSection:
                     end = data.get(f"End_Sample_Rate_#{i}")
                     if samp and end:
                         sampling.segments.append(
-                            Segment(samp=int(samp), end_point=int(end))
+                            Segment(samp=int(float(samp)), end_point=int(float(end)))
                         )
             description.sampling = sampling
 
@@ -85,9 +81,7 @@ class DescriptionSection:
             time_str = data.get(key)
             if time_str:
                 try:
-                    setattr(
-                        description, attr, PrecisionTime(time=format_time(time_str))
-                    )
+                    setattr(description, attr, format_time(time_str))
                 except (ValueError, IndexError):
                     pass
 

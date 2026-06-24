@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """DFR 文件编排器（主入口）。"""
 
 from datetime import datetime
@@ -9,12 +7,12 @@ from typing import Union
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.parser.dfr.binary_section import BinarySection
-from comtrade_io.parser.dfr.constants import DATA_MARKER, WNDR_TEXT_SIZE
-from comtrade_io.parser.dfr.converter import wndr_to_configure
-from comtrade_io.parser.dfr.wndr_section import WndrSection
-from comtrade_io.utils import get_logger
+from ...model.configure import Configure
+from .binary_section import BinarySection
+from .constants import DATA_MARKER, WNDR_TEXT_SIZE
+from .converter import wndr_to_configure
+from .wndr_section import WndrSection
+from ...utils import get_logger
 
 logger = get_logger()
 

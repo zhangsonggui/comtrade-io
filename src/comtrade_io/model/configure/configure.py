@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from pydantic import BaseModel, Field, model_serializer
 
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.description import Description, Segment
+from ..channel.analog import Analog
+from ..channel.status import Status
+from ..description import Description, Segment
+from ...parser.description.data_time_parser import format_datetime_for_cfg
 
 
 class Configure(BaseModel):
@@ -41,8 +40,8 @@ class Configure(BaseModel):
         for status in self.statuses.values():
             cfg_content += status.__str__() + "\n"
         cfg_content += self.description.sampling.__str__() + "\n"
-        cfg_content += self.description.file_start_time.__str__() + "\n"
-        cfg_content += self.description.trigger_time.__str__() + "\n"
+        cfg_content += format_datetime_for_cfg(self.description.file_start_time) + "\n"
+        cfg_content += format_datetime_for_cfg(self.description.trigger_time) + "\n"
         cfg_content += self.description.data_type.value + "\n"
         cfg_content += str(self.description.timemult)
         if self.description.time_info:

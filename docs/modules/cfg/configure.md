@@ -6,34 +6,45 @@ Configure 是 CFG 配置文件的解析类，负责解析 COMTRADE 标准的配�
 
 ```python
 class Configure(BaseModel):
-    header: Header = Field(description="配置文件头")
-    channel_num: ChannelNum = Field(description="通道数量")
+    description: Description = Field(default_factory=Description, description="描述信息")
     analogs: dict[int, Analog] = Field(default_factory=dict, description="模拟量通道")
     statuses: dict[int, Status] = Field(default_factory=dict, description="数字量通道")
-    sampling: Sampling = Field(default_factory=Sampling, description="采样信息")
-    start_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障文件开始时间")
-    fault_time: PrecisionTime = Field(default_factory=PrecisionTime, description="故障时间")
-    data_type: DataType = Field(default=DataType.BINARY, description="录波文件数据格式")
-    timemult: float = Field(default=1.0, description="时标倍率因子")
-    time_info: Optional[TimeInfo] = Field(default=None, description="时间信息及与UTC时间关系")
-    sampling_time_quality: Optional[SamplingTimeQuality] = Field(default=None, description="采样时间品质")
 ```
+
+所有配置元数据（文件头、通道数、采样信息、时间等）均通过 `description` 属性访问。
 
 ## 属性
 
-| 属性                      | 类型                            | 描述                                      |
-|-------------------------|-------------------------------|-----------------------------------------|
-| `header`                | Header                        | 配置文件头信息                                 |
-| `channel_num`           | ChannelNum                    | 通道数量信息                                  |
-| `analogs`               | Dict[int, Analog]             | 模拟量通道字典，key为通道索引                        |
-| `statuses`              | Dict[int, Status]             | 状态量通道字典，key为通道索引                        |
-| `sampling`              | Sampling                      | 采样信息                                    |
-| `start_time`            | PrecisionTime                 | 故障文件开始时间                                |
-| `fault_time`            | PrecisionTime                 | 故障时间                                    |
-| `data_type`             | DataType                      | 录波文件数据格式（ASCII/BINARY/BINARY32/FLOAT32） |
-| `timemult`              | float                         | 时标倍率因子                                  |
-| `time_info`             | Optional[TimeInfo]            | 时间信息及与UTC时间关系                           |
-| `sampling_time_quality` | Optional[SamplingTimeQuality] | 采样时间品质                                  |
+| 属性             | 类型                           | 描述                                      |
+|----------------|------------------------------|-----------------------------------------|
+| `description`  | Description                  | 描述信息（文件头、通道数、采样、时间）                   |
+| `analogs`      | Dict[int, Analog]            | 模拟量通道字典，key为通道索引                        |
+| `statuses`     | Dict[int, Status]            | 状态量通道字典，key为通道索引                        |
+
+### Description 子属性
+
+通过 `configure.description` 访问：
+
+| 属性                    | 访问路径                                   | 类型                            | 描述              |
+|-----------------------|----------------------------------------|-------------------------------|-----------------|
+| `header`              | `.description.header`                  | Header                        | 配置文件头信息         |
+| `channel_num`         | `.description.channel_num`             | ChannelNum                    | 通道数量信息          |
+| `sampling`            | `.description.sampling`                | Sampling                      | 采样信息            |
+| `file_start_time`     | `.description.file_start_time`         | datetime \| None              | 录波文件开始时间        |
+| `trigger_time`        | `.description.trigger_time`            | datetime \| None              | 触发时间            |
+| `data_type`           | `.description.data_type`               | DataType \| None              | 数据格式            |
+| `timemult`            | `.description.timemult`                | float \| None                 | 时标倍率因子          |
+| `time_info`           | `.description.time_info`               | TimeInfo \| None              | 时间信息及与UTC时间关系   |
+| `sampling_time_quality` | `.description.sampling_time_quality` | SamplingTimeQuality \| None | 采样时间品质          |
+
+### 便捷属性（委托至 description）
+
+Configure 还提供便捷属性直接访问 description 中的字段：
+
+- `configure.header` → `configure.description.header`
+- `configure.channel_num` → `configure.description.channel_num`
+- `configure.start_time` → `configure.description.file_start_time`
+- 等等
 
 ## 方法
 
@@ -73,7 +84,7 @@ configure = Configure.from_str(cfg_content)
 
 ```python
 @classmethod
-def from_file(cls, file_name: str | Path | ComtradeFile) -> 'Configure|None'
+def from_file(cls, file_name: str | Path | ComtradeFile) -> Configure | None
 ```
 
 **参数：**
@@ -88,9 +99,9 @@ def from_file(cls, file_name: str | Path | ComtradeFile) -> 'Configure|None'
 
 ```python
 from pathlib import Path
-from comtrade_io.parser.cfg import Configure
+from comtrade_io.parser.cfg import CfgFile
 
-configure = Configure.from_file("dat/example.cfg")
+configure = CfgFile.from_file("dat/example.cfg")
 ```
 
 ---
@@ -211,12 +222,11 @@ CFG 文件按行包含以下内容：
 
 ## 子模块
 
-- [header.py](header.md) - Header 类
-- [channel_num.py](channel_num.md) - ChannelNum 类
-- [analog_dispose.py](analog_dispose.md) - Analog 类
-- [status_dispose.py](status_dispose.md) - Status 类
-- [sampling.py](sampling.md) - Sampling 类
-- [segment.py](segment.md) - Segment 类
-- [time_info.py](time_info.md) - TimeInfo 类
-- [sampling_time_quality.py](sampling_time_quality.md) - SamplingTimeQuality 类
-- [precision_time.py](precision_time.md) - PrecisionTime 类
+- [header.py](../../model/description/header.md) - Header 类
+- [channel_num.py](../../model/description/channel_num.md) - ChannelNum 类
+- [analog.py](../../model/channel/analog.md) - Analog 类
+- [status.py](../../model/channel/status.md) - Status 类
+- [sampling.py](../../model/description/sampling.md) - Sampling 类
+- [segment.py](../../model/description/segment.md) - Segment 类
+- [time_info.py](../../model/description/time_info.md) - TimeInfo 类
+- [sampling_time_quality.py](../../model/description/sampling_time_quality.md) - SamplingTimeQuality 类

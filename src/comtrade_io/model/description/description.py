@@ -1,16 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from datetime import datetime
 
 from pydantic import Field
 
-from comtrade_io.model.description.channel_num import ChannelNum
-from comtrade_io.model.description.header import Header
-from comtrade_io.model.description.index_base import ReferenceBaseModel
-from comtrade_io.model.description.precision_time import PrecisionTime
-from comtrade_io.model.description.sampling import Sampling
-from comtrade_io.model.description.sampling_time_quality import SamplingTimeQuality
-from comtrade_io.model.description.time_info import TimeInfo
-from comtrade_io.model.type import DataType
+from .channel_num import ChannelNum
+from .header import Header
+from .index_base import ReferenceBaseModel
+from .sampling import Sampling
+from .sampling_time_quality import SamplingTimeQuality
+from .time_info import TimeInfo
+from ..type import DataType
 
 
 class Description(ReferenceBaseModel):
@@ -33,19 +31,19 @@ class Description(ReferenceBaseModel):
         description="通道数量",
     )
     sampling: Sampling | None = Field(default_factory=Sampling, description="采样信息")
-    file_start_time: PrecisionTime | None = Field(
-        default_factory=PrecisionTime, description="文件开始时间"
+    file_start_time: datetime | None = Field(
+        default_factory=datetime.now, description="文件开始时间"
     )
-    trigger_time: PrecisionTime | None = Field(
-        default_factory=PrecisionTime, description="触发时间"
+    trigger_time: datetime | None = Field(
+        default_factory=datetime.now, description="触发时间"
     )
     data_type: DataType | None = Field(default=DataType.BINARY, description="数据格式")
     timemult: float | None = Field(default=1.0, description="时标倍率因子")
     time_info: TimeInfo | None = Field(
-        default=None, description="时间信息及与UTC时间关系"
+        default_factory=TimeInfo, description="时间信息及与UTC时间关系"
     )
     sampling_time_quality: SamplingTimeQuality | None = Field(
-        default=None, description="采样时间品质"
+        default_factory=SamplingTimeQuality, description="采样时间品质"
     )
 
     @property
@@ -80,7 +78,7 @@ class Description(ReferenceBaseModel):
     @version.setter
     def version(self, value):
         if self.header is None:
-            from comtrade_io.model.type import Version
+            from ..type import Version
 
             self.header = Header(
                 version=Version(value) if isinstance(value, int) else value
@@ -102,13 +100,17 @@ class Description(ReferenceBaseModel):
         return xml
 
     def to_inf(self) -> str:
+        from ...parser.description.data_time_parser import (
+            format_datetime_for_cfg,
+        )
+
         attrs = [
             f"[Public File_Description]",
             self.header.to_inf(),
             self.channel_num.to_inf(),
             self.sampling.to_inf(),
-            f"File_Start_Time={self.file_start_time}",
-            f"Trigger_Time={self.trigger_time}",
+            f"File_Start_Time={format_datetime_for_cfg(self.file_start_time) if self.file_start_time else ''}",
+            f"Trigger_Time={format_datetime_for_cfg(self.trigger_time) if self.trigger_time else ''}",
             f"File_Type={self.data_type.value}",
             f"Time_Multiplier={self.timemult}",
         ]

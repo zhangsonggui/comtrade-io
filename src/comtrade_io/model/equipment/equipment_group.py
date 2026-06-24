@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.description import Description
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.equipment.bus import Bus
-from comtrade_io.model.equipment.line import Line
-from comtrade_io.model.equipment.transformer import Transformer
+from ..description import Description
+from ..channel import Analog, Status
+from .bus import Bus
+from .line import Line
+from .transformer import Transformer
 
 class EquipmentGroup(BaseModel):
     description: Description = Field(default_factory=Description, description="描述文件")

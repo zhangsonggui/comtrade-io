@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """采样信息模型
 描述：用于描述波形的采样信息，包含频率和采样段列表。
 """
@@ -7,7 +5,7 @@ from typing import List
 
 from pydantic import BaseModel, Field, model_validator
 
-from comtrade_io.model.description.segment import Segment
+from .segment import Segment
 
 
 class Sampling(BaseModel):

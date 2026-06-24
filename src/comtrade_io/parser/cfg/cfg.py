@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -7,22 +5,22 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from comtrade_io.parser.comtrade_file import ComtradeFile
+    from ..comtrade_file import ComtradeFile
 
-from comtrade_io.model.description import Description, Sampling
-from comtrade_io.model.configure import Configure
-from comtrade_io.parser.cfg.analog_parser import AnalogParser
-from comtrade_io.parser.description import (
+from ...model.description import Description, Sampling
+from ...model.configure import Configure
+from .analog_parser import AnalogParser
+from ..description import (
     ChannelNumParser,
-    PrecisionTimeParser,
+    DateTimeParser,
     SegmentParser,
     TimeInfoParser,
     SamplingTimeQualityParser,
     HeaderParser,
 )
-from comtrade_io.parser.cfg.status_parser import StatusParser
-from comtrade_io.model.type import DataType
-from comtrade_io.utils import FilePath, get_logger, parse_float, text_split
+from .status_parser import StatusParser
+from ...model.type import DataType
+from ...utils import FilePath, get_logger, parse_float, text_split
 
 logger = get_logger()
 
@@ -84,10 +82,10 @@ class CfgFile:
 
         # 开始时间和故障时间
         start_time_str = parts[cursor_row]
-        start_time = PrecisionTimeParser.from_str(start_time_str)
+        start_time = DateTimeParser.from_str(start_time_str)
         fault_time_str = parts[cursor_row + 1]
-        fault_time = PrecisionTimeParser.from_str(fault_time_str)
-        logger.debug(f"解析开始时间: {start_time.time}, 故障时间: {fault_time.time}")
+        fault_time = DateTimeParser.from_str(fault_time_str)
+        logger.debug(f"解析开始时间: {start_time}, 故障时间: {fault_time}")
 
         # 数据格式
         data_type_str = parts[cursor_row + 2].strip(",")
@@ -183,5 +181,3 @@ class CfgFile:
             error_str = f"配置文件{cfg_path}行数不对应,{str(e)}"
             logger.error(error_str)
             raise ValueError(f"配置文件{cfg_path}行数不对应,{e}")
-
-

@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import json
 
-from comtrade_io.model.description import TimeInfo
-from comtrade_io.utils import text_split, get_logger
+from ...model.description import TimeInfo
+from ...utils import text_split, get_logger
 
 logger = get_logger()
 

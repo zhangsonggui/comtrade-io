@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.type.base_enum import BaseEnum
-from comtrade_io.model.type.channel_type import AnalogChannelType, DigitalChannelType
+from .base_enum import BaseEnum
+from .channel_type import AnalogChannelType, DigitalChannelType
 
 class AnalogChannelFlag(BaseEnum):
     """模拟量通道标志枚举

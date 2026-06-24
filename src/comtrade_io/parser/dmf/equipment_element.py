@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 DMF设备部件基类模块
 
@@ -8,10 +6,10 @@ DMF设备部件基类模块
 from typing import List, Set
 from xml.etree.ElementTree import Element
 
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.equipment.equipment import Equipment
-from comtrade_io.utils import parse_int
+from ...model.channel.analog import Analog
+from ...model.channel.status import Status
+from ...model.equipment.equipment import Equipment
+from ...utils import parse_int
 
 
 def _find_all_elements(element: Element, ns: dict, tag_name: str) -> List[Element]:

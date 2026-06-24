@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.type.base_enum import BaseEnum
+from .base_enum import BaseEnum
 
 class CurrentBranchNum(BaseEnum):
     """电流分支数量枚举

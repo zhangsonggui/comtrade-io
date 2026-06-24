@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import json
 
-from comtrade_io.model.description import Header
-from comtrade_io.model.type import Version
-from comtrade_io.utils import text_split, get_logger
+from ...model.description import Header
+from ...model.type import Version
+from ...utils import text_split, get_logger
 
 logger = get_logger()
 
@@ -24,7 +22,7 @@ class HeaderParser:
             Header: 解析后的文件头对象
         """
         logger.debug(f"正在解析配置文件第一行内容:{_str}")
-        str_arr = text_split(_str)
+        str_arr = text_split(_str, filter_empty=False)
         if len(str_arr) < 2:
             return Header()
         if len(str_arr) < 3:

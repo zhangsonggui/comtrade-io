@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from comtrade_io.utils import get_logger
+from ..utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.model.comtrade import Comtrade
+    from ..model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -96,7 +94,7 @@ def export_json(
     返回:
         成功与否
     """
-    from comtrade_io.exporters import _resolve_export_path
+    from . import _resolve_export_path
 
     path = _resolve_export_path(output_path, ".json")
     return save_json(comtrade, path, indent=kwargs.get('indent'))

@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.type.base_enum import BaseEnum
+from .base_enum import BaseEnum
 
 class DataType(BaseEnum):
     """数据格式类型枚举

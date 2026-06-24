@@ -1,23 +1,20 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """WNDR → COMTRADE CFG 转换器。"""
 
 from datetime import datetime
 
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.description import (
+from ...model.channel.analog import Analog
+from ...model.channel.status import Status
+from ...model.configure import Configure
+from ...model.description import (
     ChannelNum,
     Description,
     Header,
-    PrecisionTime,
     Sampling,
     Segment,
 )
-from comtrade_io.model.type import DataType, Phase, TranSide, Unit, Version
-from comtrade_io.parser.dfr.wndr_section import WndrSection
-from comtrade_io.utils import get_logger
+from ...model.type import DataType, Phase, TranSide, Unit, Version
+from .wndr_section import WndrSection
+from ...utils import get_logger
 
 logger = get_logger()
 
@@ -118,12 +115,12 @@ def wndr_to_configure(
     )
 
     if file_mtime:
-        file_start_time = PrecisionTime(time=file_mtime)
-        trigger_time = PrecisionTime(time=file_mtime)
+        file_start_time = file_mtime
+        trigger_time = file_mtime
     else:
         now = datetime.now()
-        file_start_time = PrecisionTime(time=now)
-        trigger_time = PrecisionTime(time=now)
+        file_start_time = now
+        trigger_time = now
 
     description = Description(
         header=header,

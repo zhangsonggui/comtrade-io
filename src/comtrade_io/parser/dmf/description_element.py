@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from xml.etree.ElementTree import Element
 
-from comtrade_io.model.description import Description
-from comtrade_io.model.description.header import Header
-from comtrade_io.utils import parse_float
+from ...model.description import Description
+from ...model.description.header import Header
+from ...utils import parse_float
 
 
 class DescriptionElement:

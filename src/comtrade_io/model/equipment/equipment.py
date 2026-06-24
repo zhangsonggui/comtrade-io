@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import Field
 
-from comtrade_io.model.description import IndexBaseModel, ReferenceBaseModel
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.channel.status import Status
+from ..description import IndexBaseModel, ReferenceBaseModel
+from ..channel.analog import Analog
+from ..channel.status import Status
 
 class Equipment(IndexBaseModel, ReferenceBaseModel):
     """

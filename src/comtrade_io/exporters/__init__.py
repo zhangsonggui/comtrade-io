@@ -1,17 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.exporters.cff_exporter import export_cff
-from comtrade_io.exporters.csv_exporter import export_csv
-from comtrade_io.exporters.decorators import ExportFormat, export_format
-from comtrade_io.exporters.json_exporter import export_json, save_json
-from comtrade_io.exporters.multi_file_exporter import export_multi_file
-from comtrade_io.model.type.data_type import DataType
+from .cff_exporter import export_cff
+from .csv_exporter import export_csv
+from .decorators import ExportFormat, export_format
+from .json_exporter import export_json, save_json
+from .multi_file_exporter import export_multi_file
+from ..model.type.data_type import DataType
 
 if TYPE_CHECKING:
-    from comtrade_io.parser.comtrade_file import ComtradeFile
+    from ..parser.comtrade_file import ComtradeFile
 
 __all__ = [
     "export_format", "ExportFormat", "DataType",
@@ -20,7 +18,7 @@ __all__ = [
 
 
 def _resolve_export_path(output_path: "str | Path | ComtradeFile", suffix: str) -> Path:
-    from comtrade_io.parser.comtrade_file import ComtradeFile
+    from ..parser.comtrade_file import ComtradeFile
 
     if isinstance(output_path, ComtradeFile):
         if output_path.cfg_path.path:

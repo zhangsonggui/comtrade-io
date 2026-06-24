@@ -1,9 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from ...utils import get_logger
+
+logger = get_logger()
 
 # 支持的时间格式列表，按优先级排序
 time_formats = (
@@ -26,25 +26,12 @@ time_formats = (
 
 
 def format_time(str_time: str) -> datetime:
-    """解析时间字符串为datetime对象
-
-    支持多种常见的时间格式，按优先级尝试解析。
-
-    参数:
-        str_time: 时间字符串，也可以直接是datetime对象
-
-    返回:
-        datetime: 解析后的datetime对象
-
-    异常:
-        ValueError: 当时间字符串格式无法解析时抛出异常
-    """
+    """解析时间字符串为datetime对象"""
     if isinstance(str_time, datetime):
         return str_time
 
     str_time = str_time.strip()
-    # 规整冒号周围的空格（如 "19 : 45" → "19:45"）
-    str_time = re.sub(r'(\d)\s*:\s*(\d)', r'\1:\2', str_time)
+    str_time = re.sub(r"(\d)\s*:\s*(\d)", r"\1:\2", str_time)
     if "." in str_time:
         parts = str_time.split(".")
         base = parts[0]
@@ -64,22 +51,26 @@ def format_time(str_time: str) -> datetime:
     raise ValueError(f"时间格式错误: {str_time}")
 
 
-class PrecisionTime(BaseModel):
-    """精度时间类
+def format_datetime_for_cfg(dt: datetime) -> str:
+    """将 datetime 格式化为 COMTRADE CFG 标准时间字符串"""
+    return dt.strftime("%m/%d/%Y,%H:%M:%S.%f")
 
-    表示COMTRADE文件中的高精度时间戳，精确到微秒级别。
 
-    属性:
-        time: 精确时间，精确到微秒
-    """
-    time: datetime = Field(default_factory=datetime.now, description="时间")
+class DateTimeParser:
+    """精度时间解析器"""
 
-    def __str__(self) -> str:
-        """序列化为标准时间字符串
+    @classmethod
+    def from_str(cls, _str: str) -> datetime:
+        time = format_time(_str)
+        logger.debug(f"解析时间: {_str} -> {time}")
+        return time
 
-        将datetime对象转换为 'yyyy-mm-dd hh:mm:ss.ffffff' 格式的字符串
+    @classmethod
+    def from_json(cls, json_str: str) -> datetime:
+        import json
 
-        返回:
-            str: 格式化的时间字符串
-        """
-        return self.time.strftime("%m/%d/%Y,%H:%M:%S.%f")
+        data = json.loads(json_str)
+        t = data.get("time")
+        if t is None:
+            raise ValueError("缺少 time 字段")
+        return format_time(t)

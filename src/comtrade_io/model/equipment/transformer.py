@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import Field
 
-from comtrade_io.model.equipment.equipment import Equipment
-from comtrade_io.model.equipment.transformer_winding import TransformerWinding
+from .equipment import Equipment
+from .transformer_winding import TransformerWinding
 
 class Transformer(Equipment):
     """

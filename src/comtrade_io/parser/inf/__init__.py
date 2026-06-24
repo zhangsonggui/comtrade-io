@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 INF 解析模块
 
@@ -16,10 +14,10 @@ INF 解析模块
     - build_equipment_group: SectionData → EquipmentGroup
 """
 
-from comtrade_io.parser.inf.configure_builder import build_configure
-from comtrade_io.parser.inf.equipment_builder import build_equipment_group
-from comtrade_io.parser.inf.inf import InfFile
-from comtrade_io.parser.inf.text_splitter import (
+from .configure_builder import build_configure
+from .equipment_builder import build_equipment_group
+from .inf import InfFile
+from .text_splitter import (
     SectionData,
     _kv_pairs,
     parse_section_header,

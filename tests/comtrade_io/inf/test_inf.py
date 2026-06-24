@@ -559,7 +559,7 @@ def test_comtrade_model_to_inf_with_parameters():
     assert "[ZYHD Status_Channels_Parameter]" in inf_output
 
     # 验证模拟量参数段格式
-    assert "CHNL_INFO_#1=1, 0, Ia, TA, 50.0, 0.6, kA, 1.0, A, 1.0, 0.0" in inf_output
+    assert "CHNL_INFO_#1=1, 1, Ia, TA, 50.0, 0.6, kA, 1.0, A, 1.0, 0.0" in inf_output
 
     # 验证开关量参数段格式（flag.name 为 GENERAL）
-    assert "CHNL_INFO_#1=1, 0, Breaker1, Breaker_Pos, GENERAL, Breaker_#1" in inf_output
+    assert "CHNL_INFO_#1=1, 1, Breaker1, Breaker_Pos, GENERAL, Breaker_#1" in inf_output

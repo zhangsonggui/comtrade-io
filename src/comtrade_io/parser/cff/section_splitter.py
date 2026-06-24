@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
 
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 
@@ -23,32 +23,30 @@ def extract_sections(cff_path: Union[str, Path]) -> CffSection:
         raise FileNotFoundError(f"CFF 文件不存在: {cff_path}")
 
     content_bytes = path.read_bytes()
-    content = content_bytes.decode("gbk", errors="replace")
 
+    # 在字节级别搜索 section 标记（标记均为 ASCII，避免中文字节偏移问题）
     section_pattern = re.compile(
-        r"^--{1,2}\s*file\s+type\s+(\w+)\s*---", re.IGNORECASE | re.MULTILINE
+        rb"^--{1,2}\s*file\s+type\s*:?\s+(\w+)(?:\s+[^-]*)?\s*---",
+        re.IGNORECASE | re.MULTILINE,
     )
 
-    sections = {}
-    matches = list(section_pattern.finditer(content))
+    result = CffSection()
+    matches = list(section_pattern.finditer(content_bytes))
 
     for i, match in enumerate(matches):
-        section_type = match.group(1).upper()
+        section_type = match.group(1).decode("ascii").upper()
         start = match.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(content)
-        sections[section_type] = (start, end)
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(content_bytes)
+        section_bytes = content_bytes[start:end].strip()
 
-    result = CffSection()
-    for section_type, (start, end) in sections.items():
-        section_content = content[start:end].strip()
         if section_type == "CFG":
-            result.cfg = section_content
+            result.cfg = section_bytes.decode("gbk", errors="replace")
         elif section_type == "DAT":
-            result.dat = section_content
-            result.dat_bytes = content_bytes[start:end]
+            result.dat = section_bytes.decode("gbk", errors="replace")
+            result.dat_bytes = section_bytes
         elif section_type == "INF":
-            result.inf = section_content
+            result.inf = section_bytes.decode("gbk", errors="replace")
         elif section_type == "HDR":
-            result.hdr = section_content
+            result.hdr = section_bytes.decode("gbk", errors="replace")
 
     return result

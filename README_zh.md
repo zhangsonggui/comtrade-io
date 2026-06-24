@@ -91,10 +91,10 @@ wave.get_transformer("主变名称")  # 获取主变及各绕组通道数据
 
 ```python
 # 从 CFF 单文件加载
-cf = ComtradeFile.from_file("recording.cff")
+cf = ComtradeFile.from_cff("recording.cff")
 
 # 从 DFR（WNDR）文件加载
-cf = ComtradeFile.from_file("recording.dfr")
+cf = ComtradeFile.from_dfr("recording.dfr")
 ```
 
 ### 导出文件
@@ -282,14 +282,6 @@ MIT 许可证
 - 0.1.1: 添加对 DMF 数据模型文件的支持
 - 0.1.2: 和 0.1.1 版本一致
 - 0.1.3: 添加对 CFF 单文件、INF 信息文件的支持
-- **0.2.1**: 增强 DFR 格式兼容性和 Bug 修复
-  - 支持多型号 DFR 装置（2704V042、2704V072）
-  - DFR 帧大小根据通道配置动态计算
-  - 修复数据中模拟量未转换为瞬时值的问题
-  - 修复 ASCII 导出未反向转换为 ADC 计数值的问题
-  - 修复 INF/DMF 导出时母线/线路/变压器为 None 的崩溃问题
-  - DFR 解析器重构为模块化子模块（wndr_section、binary_section、converter）
-  - 添加批量 DFR→COMTRADE 转换脚本
 - **0.2.0**: 重大重构和新功能
   - 包结构重构为 `model/`、`parser/`、`exporters/`、`utils/` 模块
   - Comtrade 模型重构：`cfg` → `config`，集成设备模型
@@ -302,3 +294,23 @@ MIT 许可证
   - 日志系统迁移至 loguru
   - 所有模型迁移至 Pydantic v2
   - 改进的 GBK/UTF-8 编码处理
+- **0.2.1**: 增强 DFR 格式兼容性和 Bug 修复
+  - 支持多型号 DFR 装置（2704V042、2704V072）
+  - DFR 帧大小根据通道配置动态计算
+  - 修复数据中模拟量未转换为瞬时值的问题
+  - 修复 ASCII 导出未反向转换为 ADC 计数值的问题
+  - 修复 INF/DMF 导出时母线/线路/变压器为 None 的崩溃问题
+  - DFR 解析器重构为模块化子模块（wndr_section、binary_section、converter）
+  - 添加批量 DFR→COMTRADE 转换脚本
+- **0.3.0**: 代码规范和内部重构
+  - 移除所有源文件的 shebang 和 coding 头部声明
+  - 修复 `__init__.py` 中 `version` 变量名遮蔽问题
+  - 替换不必要的 f-string 为普通字符串
+  - `.env` 移至项目根目录，通过 `.env.example` 提供模板
+  - 依赖规范：`dev-dependencies` 转为标准 `[project.optional-dependencies] dev`
+  - 移除非必要的 `openpyxl` 依赖
+  - 消除 `Comtrade.save_comtrade` 后置猴子补丁，`@export_format` 内联到类定义
+  - 为 `Comtrade` 所有委托属性添加完整类型注解
+  - 新增 CI/CD 工作流（`.github/workflows/publish.yml`），含多 Python 版本测试
+  - 全部 357 个包内绝对导入转为相对导入（覆盖 95 个文件）
+  - 清理 `compatibility.md` 中的硬编码本地路径

@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.equipment.branch import ACCBranch, ACVBranch
-from comtrade_io.model.type import CurrentBranchNum, TransWindLocation, WindFlag
+from ..channel.analog import Analog
+from .branch import ACCBranch, ACVBranch
+from ..type import CurrentBranchNum, TransWindLocation, WindFlag
 
 class WindGroup(BaseModel):
     """

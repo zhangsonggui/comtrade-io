@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.type.base_enum import BaseEnum
+from .base_enum import BaseEnum
 
 class AnalogChannelType(BaseEnum):
     """模拟量通道类型枚举

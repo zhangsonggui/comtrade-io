@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.channel.channel import ChannelBaseModel
-from comtrade_io.model.type import TranSide, Unit
-from comtrade_io.utils import get_logger, parse_float
+from ...model.channel.analog import Analog
+from ...model.channel.channel import ChannelBaseModel
+from ...model.type import TranSide, Unit
+from ...utils import get_logger, parse_float
 
 logger = get_logger()
 
@@ -69,7 +67,7 @@ class AnalogParser:
     """
 
     @staticmethod
-    def from_string(_str: str):
+    def from_string(_str: str) -> Analog:
         """
         从字符串中解析模拟量数据
         """

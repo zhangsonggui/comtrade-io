@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import json
 from typing import List
 
-from comtrade_io.model.description import Sampling, Segment
-from comtrade_io.parser.description.segment_parser import SegmentParser
-from comtrade_io.utils import get_logger
+from ...model.description import Sampling, Segment
+from .segment_parser import SegmentParser
+from ...utils import get_logger
 
 logger = get_logger()
 

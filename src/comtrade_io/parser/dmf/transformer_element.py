@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 变压器部件处理模块
 
@@ -7,12 +5,12 @@
 """
 from xml.etree.ElementTree import Element
 
-from comtrade_io.parser.dmf.equipment_element import EquipmentElement
-from comtrade_io.model.equipment.branch import ACCBranch, ACVBranch
-from comtrade_io.model.equipment.transformer import Transformer, TransformerWinding
-from comtrade_io.model.equipment.transformer_winding import Igap, WindGroup
-from comtrade_io.model.type import CurrentBranchNum, TransWindLocation, WindFlag
-from comtrade_io.utils import parse_float, parse_int
+from .equipment_element import EquipmentElement
+from ...model.equipment.branch import ACCBranch, ACVBranch
+from ...model.equipment.transformer import Transformer, TransformerWinding
+from ...model.equipment.transformer_winding import Igap, WindGroup
+from ...model.type import CurrentBranchNum, TransWindLocation, WindFlag
+from ...utils import parse_float, parse_int
 
 
 class TransformerWindingSection:

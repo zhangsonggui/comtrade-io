@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.utils.logging import get_logger
+from .logging import get_logger
 
 logger = get_logger()
 

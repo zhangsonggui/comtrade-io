@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import json
 
-from comtrade_io.model.description import ChannelNum
-from comtrade_io.utils import text_split
+from ...model.description import ChannelNum
+from ...utils import text_split
 
 
 class ChannelNumParser:

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from dataclasses import dataclass
 from io import BytesIO, StringIO
 from pathlib import Path
@@ -8,10 +6,10 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.description.sampling import Sampling, Segment
-from comtrade_io.model.type import DataType
-from comtrade_io.utils import get_logger
+from ...model.configure import Configure
+from ...model.description.sampling import Sampling, Segment
+from ...model.type import DataType
+from ...utils import get_logger
 
 logger = get_logger()
 
@@ -255,9 +253,11 @@ class DatFile:
 
     def _post_process(self, df: pd.DataFrame):
         config = self.config
+        if df is None:
+            return
+
         if (
-            df is not None
-            and config.description.sampling.segments
+            config.description.sampling.segments
             and df.shape[0] != config.description.sampling.segments[-1].end_point
         ):
             logger.warning(
@@ -265,7 +265,14 @@ class DatFile:
                 f"{config.description.sampling.segments[-1].end_point}不一致，"
                 "根据采样点时间进行修正"
             )
+
         self._verify_and_recalculate_sampling(df)
+
+        # 应用时标倍率因子（在采样率重算之后，避免重复乘 timemult）
+        timemult = config.description.timemult
+        if timemult is not None and timemult != 1.0:
+            df.iloc[:, 1] = df.iloc[:, 1] * timemult
+            logger.debug(f"时标倍率因子 {timemult} 已应用到时间戳列")
 
     def _verify_and_recalculate_sampling(self, df: pd.DataFrame) -> Sampling:
         config = self.config
@@ -275,7 +282,12 @@ class DatFile:
         timestamps_us = df.iloc[:, 1].to_numpy() * config.description.timemult
         time_diffs_us = np.diff(timestamps_us)
 
-        change_indices = np.where(np.diff(time_diffs_us) != 0)[0] + 1
+        change_threshold = 0.05  # 5% 变化才视为真实的采样率切换
+        diff_diffs = np.diff(time_diffs_us)
+        abs_prev = np.abs(time_diffs_us[:-1])
+        abs_prev[abs_prev == 0] = 1
+        significant_changes = np.abs(diff_diffs) / abs_prev > change_threshold
+        change_indices = np.where(significant_changes)[0] + 1
         segment_starts = np.concatenate([[0], change_indices])
         segment_ends = np.concatenate([change_indices, [len(timestamps_us)]])
 
@@ -288,7 +300,14 @@ class DatFile:
             if time_diffs_us[start] <= 0 or not np.isfinite(time_diffs_us[start]):
                 continue
 
-            samp = int(np.ceil(1_000_000.0 / time_diffs_us[start]))
+            n_intervals = end - start - 1
+            if n_intervals > 0:
+                avg_interval = (
+                    timestamps_us[end - 1] - timestamps_us[start]
+                ) / n_intervals
+                samp = int(np.round(1_000_000.0 / avg_interval))
+            else:
+                samp = int(np.round(1_000_000.0 / time_diffs_us[start]))
             count = end - start
             cycle_point_num = samp / frequency
 
@@ -316,22 +335,22 @@ class DatFile:
     def _write_ascii(self, data: pd.DataFrame, output: Path | BytesIO):
         config = self.config
         analog_count = config.description.channel_num.analog
+        out = data.copy()
+
         if analog_count > 0:
             analog_list = list(config.analogs.values())[:analog_count]
             multipliers = np.array([a.multiplier for a in analog_list])
             offsets = np.array([a.offset for a in analog_list])
-            analog_values = data.iloc[:, 2 : 2 + analog_count].to_numpy(
-                dtype=np.float64
-            )
+            analog_values = out.iloc[:, 2 : 2 + analog_count].to_numpy(dtype=np.float64)
             mask = multipliers != 0
             raw_values = np.zeros_like(analog_values)
             raw_values[:, mask] = (
                 analog_values[:, mask] - offsets[mask]
             ) / multipliers[mask]
-            out = data.copy()
             out.iloc[:, 2 : 2 + analog_count] = np.round(raw_values)
-        else:
-            out = data
+
+        # 全部列转为整型，确保无小数输出
+        out = out.astype(np.int64)
 
         if isinstance(output, BytesIO):
             out.to_csv(output, header=False, index=False)
