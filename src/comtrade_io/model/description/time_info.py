@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """时间信息(Time Information)模型
 
 使用 time_code 与 local_code 表示时间区域信息。

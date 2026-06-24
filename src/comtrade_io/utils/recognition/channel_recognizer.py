@@ -1,18 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import re
 from dataclasses import dataclass
 
-from comtrade_io.model.type import (
+from ...model.type import (
     AnalogChannelFlag,
     AnalogChannelType,
     DigitalChannelFlag,
     DigitalChannelType,
 )
-from comtrade_io.model.type.base_enum import BaseEnum
-from comtrade_io.utils.recognition.analog_recognizer import AnalogRecognizer
-from comtrade_io.utils.recognition.status_recognizer import StatusRecognizer
+from ...model.type.base_enum import BaseEnum
+from .analog_recognizer import AnalogRecognizer
+from .status_recognizer import StatusRecognizer
 
 
 class RecognitionResult(BaseEnum):

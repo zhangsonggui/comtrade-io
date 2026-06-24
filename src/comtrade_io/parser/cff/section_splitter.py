@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
 
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 

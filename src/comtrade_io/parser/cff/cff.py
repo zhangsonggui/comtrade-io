@@ -4,12 +4,12 @@ from typing import Union
 
 import pandas as pd
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.parser.cff.cfg_section import CfgSection
-from comtrade_io.parser.cff.dat_section import DatSection
-from comtrade_io.parser.cff.inf_section import InfSection
-from comtrade_io.parser.cff.section_splitter import CffSection, extract_sections
-from comtrade_io.utils import get_logger
+from ...model.configure import Configure
+from .cfg_section import CfgSection
+from .dat_section import DatSection
+from .inf_section import InfSection
+from .section_splitter import CffSection, extract_sections
+from ...utils import get_logger
 
 logger = get_logger()
 

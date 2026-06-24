@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.parser.description.channel_num_parser import ChannelNumParser
-from comtrade_io.parser.description.data_time_parser import DateTimeParser
-from comtrade_io.parser.description.header_parser import HeaderParser
-from comtrade_io.parser.description.sampling_parser import SamplingParser
-from comtrade_io.parser.description.sampling_time_quality_parser import (
+from .channel_num_parser import ChannelNumParser
+from .data_time_parser import DateTimeParser
+from .header_parser import HeaderParser
+from .sampling_parser import SamplingParser
+from .sampling_time_quality_parser import (
     SamplingTimeQualityParser,
 )
-from comtrade_io.parser.description.segment_parser import SegmentParser
-from comtrade_io.parser.description.time_info_parser import TimeInfoParser
+from .segment_parser import SegmentParser
+from .time_info_parser import TimeInfoParser
 
 __all__ = [
     "HeaderParser",

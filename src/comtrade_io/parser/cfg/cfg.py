@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -7,12 +5,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from comtrade_io.parser.comtrade_file import ComtradeFile
+    from ..comtrade_file import ComtradeFile
 
-from comtrade_io.model.description import Description, Sampling
-from comtrade_io.model.configure import Configure
-from comtrade_io.parser.cfg.analog_parser import AnalogParser
-from comtrade_io.parser.description import (
+from ...model.description import Description, Sampling
+from ...model.configure import Configure
+from .analog_parser import AnalogParser
+from ..description import (
     ChannelNumParser,
     DateTimeParser,
     SegmentParser,
@@ -20,9 +18,9 @@ from comtrade_io.parser.description import (
     SamplingTimeQualityParser,
     HeaderParser,
 )
-from comtrade_io.parser.cfg.status_parser import StatusParser
-from comtrade_io.model.type import DataType
-from comtrade_io.utils import FilePath, get_logger, parse_float, text_split
+from .status_parser import StatusParser
+from ...model.type import DataType
+from ...utils import FilePath, get_logger, parse_float, text_split
 
 logger = get_logger()
 

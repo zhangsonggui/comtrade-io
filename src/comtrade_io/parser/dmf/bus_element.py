@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 母线部件处理模块
 
@@ -7,11 +5,11 @@
 """
 from xml.etree.ElementTree import Element
 
-from comtrade_io.parser.dmf.equipment_element import EquipmentElement
-from comtrade_io.model.equipment import Bus
-from comtrade_io.model.equipment.branch import ACVBranch
-from comtrade_io.model.type import TvInstallSite
-from comtrade_io.utils import parse_float
+from .equipment_element import EquipmentElement
+from ...model.equipment import Bus
+from ...model.equipment.branch import ACVBranch
+from ...model.type import TvInstallSite
+from ...utils import parse_float
 
 
 class BusElement(EquipmentElement):

@@ -1,23 +1,21 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import re
 
 from pydantic import BaseModel
 
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.equipment import Transformer
-from comtrade_io.model.equipment.branch import ACCBranch, ACVBranch
-from comtrade_io.model.equipment.transformer_winding import (
+from ...model.channel import Analog, Status
+from ...model.equipment import Transformer
+from ...model.equipment.branch import ACCBranch, ACVBranch
+from ...model.equipment.transformer_winding import (
     TransformerWinding,
     WindGroup,
 )
-from comtrade_io.model.type import CurrentBranchNum, TransWindLocation
-from comtrade_io.parser.inf.equipment_section import (
+from ...model.type import CurrentBranchNum, TransWindLocation
+from .equipment_section import (
     EquipmentSection,
     parse_number_with_unit,
     str2channel,
 )
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 

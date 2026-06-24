@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import re
 from dataclasses import dataclass, field
 from typing import Optional
 
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 

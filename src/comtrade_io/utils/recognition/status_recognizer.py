@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """数字量通道识别模块：根据通道名称自动识别通道类型和标志"""
 
 import re
@@ -7,7 +5,7 @@ from typing import Tuple
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.type import DigitalChannelFlag, DigitalChannelType
+from ...model.type import DigitalChannelFlag, DigitalChannelType
 
 
 class StatusChannelInfo(BaseModel):

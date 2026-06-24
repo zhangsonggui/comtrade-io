@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.type.version import Version
+from ..type.version import Version
 
 
 class Header(BaseModel):

@@ -1,17 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from datetime import datetime
 
 from pydantic import Field
 
-from comtrade_io.model.description.channel_num import ChannelNum
-from comtrade_io.model.description.header import Header
-from comtrade_io.model.description.index_base import ReferenceBaseModel
-from comtrade_io.model.description.sampling import Sampling
-from comtrade_io.model.description.sampling_time_quality import SamplingTimeQuality
-from comtrade_io.model.description.time_info import TimeInfo
-from comtrade_io.model.type import DataType
+from .channel_num import ChannelNum
+from .header import Header
+from .index_base import ReferenceBaseModel
+from .sampling import Sampling
+from .sampling_time_quality import SamplingTimeQuality
+from .time_info import TimeInfo
+from ..type import DataType
 
 
 class Description(ReferenceBaseModel):
@@ -81,7 +78,7 @@ class Description(ReferenceBaseModel):
     @version.setter
     def version(self, value):
         if self.header is None:
-            from comtrade_io.model.type import Version
+            from ..type import Version
 
             self.header = Header(
                 version=Version(value) if isinstance(value, int) else value
@@ -103,7 +100,7 @@ class Description(ReferenceBaseModel):
         return xml
 
     def to_inf(self) -> str:
-        from comtrade_io.parser.description.data_time_parser import (
+        from ...parser.description.data_time_parser import (
             format_datetime_for_cfg,
         )
 

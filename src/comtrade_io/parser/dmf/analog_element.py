@@ -1,16 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from xml.etree.ElementTree import Element
 
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.type import (
+from ...model.channel.analog import Analog
+from ...model.type import (
     AnalogChannelFlag,
     AnalogChannelType,
     Phase,
     TranSide,
     Unit,
 )
-from comtrade_io.utils import parse_float, parse_int
+from ...utils import parse_float, parse_int
 
 
 class AnalogElement:

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """WNDR 文本头部解析模块。"""
 
 import csv
@@ -7,11 +5,11 @@ import io
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.parser.dfr.constants import (
+from .constants import (
     DEFAULT_FULL_SCALE,
     DEFAULT_SAMPLES_PER_CYCLE,
 )
-from comtrade_io.utils import get_logger, parse_float
+from ...utils import get_logger, parse_float
 
 logger = get_logger()
 

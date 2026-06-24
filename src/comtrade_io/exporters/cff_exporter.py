@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from io import BytesIO, StringIO
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.parser.dat import DatFile
-from comtrade_io.utils import get_logger
+from ..parser.dat import DatFile
+from ..utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.model.comtrade import Comtrade
+    from ..model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -16,7 +14,7 @@ logger = get_logger()
 def export_cff(
     comtrade: "Comtrade", output_path: "str | Path", data_format: str, **kwargs
 ) -> bool:
-    from comtrade_io.exporters import _resolve_export_path
+    from . import _resolve_export_path
 
     cff_path = _resolve_export_path(output_path, ".cff")
     sections = ["--- file type CFG ---", str(comtrade.to_cfg())]

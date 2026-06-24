@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.channel.channel import ChannelBaseModel
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.type import Contact
-from comtrade_io.utils import get_logger, text_split
+from ...model.channel.channel import ChannelBaseModel
+from ...model.channel.status import Status
+from ...model.type import Contact
+from ...utils import get_logger, text_split
 
 logger = get_logger()
 

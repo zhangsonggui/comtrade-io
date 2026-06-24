@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import ConfigDict, Field
 
-from comtrade_io.model.channel.channel import ChannelBaseModel
-from comtrade_io.model.description import ReferenceBaseModel
-from comtrade_io.model.type import Contact
+from .channel import ChannelBaseModel
+from ..description import ReferenceBaseModel
+from ..type import Contact
 
 
 class Status(ChannelBaseModel, ReferenceBaseModel):

@@ -1,14 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.description import ChannelNum, Description, Header
-from comtrade_io.parser.inf.analog_section import AnalogSection
-from comtrade_io.parser.inf.description_section import DescriptionSection
-from comtrade_io.parser.inf.status_section import StatusSection
-from comtrade_io.parser.inf.text_splitter import SectionData
-from comtrade_io.utils import get_logger
+from ...model.channel import Analog, Status
+from ...model.configure import Configure
+from ...model.description import ChannelNum, Description, Header
+from .analog_section import AnalogSection
+from .description_section import DescriptionSection
+from .status_section import StatusSection
+from .text_splitter import SectionData
+from ...utils import get_logger
 
 logger = get_logger()
 

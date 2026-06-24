@@ -1,21 +1,16 @@
-# Information 类
+# InfFile 类（原 Information）
 
-Information 是 INF 信息文件的解析类，负责解析 INI 格式的信息文件。
+`Information` 类在 0.3.0 重构中重命名为 `InfFile`，解析 INI 格式的 INF 信息文件。
 
 ## 类定义
 
 ```python
-class Information(BaseModel):
-    record_info: Optional[list] = Field(default_factory=list, description="录波记录信息")
-    file_description: Optional[Description] = Field(default_factory=Description, description="文件描述信息")
-    analog_channels: Optional[dict[int, Analog]] = Field(default_factory=dict, description="模拟通道信息")
-    status_channels: Optional[dict[int, Status]] = Field(default_factory=dict, description="状态量通道信息")
-    buses: Optional[list[Bus]] = Field(default_factory=list, description="母线信息")
-    lines: Optional[list[Line]] = Field(default_factory=list, description="线路信息")
-    transformers: Optional[list[Transformer]] = Field(default_factory=list, description="变压器信息")
+@dataclass
+class InfFile:
+    ...
 ```
 
-## 方法
+## 主要方法
 
 ### from_file()
 
@@ -23,7 +18,7 @@ class Information(BaseModel):
 
 ```python
 @classmethod
-def from_file(cls, file_name: str | Path) -> 'ComtradeModel | None'
+def from_file(cls, file_name: str | Path) -> InfFile | None
 ```
 
 **参数：**
@@ -32,7 +27,7 @@ def from_file(cls, file_name: str | Path) -> 'ComtradeModel | None'
 
 **返回：**
 
-- ComtradeModel 对象，文件不存在返回 None
+- InfFile 对象，文件不存在返回 None
 
 ---
 
@@ -42,7 +37,7 @@ def from_file(cls, file_name: str | Path) -> 'ComtradeModel | None'
 
 ```python
 @classmethod
-def from_str(cls, content: str) -> 'ComtradeModel'
+def from_str(cls, content: str) -> InfFile
 ```
 
 **参数：**
@@ -51,7 +46,23 @@ def from_str(cls, content: str) -> 'ComtradeModel'
 
 **返回：**
 
-- ComtradeModel 对象
+- InfFile 对象
+
+---
+
+### to_equipment_group()
+
+将 INF 解析结果转换为 EquipmentGroup 对象。
+
+```python
+def to_equipment_group(self) -> EquipmentGroup | None
+```
+
+**返回：**
+
+- EquipmentGroup 对象（包含设备拓扑和通道信息），解析失败返回 None
+
+---
 
 ## INF 文件格式
 
@@ -79,4 +90,5 @@ DEV_ID=,Bus1
 
 ## 相关模块
 
-- [ComtradeModel](../comtrade_model.md) - 数据模型基类
+- [Comtrade](../comtrade.md) - 主类
+- [CffFile](../cff/cff.md) - CFF 单文件格式（INF 解析由 CffFile 内部调用）

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """DFR 格式常量和设备注册表。"""
 
 WNDR_TEXT_SIZE = 4088

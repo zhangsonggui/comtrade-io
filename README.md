@@ -283,14 +283,6 @@ MIT License
 - 0.1.1: Added support for DMF data model files
 - 0.1.2: Same as version 0.1.1
 - 0.1.3: Added support for CFF single file and INF information files
-- **0.2.1**: Enhanced DFR format support and bug fixes
-    - Added support for multiple DFR device types (2704V042, 2704V072)
-    - Dynamic DFR frame size calculation based on channel configuration
-    - Fixed analog scaling to physical instantaneous values in data
-    - Fixed ASCII export by reversing physical values back to ADC counts
-    - Fixed INF/DMF export crash on None buses/lines/transformers
-    - DFR parser refactored into modular sub-modules (wndr_section, binary_section, converter)
-    - Batch DFR→COMTRADE conversion script added
 - **0.2.0**: Major refactoring and new features
     - Package restructured into `model/`, `parser/`, `exporters/`, `utils/` modules
     - Comtrade model refactored: `cfg` → `config`, equipment model integration
@@ -303,3 +295,23 @@ MIT License
     - Logging migrated to loguru
     - All models migrated to Pydantic v2
     - Improved GBK/UTF-8 encoding handling
+- **0.2.1**: Enhanced DFR format support and bug fixes
+    - Added support for multiple DFR device types (2704V042, 2704V072)
+    - Dynamic DFR frame size calculation based on channel configuration
+    - Fixed analog scaling to physical instantaneous values in data
+    - Fixed ASCII export by reversing physical values back to ADC counts
+    - Fixed INF/DMF export crash on None buses/lines/transformers
+    - DFR parser refactored into modular sub-modules (wndr_section, binary_section, converter)
+    - Batch DFR→COMTRADE conversion script added
+- **0.3.0**: Code cleanup and internal refactoring
+    - Removed shebang and coding headers from all source files
+    - Fixed `version` variable shadowing in `__init__.py`
+    - Replaced unnecessary f-strings with plain strings
+    - Moved `.env` to project root with `.env.example` template
+    - Converted `dev-dependencies` to standard `[project.optional-dependencies] dev`
+    - Removed unused `openpyxl` dependency
+    - Eliminated post-class monkey-patching; `@export_format` decorator inlined to class definition
+    - Added full type annotations on all `Comtrade` delegation properties
+    - New CI/CD workflow (`.github/workflows/publish.yml`) with multi-Python-version test matrix
+    - Converted all 357 internal absolute imports to relative imports (95 files)
+    - Cleaned up hardcoded local paths in `compatibility.md`

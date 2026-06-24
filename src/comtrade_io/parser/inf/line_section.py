@@ -1,22 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.equipment import Line
-from comtrade_io.model.equipment.branch import ACCBranch
-from comtrade_io.model.equipment.line_param import (
+from ...model.channel import Analog, Status
+from ...model.equipment import Line
+from ...model.equipment.branch import ACCBranch
+from ...model.equipment.line_param import (
     Capacitance,
     Impedance,
     MutualInductance,
 )
-from comtrade_io.model.type import CurrentBranchNum
-from comtrade_io.parser.inf.equipment_section import (
+from ...model.type import CurrentBranchNum
+from .equipment_section import (
     EquipmentSection,
     parse_four_values,
     parse_number_with_unit,
     parse_two_values,
 )
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 

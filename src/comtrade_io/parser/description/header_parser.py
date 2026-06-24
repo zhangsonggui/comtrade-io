@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import json
 
-from comtrade_io.model.description import Header
-from comtrade_io.model.type import Version
-from comtrade_io.utils import text_split, get_logger
+from ...model.description import Header
+from ...model.type import Version
+from ...utils import text_split, get_logger
 
 logger = get_logger()
 

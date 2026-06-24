@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import re
 
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.equipment.equipment import Equipment
-from comtrade_io.utils import get_logger
+from ...model.channel import Analog, Status
+from ...model.equipment.equipment import Equipment
+from ...utils import get_logger
 
 logger = get_logger()
 

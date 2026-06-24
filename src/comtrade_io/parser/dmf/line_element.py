@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 线路部件处理模块
 
@@ -7,16 +5,16 @@
 """
 from xml.etree.ElementTree import Element
 
-from comtrade_io.parser.dmf.equipment_element import EquipmentElement
-from comtrade_io.model.equipment import Line
-from comtrade_io.model.equipment.branch import ACCBranch
-from comtrade_io.model.equipment.line_param import (
+from .equipment_element import EquipmentElement
+from ...model.equipment import Line
+from ...model.equipment.branch import ACCBranch
+from ...model.equipment.line_param import (
     Capacitance,
     Impedance,
     MutualInductance,
 )
-from comtrade_io.model.type import CurrentBranchNum
-from comtrade_io.utils import parse_float, parse_int
+from ...model.type import CurrentBranchNum
+from ...utils import parse_float, parse_int
 
 
 class LineElement(EquipmentElement):

@@ -96,7 +96,7 @@ because:
 
 ## Key Dependencies (from pyproject.toml)
 
-- Python >= 3.10, pandas >= 2.3.3, pydantic >= 2.12.5, numpy >= 1.26.0, openpyxl >= 3.1.5, loguru >= 0.7.3
+- Python >= 3.10, pandas >= 2.3.3, pydantic >= 2.12.5, numpy >= 1.26.0, loguru >= 0.7.3
 - Dev: pytest >= 9.0.2, black >= 26.1.0, setuptools >= 80.9.0, pandas-stubs ~= 2.3.3
 - Package under `src/` layout (`[tool.setuptools.packages.find] where = ["src"]`)
 - Registers package index: `https://pypi.tuna.tsinghua.edu.cn/simple` (default)
@@ -113,8 +113,11 @@ uv run pytest tests/comtrade_io/cfg/test_configure.py -v --tb=short
 # Single test
 uv run pytest tests/comtrade_io/test_comtrade_file.py::TestFilePath::test_file_path_default_values -v
 
-# Install/sync
-uv sync
+# Install/sync (includes dev dependencies)
+uv sync --extra dev
+
+# Build only
+uv sync --no-dev
 
 # Run the CFG↔INF comparison example
 uv run python -m comtrade_io.example.main binary_inf
@@ -138,7 +141,7 @@ uv run python -m comtrade_io.example.main binary_inf
 ## Logging
 
 - Uses `loguru` with `LoguruLoggerWrapper` adapter (compatible with `logging.Logger` interface)
-- Configured via `src/comtrade_io/.env` (LOG_LEVEL=DEBUG by default in dev)
+- Configured via `.env` (project root), with fallback to `comtrade_io/.env` (LOG_LEVEL=DEBUG by default in dev)
 - `get_logger()` auto-resolves caller module name via frame walking (`sys._getframe`), cached by name
 - Do NOT use `logging.getLogger()` — use `from comtrade_io.utils import get_logger`
 
@@ -151,8 +154,8 @@ uv run python -m comtrade_io.example.main binary_inf
 
 ## Publishing
 
-- GitHub Actions: triggered by `v*` tags → `python -m build` → publish to PyPI
-- Not configured for automated test run before publish
+- GitHub Actions: triggered by `v*` tags → run tests (Python 3.10/3.11/3.12) → build → publish to PyPI
+- Workflow: `.github/workflows/publish.yml`
 
 ## Notable Refactors
 

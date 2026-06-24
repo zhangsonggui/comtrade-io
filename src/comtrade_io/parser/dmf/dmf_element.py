@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 DMF元素模块
 
@@ -11,14 +9,14 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.etree.ElementTree import Element
 
-from comtrade_io.model.equipment import EquipmentGroup
-from comtrade_io.parser.dmf.analog_element import AnalogElement
-from comtrade_io.parser.dmf.bus_element import BusElement
-from comtrade_io.parser.dmf.description_element import DescriptionElement
-from comtrade_io.parser.dmf.line_element import LineElement
-from comtrade_io.parser.dmf.status_element import StatusElement
-from comtrade_io.parser.dmf.transformer_element import TransformerElement
-from comtrade_io.utils import FilePath, get_logger
+from ...model.equipment import EquipmentGroup
+from .analog_element import AnalogElement
+from .bus_element import BusElement
+from .description_element import DescriptionElement
+from .line_element import LineElement
+from .status_element import StatusElement
+from .transformer_element import TransformerElement
+from ...utils import FilePath, get_logger
 
 logger = get_logger(__name__)
 

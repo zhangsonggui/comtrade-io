@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 分支通道模块
 
@@ -11,9 +9,9 @@ from xml.etree.ElementTree import Element
 
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.channel import Analog
-from comtrade_io.model.type import CtDirection, Phase
-from comtrade_io.utils import parse_int
+from ..channel import Analog
+from ..type import CtDirection, Phase
+from ...utils import parse_int
 
 
 class ACVBranch(BaseModel):

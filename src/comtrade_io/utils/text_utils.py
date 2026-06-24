@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 文本分割工具
 支持按分隔符分割单行或多行文本

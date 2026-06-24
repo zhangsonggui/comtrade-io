@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from comtrade_io.parser.comtrade_file import ComtradeFile
-from comtrade_io.parser.dat import DatFile
-from comtrade_io.utils import get_logger
+from ..parser.comtrade_file import ComtradeFile
+from ..parser.dat import DatFile
+from ..utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.model.comtrade import Comtrade
+    from ..model.comtrade import Comtrade
 
 logger = get_logger()
 

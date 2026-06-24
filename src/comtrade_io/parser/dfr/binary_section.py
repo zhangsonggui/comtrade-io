@@ -1,20 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """DFR [Data] 二进制数据解析模块。"""
 
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.parser.dfr.constants import (
+from ...model.configure import Configure
+from .constants import (
     DATA_MARKER,
     DEFAULT_HEADER_SIZE,
     KNOWN_DEVICES,
     WNDR_TEXT_SIZE,
     calc_frame_params,
 )
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 

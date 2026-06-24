@@ -1,8 +1,8 @@
 import pandas as pd
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.parser.dat import DatFile
-from comtrade_io.utils import get_logger
+from ...model.configure import Configure
+from ..dat import DatFile
+from ...utils import get_logger
 
 logger = get_logger()
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 开关量通道模块
 
@@ -8,9 +6,9 @@
 """
 from xml.etree.ElementTree import Element
 
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.type import Contact, DigitalChannelFlag, DigitalChannelType
-from comtrade_io.utils import get_logger, parse_int
+from ...model.channel.status import Status
+from ...model.type import Contact, DigitalChannelFlag, DigitalChannelType
+from ...utils import get_logger, parse_int
 
 logger = get_logger()
 

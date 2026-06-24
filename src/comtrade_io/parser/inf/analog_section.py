@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.type import AnalogChannelFlag, Phase, TranSide, Unit
-from comtrade_io.utils import get_logger
+from ...model.channel.analog import Analog
+from ...model.type import AnalogChannelFlag, Phase, TranSide, Unit
+from ...utils import get_logger
 
 logger = get_logger()
 

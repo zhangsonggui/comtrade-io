@@ -1,20 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from typing import Any
 
 import numpy as np
 from pydantic import Field, field_serializer
 
-from comtrade_io.model.description.index_base import IdxOrgBaseModel
-from comtrade_io.model.type import (
+from ..description.index_base import IdxOrgBaseModel
+from ..type import (
     AnalogChannelFlag,
     AnalogChannelType,
     DigitalChannelFlag,
     DigitalChannelType,
     Phase,
 )
-from comtrade_io.model.type.base_enum import BaseEnum
-from comtrade_io.utils import text_split
+from ..type.base_enum import BaseEnum
+from ...utils import text_split
 
 
 class ChannelType(IdxOrgBaseModel):

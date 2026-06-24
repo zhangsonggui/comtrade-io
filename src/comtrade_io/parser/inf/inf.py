@@ -1,16 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.equipment import EquipmentGroup
-from comtrade_io.parser.inf.configure_builder import build_configure
-from comtrade_io.parser.inf.equipment_builder import build_equipment_group
-from comtrade_io.parser.inf.text_splitter import SectionData, split_sections
-from comtrade_io.utils import FilePath, get_logger
+from ...model.configure import Configure
+from ...model.equipment import EquipmentGroup
+from .configure_builder import build_configure
+from .equipment_builder import build_equipment_group
+from .text_splitter import SectionData, split_sections
+from ...utils import FilePath, get_logger
 
 logger = get_logger()
 

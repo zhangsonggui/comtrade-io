@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import json
 from enum import Enum
 from typing import Any, Dict, TypeVar, cast

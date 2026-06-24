@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import Field, model_validator
 
-from comtrade_io.model.channel.channel import ChannelBaseModel
-from comtrade_io.model.description import ReferenceBaseModel
-from comtrade_io.model.type import TranSide, Unit
-from comtrade_io.utils import get_logger
+from .channel import ChannelBaseModel
+from ..description import ReferenceBaseModel
+from ..type import TranSide, Unit
+from ...utils import get_logger
 
 logger = get_logger()
 
@@ -75,7 +72,7 @@ class Analog(ChannelBaseModel, ReferenceBaseModel):
             return self
         if not self.name:
             return self
-        from comtrade_io.utils.recognition.channel_recognizer import (
+        from ...utils.recognition.channel_recognizer import (
             recognize_analog_channel,
         )
 

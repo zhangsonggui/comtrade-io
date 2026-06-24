@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.description.channel_num import ChannelNum
-from comtrade_io.model.description.description import Description
-from comtrade_io.model.description.header import Header
-from comtrade_io.model.description.index_base import IndexBaseModel, ReferenceBaseModel
-from comtrade_io.model.description.sampling import Sampling
-from comtrade_io.model.description.sampling_time_quality import SamplingTimeQuality
-from comtrade_io.model.description.segment import Segment
-from comtrade_io.model.description.time_info import TimeInfo
+from .channel_num import ChannelNum
+from .description import Description
+from .header import Header
+from .index_base import IndexBaseModel, ReferenceBaseModel
+from .sampling import Sampling
+from .sampling_time_quality import SamplingTimeQuality
+from .segment import Segment
+from .time_info import TimeInfo

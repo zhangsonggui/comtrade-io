@@ -1,16 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.description import (
+from ...model.description import (
     ChannelNum,
     Description,
     Header,
     Sampling,
     Segment,
 )
-from comtrade_io.model.type import DataType, Version
-from comtrade_io.parser.description.data_time_parser import format_time
-from comtrade_io.utils import get_logger
+from ...model.type import DataType, Version
+from ..description.data_time_parser import format_time
+from ...utils import get_logger
 
 logger = get_logger()
 

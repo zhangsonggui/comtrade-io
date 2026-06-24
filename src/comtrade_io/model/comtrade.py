@@ -1,22 +1,28 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field, model_serializer
 
-from comtrade_io.exporters.json_exporter import _to_json
-from comtrade_io.model.channel.analog import Analog
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.equipment import Bus, EquipmentGroup, Line, Transformer
-from comtrade_io.utils import get_logger
+from ..exporters.decorators import export_format
+from ..exporters.json_exporter import _to_json
+from .channel.analog import Analog
+from .channel.status import Status
+from .configure import Configure
+from .description.channel_num import ChannelNum
+from .description.header import Header
+from .description.sampling import Sampling
+from .description.sampling_time_quality import SamplingTimeQuality
+from .description.time_info import TimeInfo
+from .equipment import Bus, EquipmentGroup, Line, Transformer
+from .type import DataType
+from ..utils import get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.parser.comtrade_file import ComtradeFile
+    from ..parser.comtrade_file import ComtradeFile
 
 logger = get_logger()
 
@@ -67,39 +73,39 @@ class Comtrade(BaseModel):
         return self.config.statuses
 
     @property
-    def channel_num(self):
+    def channel_num(self) -> ChannelNum | None:
         return self.config.description.channel_num
 
     @property
-    def sampling(self):
+    def sampling(self) -> Sampling | None:
         return self.config.description.sampling
 
     @property
-    def start_time(self):
+    def start_time(self) -> datetime | None:
         return self.config.description.file_start_time
 
     @property
-    def fault_time(self):
+    def fault_time(self) -> datetime | None:
         return self.config.description.trigger_time
 
     @property
-    def data_type(self):
+    def data_type(self) -> DataType | None:
         return self.config.description.data_type
 
     @property
-    def timemult(self):
+    def timemult(self) -> float | None:
         return self.config.description.timemult
 
     @property
-    def header(self):
+    def header(self) -> Header | None:
         return self.config.description.header
 
     @property
-    def time_info(self):
+    def time_info(self) -> TimeInfo | None:
         return self.config.description.time_info
 
     @property
-    def sampling_time_quality(self):
+    def sampling_time_quality(self) -> SamplingTimeQuality | None:
         return self.config.description.sampling_time_quality
 
     # -- 序列化 --
@@ -317,11 +323,12 @@ class Comtrade(BaseModel):
         with open(path, "w", encoding="gbk", errors="ignore") as f:
             f.write(self.to_inf())
 
-    def save_comtrade(self, output_file_path: ComtradeFile | Path | str, **kwargs):
+    @export_format
+    def save_comtrade(
+        self,
+        output_file_path: ComtradeFile | Path | str,
+        format: str = "multi_file",
+        data_format: str = "BINARY",
+        **kwargs,
+    ):
         pass
-
-
-# 延迟导入 export_format 装饰器以打破循环导入
-from comtrade_io.exporters import export_format  # noqa: E402
-
-Comtrade.save_comtrade = export_format(Comtrade.save_comtrade)  # type: ignore[arg-type]

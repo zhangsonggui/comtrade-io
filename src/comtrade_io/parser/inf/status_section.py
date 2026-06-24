@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.model.channel.status import Status
-from comtrade_io.model.type import (
+from ...model.channel.status import Status
+from ...model.type import (
     Contact,
     DigitalChannelFlag,
     DigitalChannelType,
     Phase,
 )
-from comtrade_io.utils import get_logger
+from ...utils import get_logger
 
 logger = get_logger()
 

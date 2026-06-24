@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from comtrade_io.utils.error_messages import ErrorMessage
-from comtrade_io.utils.file_compressor import FileCompressor, compress_files
-from comtrade_io.utils.file_path import FilePath
-from comtrade_io.utils.logging import get_logger
-from comtrade_io.utils.numeric_utils import parse_float, parse_int
-from comtrade_io.utils.recognition.channel_recognizer import (
+from .error_messages import ErrorMessage
+from .file_compressor import FileCompressor, compress_files
+from .file_path import FilePath
+from .logging import get_logger
+from .numeric_utils import parse_float, parse_int
+from .recognition.channel_recognizer import (
     ChannelRecognitionResult,
     ChannelRecognizer,
     RecognitionResult,
@@ -13,7 +11,7 @@ from comtrade_io.utils.recognition.channel_recognizer import (
     recognize_analog_channel,
     recognize_status_channel,
 )
-from comtrade_io.utils.text_utils import text_split
+from .text_utils import text_split
 
 __all__ = [
     "ChannelRecognitionResult",

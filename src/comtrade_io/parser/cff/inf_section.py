@@ -1,5 +1,5 @@
-from comtrade_io.parser.inf import InfFile
-from comtrade_io.utils import get_logger
+from ..inf import InfFile
+from ...utils import get_logger
 
 logger = get_logger()
 

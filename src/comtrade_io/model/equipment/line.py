@@ -1,16 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from pydantic import Field
 
-from comtrade_io.model.equipment.branch import ACCBranch
-from comtrade_io.model.equipment.bus import Bus
-from comtrade_io.model.equipment.equipment import Equipment
-from comtrade_io.model.equipment.line_param import (
+from .branch import ACCBranch
+from .bus import Bus
+from .equipment import Equipment
+from .line_param import (
     Capacitance,
     Impedance,
     MutualInductance,
 )
-from comtrade_io.model.type import CurrentBranchNum
+from ..type import CurrentBranchNum
 
 class Line(Equipment):
     """线路部件模型"""

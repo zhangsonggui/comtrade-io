@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import re
 
-from comtrade_io.model.type import AnalogChannelFlag, AnalogChannelType
+from ...model.type import AnalogChannelFlag, AnalogChannelType
 
 AC_VOLTAGE_SUFFIXES = [
     "Ua",

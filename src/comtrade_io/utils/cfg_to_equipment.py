@@ -1,24 +1,22 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """将 Configure 对象转换为 EquipmentGroup 对象"""
 
 from dataclasses import dataclass
 from typing import Dict
 
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.equipment import Bus, EquipmentGroup, Line, Transformer
-from comtrade_io.model.equipment.branch import ACCBranch, ACVBranch
-from comtrade_io.model.equipment.transformer_winding import TransformerWinding
-from comtrade_io.model.type import (
+from ..model.channel import Analog, Status
+from ..model.configure import Configure
+from ..model.equipment import Bus, EquipmentGroup, Line, Transformer
+from ..model.equipment.branch import ACCBranch, ACVBranch
+from ..model.equipment.transformer_winding import TransformerWinding
+from ..model.type import (
     AnalogChannelFlag,
     AnalogChannelType,
     Phase,
     TransWindLocation,
     Unit,
 )
-from comtrade_io.utils import get_logger
-from comtrade_io.utils.recognition.channel_recognizer import (
+from . import get_logger
+from .recognition.channel_recognizer import (
     ChannelRecognitionResult,
     RecognitionResult,
     recognize_analog_channel,

@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from pydantic import Field
 
-from comtrade_io.model.equipment.branch import ACVBranch
-from comtrade_io.model.equipment.equipment import Equipment
-from comtrade_io.model.type import TvInstallSite
+from .branch import ACVBranch
+from .equipment import Equipment
+from ..type import TvInstallSite
 
 class Bus(Equipment):
     """母线部件模型"""

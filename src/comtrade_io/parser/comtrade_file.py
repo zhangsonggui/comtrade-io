@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from pathlib import Path
@@ -8,13 +6,13 @@ from typing import TYPE_CHECKING
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.equipment import EquipmentGroup
-from comtrade_io.parser import CfgFile
-from comtrade_io.utils import FilePath, get_logger
+from ..model.configure import Configure
+from ..model.equipment import EquipmentGroup
+from . import CfgFile
+from ..utils import FilePath, get_logger
 
 if TYPE_CHECKING:
-    from comtrade_io.model.comtrade import Comtrade
+    from ..model.comtrade import Comtrade
 
 logger = get_logger()
 
@@ -112,14 +110,14 @@ class ComtradeFile(BaseModel):
             logger.warning(f"未能读取 CFG 配置文件: {cf.cfg_path.path}")
             return None
 
-        from comtrade_io.parser import DmfFile, InfFile
+        from . import DmfFile, InfFile
 
         eg = DmfFile.from_file(cf.dmf_path.path)
         if eg is None:
             inf = InfFile.from_file(cf.inf_path.path)
             eg = inf.to_equipment_group() if inf else None
 
-        from comtrade_io.parser.dat import DatFile
+        from .dat import DatFile
 
         data = DatFile.from_file(configure, cf.dat_path.path)
         logger.info(f"传统 COMTRADE 多文件读取完成: {file_name}")
@@ -128,7 +126,7 @@ class ComtradeFile(BaseModel):
     @classmethod
     def from_cff(cls, file_name: str | Path) -> Comtrade | None:
         """从 CFF 单文件解析为 Comtrade 对象"""
-        from comtrade_io.parser.cff import CffFile
+        from .cff import CffFile
 
         logger.info(f"开始读取 CFF 单文件: {file_name}")
         try:
@@ -151,7 +149,7 @@ class ComtradeFile(BaseModel):
     @classmethod
     def from_dfr(cls, file_name: str | Path) -> Comtrade | None:
         """从 DFR 单文件解析为 Comtrade 对象"""
-        from comtrade_io.parser.dfr import DfrFile
+        from .dfr import DfrFile
 
         logger.info(f"开始读取 DFR 单文件: {file_name}")
         try:
@@ -180,14 +178,14 @@ class ComtradeFile(BaseModel):
         """组装 Comtrade 对象，DMF/INF信息缺失时由CfgToEquipment自动生成设备模型"""
 
         if eg is None:
-            from comtrade_io.utils.cfg_to_equipment import CfgToEquipment
+            from ..utils.cfg_to_equipment import CfgToEquipment
 
             eg = CfgToEquipment.convert(cfg)
             logger.info(
                 "设备信息文件不存在或为空，已通过CfgToEquipment从CFG自动生成设备模型"
             )
 
-        from comtrade_io.model.comtrade import Comtrade
+        from ..model.comtrade import Comtrade
 
         comtrade = Comtrade(
             config=cfg,

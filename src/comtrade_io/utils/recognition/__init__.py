@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.utils.recognition.channel_recognizer import (
+from .channel_recognizer import (
     ChannelRecognitionResult,
     ChannelRecognizer,
     RecognitionResult,

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 文件压缩工具
 """
@@ -10,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Union
 
-from comtrade_io.utils.logging import get_logger
+from .logging import get_logger
 
 logger = get_logger(__name__)
 

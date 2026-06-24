@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pydantic import BaseModel, Field, model_validator
 
 class IndexBaseModel(BaseModel):

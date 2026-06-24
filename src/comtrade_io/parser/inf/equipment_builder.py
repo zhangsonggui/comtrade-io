@@ -1,21 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from comtrade_io.model.channel import Analog, Status
-from comtrade_io.model.description import Description
-from comtrade_io.model.equipment import Bus, EquipmentGroup, Line, Transformer
-from comtrade_io.model.equipment.branch import ACVBranch
-from comtrade_io.parser.inf.analog_section import AnalogSection
-from comtrade_io.parser.inf.bus_section import BusSection
-from comtrade_io.parser.inf.configure_builder import (
+from ...model.channel import Analog, Status
+from ...model.description import Description
+from ...model.equipment import Bus, EquipmentGroup, Line, Transformer
+from ...model.equipment.branch import ACVBranch
+from .analog_section import AnalogSection
+from .bus_section import BusSection
+from .configure_builder import (
     _apply_channel_parameters_internal,
 )
-from comtrade_io.parser.inf.description_section import DescriptionSection
-from comtrade_io.parser.inf.line_section import LineSection
-from comtrade_io.parser.inf.status_section import StatusSection
-from comtrade_io.parser.inf.text_splitter import SectionData
-from comtrade_io.parser.inf.transformer_section import TransformerSection
-from comtrade_io.utils import get_logger
+from .description_section import DescriptionSection
+from .line_section import LineSection
+from .status_section import StatusSection
+from .text_splitter import SectionData
+from .transformer_section import TransformerSection
+from ...utils import get_logger
 
 logger = get_logger()
 

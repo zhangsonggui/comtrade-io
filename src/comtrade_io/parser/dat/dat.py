@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from dataclasses import dataclass
 from io import BytesIO, StringIO
 from pathlib import Path
@@ -8,10 +6,10 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from comtrade_io.model.configure import Configure
-from comtrade_io.model.description.sampling import Sampling, Segment
-from comtrade_io.model.type import DataType
-from comtrade_io.utils import get_logger
+from ...model.configure import Configure
+from ...model.description.sampling import Sampling, Segment
+from ...model.type import DataType
+from ...utils import get_logger
 
 logger = get_logger()
 
