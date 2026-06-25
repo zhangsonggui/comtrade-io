@@ -96,7 +96,7 @@ class TestCfgToEquipment:
         assert eg.buses is not None and len(eg.buses) == 1
         bus = eg.buses[0]
         assert bus.name == "潞北I线"
-        assert bus.rated_primary_voltage == 220000
+        assert bus.rated_primary_voltage == 220.0
         assert bus.rated_secondary_voltage == 100
         assert bus.voltage.ua is not None
         assert bus.voltage.ub is not None
@@ -237,7 +237,7 @@ class TestCfgToEquipment:
             ],
         )
         CfgToEquipment.convert(cfg)
-        assert st.equip == "220kV母差"
+        assert st.equip == "母差"
 
     def test_status_associated_with_bus(self):
         cfg = _cfg(

@@ -142,6 +142,13 @@ class StatusRecognizer:
         prefix = re.sub(r"[_]+", "", prefix).strip()
         for sfx in self.SIGNAL_SUFFIXES:
             prefix = re.sub(sfx, "", prefix)
+
+        m_kv_strip = self.VOLTAGE_PATTERN.match(prefix)
+        if m_kv_strip:
+            after = prefix[m_kv_strip.end() :].strip(" _-")
+            if after:
+                prefix = after
+
         return prefix.strip() or None
 
     def classify(self, name: str) -> Tuple[DigitalChannelType, DigitalChannelFlag]:

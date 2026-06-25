@@ -86,6 +86,8 @@ class AnalogRecognizer:
             return True
         if re.match(r"^\d+[-_]\d+#", name):
             return True
+        if name.startswith("备用"):
+            return True
         return False
 
     def extract_phase(self, channel_name: str) -> str:
@@ -293,6 +295,8 @@ class AnalogRecognizer:
                 )
                 if not has_model and not has_measure_keyword:
                     monitor += match.group(1)
+            elif re.match(r"^[A-Za-z]+\d+$", remainder):
+                monitor += remainder
 
         for model in DEVICE_MODELS:
             monitor = re.sub(

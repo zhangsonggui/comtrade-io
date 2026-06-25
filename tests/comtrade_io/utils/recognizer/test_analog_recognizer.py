@@ -165,31 +165,6 @@ from comtrade_io.utils.recognition.channel_recognizer import (
             AnalogChannelFlag.TA,
             RecognitionResult.PARTIAL,
         ),
-        # ---------- 未知/备用通道 ----------
-        (
-            "备用CT 1电流Ia",
-            None,
-            None,
-            AnalogChannelType.A,
-            AnalogChannelFlag.TA,
-            RecognitionResult.PARTIAL,
-        ),
-        (
-            "备用CT 1电流Ib",
-            None,
-            None,
-            AnalogChannelType.A,
-            AnalogChannelFlag.TA,
-            RecognitionResult.PARTIAL,
-        ),
-        (
-            "备用CT 1电流Ic",
-            None,
-            None,
-            AnalogChannelType.A,
-            AnalogChannelFlag.TA,
-            RecognitionResult.PARTIAL,
-        ),
         # ---------- 高频通道 ----------
         (
             "2213方向保护高频信号",
@@ -272,6 +247,10 @@ def test_recognize_analog_channel(
         "121",
         "122",
         "123",
+        # 备用通道(无含义)
+        "备用CT 1电流Ia",
+        "备用CT 1电流Ib",
+        "备用CT 1电流Ic",
     ],
 )
 def test_recognize_analog_channel_unused(name):
@@ -309,7 +288,7 @@ def test_recognize_status_channel_unified_result():
     detail = recognize_status_channel("220kV母差CSC-150D保护母差动作")
 
     assert detail.voltage_level == 220000
-    assert detail.monitor == "220kV母差"
+    assert detail.monitor == "母差"
     assert detail.protection == "CSC-150D"
     assert detail.channel_type == DigitalChannelType.Relay_Act
     assert detail.channel_flag == DigitalChannelFlag.TR

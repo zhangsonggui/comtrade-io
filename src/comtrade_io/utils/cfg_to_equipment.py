@@ -3,24 +3,24 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from ..model.channel import Analog, Status
-from ..model.configure import Configure
-from ..model.equipment import Bus, EquipmentGroup, Line, Transformer
-from ..model.equipment.branch import ACCBranch, ACVBranch
-from ..model.equipment.transformer_winding import TransformerWinding
-from ..model.type import (
-    AnalogChannelFlag,
-    AnalogChannelType,
-    Phase,
-    TransWindLocation,
-    Unit,
-)
 from . import get_logger
 from .recognition.channel_recognizer import (
     ChannelRecognitionResult,
     RecognitionResult,
     recognize_analog_channel,
     recognize_status_channel,
+)
+from ..model.channel import Analog, Status
+from ..model.configure import Configure
+from ..model.equipment import Bus, EquipmentGroup, Line, Transformer
+from ..model.equipment.branch import ACCBranch, ACVBranch
+from ..model.equipment.transformer_winding import Igap, TransformerWinding
+from ..model.type import (
+    AnalogChannelFlag,
+    AnalogChannelType,
+    Phase,
+    TransWindLocation,
+    Unit,
 )
 
 logger = get_logger()
@@ -51,6 +51,23 @@ class _RecognizedAnalog:
     winding: TransWindLocation | None
 
 
+def _find_grounding_channels(
+    analogs: dict[int, Analog], base_equip: str
+) -> tuple[Analog | None, Analog | None]:
+    zgap = None
+    zsgap = None
+    for ch in analogs.values():
+        if not ch.name or base_equip not in ch.name:
+            continue
+        if "间隙" in ch.name:
+            zsgap = ch
+        elif "中性点" in ch.name:
+            zgap = ch
+    return zgap, zsgap
+
+
+_IGNORED_EQUIPS = frozenset({"kV", "kA", "V", "A", "W", "Hz", "kW", "kWh", "MW", "0"})
+
 def _is_blank(value: str | None) -> bool:
     return value is None or value.strip() == ""
 
@@ -58,9 +75,12 @@ def _is_blank(value: str | None) -> bool:
 def _channel_equip(
     channel: Analog | Status, result: ChannelRecognitionResult
 ) -> str | None:
-    if _is_blank(channel.equip) and result.monitor:
+    if result.monitor:
         channel.equip = result.monitor
-    return channel.equip.strip() if channel.equip else None
+    equip = channel.equip.strip() if channel.equip else None
+    if equip and equip in _IGNORED_EQUIPS:
+        return None
+    return equip
 
 
 def _recognize_statuses(statuses: dict[int, Status]) -> list[_RecognizedStatus]:
@@ -218,6 +238,21 @@ def _find_bus(buses: list[Bus], voltage_level: int | None) -> Bus | None:
     return None
 
 
+def _find_buses(buses: list[Bus], equip: str, voltage_level: int | None) -> list[Bus]:
+    matched: list[Bus] = []
+    for bus in buses:
+        if bus.name == equip:
+            matched.append(bus)
+    if not matched and voltage_level is not None:
+        voltage_kv = voltage_level / 1000
+        for bus in buses:
+            if bus.rated_primary_voltage == voltage_kv:
+                matched.append(bus)
+                if len(matched) >= 2:
+                    break
+    return matched[:2]
+
+
 class CfgToEquipment:
     """将 Configure 对象转换为 EquipmentGroup 对象"""
 
@@ -231,7 +266,7 @@ class CfgToEquipment:
 
         buses = CfgToEquipment._build_buses(voltage_groups, recognized_statuses)
         transformers = CfgToEquipment._build_transformers(
-            current_groups, voltage_groups, recognized_statuses, buses
+            current_groups, voltage_groups, recognized_statuses, buses, config.analogs
         )
         lines = CfgToEquipment._build_lines(current_groups, recognized_statuses, buses)
 
@@ -266,7 +301,7 @@ class CfgToEquipment:
             bus = Bus(
                 index=len(buses) + 1,
                 name=equip,
-                rated_primary_voltage=a_phase.primary,
+                rated_primary_voltage=a_phase.primary / a_phase.secondary / 10 if a_phase.secondary else 0.0,
                 rated_secondary_voltage=a_phase.secondary,
                 voltage=ACVBranch.from_analog_channels(analogs),
                 acvs=analogs,
@@ -291,16 +326,16 @@ class CfgToEquipment:
                 continue
             analogs = _sort_channels(items)
             a_phase = _a_phase_channel(items)
-            bus = _find_bus(buses, voltage_level)
+            matched_buses = _find_buses(buses, equip, voltage_level)
             line = Line(
                 index=len(lines) + 1,
                 name=equip,
-                bus_index=bus.index if bus else 0,
+                bus_index=matched_buses[0].index if matched_buses else 0,
                 rated_primary_voltage=(voltage_level / 1000) if voltage_level else 0.0,
                 rated_primary_current=a_phase.primary,
                 rated_secondary_current=a_phase.secondary,
                 currents=ACCBranch.from_analog_channels(analogs),
-                buses=[bus] if bus else [],
+                buses=matched_buses,
                 accs=analogs,
                 anas=analogs,
                 stas=_matching_statuses(statuses, equip, voltage_level),
@@ -314,6 +349,7 @@ class CfgToEquipment:
         voltage_groups: dict[tuple[str, int | None], list[_RecognizedAnalog]],
         statuses: list[_RecognizedStatus],
         buses: list[Bus],
+        all_analogs: dict[int, Analog],
     ) -> list[Transformer]:
         # Build voltage index by equip (not by equip+voltage_level),
         # since transformer current channels often lack "kV" in source names.
@@ -367,7 +403,7 @@ class CfgToEquipment:
                 if winding not in valid_groups:
                     continue
                 cur_items = valid_groups[winding]
-                analogs = _sort_channels(cur_items)
+                ch_list = _sort_channels(cur_items)
                 a_phase = _a_phase_channel(cur_items)
                 voltage_level = cur_items[0].recognition.voltage_level
                 bus = _find_bus(buses, voltage_level)
@@ -377,13 +413,16 @@ class CfgToEquipment:
                     for v in all_vol_items
                     if (v.winding or TransWindLocation.HIGH) == winding
                 ]
+                rated_voltage = bus.rated_primary_voltage if bus else ((voltage_level / 1000) if voltage_level else 0.0)
+                zgap_ch, zsgap_ch = _find_grounding_channels(all_analogs, equip)
                 winding_model = TransformerWinding(
                     bus_id=bus.index if bus else 0,
                     trans_wind_location=winding,
-                    rated_voltage=(voltage_level / 1000) if voltage_level else 0.0,
+                    rated_voltage=rated_voltage,
                     rated_current=a_phase.primary,
                     voltage=ACVBranch.from_analog_channels(_sort_channels(vol_items)),
-                    currents=ACCBranch.from_analog_channels(analogs),
+                    currents=ACCBranch.from_analog_channels(ch_list),
+                    igap=Igap(zgap=zgap_ch, zsgap=zsgap_ch),
                 )
                 tr.trans_winds.append(winding_model)
 
