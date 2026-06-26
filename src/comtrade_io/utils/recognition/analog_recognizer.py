@@ -321,4 +321,14 @@ class AnalogRecognizer:
             match = re.search(r"直流[^\s]*", stripped)
             return match.group(0) if match else stripped[:20]
 
+        for winding in ("高压侧", "中压侧", "低压侧", "公共绕组"):
+            pos = stripped.find(winding)
+            if pos != -1:
+                prefix = stripped[:pos].strip(" _-")
+                if prefix.endswith("主变"):
+                    return prefix
+                if prefix.endswith("变"):
+                    return prefix[:-1] + "主变"
+                return prefix or None
+
         return None

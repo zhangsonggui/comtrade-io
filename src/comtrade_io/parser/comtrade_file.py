@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING
 import pandas as pd
 from pydantic import BaseModel, Field
 
+from . import CfgFile
 from ..model.configure import Configure
 from ..model.equipment import EquipmentGroup
-from . import CfgFile
 from ..utils import FilePath, get_logger
 
 if TYPE_CHECKING:
@@ -184,6 +184,9 @@ class ComtradeFile(BaseModel):
             logger.info(
                 "设备信息文件不存在或为空，已通过CfgToEquipment从CFG自动生成设备模型"
             )
+        else:
+            eg.validate_and_supplement(cfg.analogs, cfg.statuses)
+            logger.info("已基于CFG对设备模型进行校验补全")
 
         from ..model.comtrade import Comtrade
 

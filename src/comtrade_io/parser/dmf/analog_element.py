@@ -49,5 +49,5 @@ class AnalogElement:
                 phase=Phase.from_value(_phase_str),
                 primary=parse_float(element.get('primary', 1.0)),
                 secondary=parse_float(element.get('secondary', 1.0)),
-                tran_side=TranSide.from_value(_tran_side_str)
+                tran_side=TranSide.from_value(_tran_side_str, TranSide.S)
         )
