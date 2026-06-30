@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import numpy as np
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field, model_serializer
 
-from ..exporters.decorators import export_format
-from ..exporters.json_exporter import _to_json
 from .channel.analog import Analog
-from .channel.status import Status
+from .channel.status import Status, StatusChangeRecord
 from .configure import Configure
 from .description.channel_num import ChannelNum
 from .description.header import Header
@@ -19,6 +18,8 @@ from .description.sampling_time_quality import SamplingTimeQuality
 from .description.time_info import TimeInfo
 from .equipment import Bus, EquipmentGroup, Line, Transformer
 from .type import DataType
+from ..exporters.decorators import export_format
+from ..exporters.json_exporter import _to_json
 from ..utils import get_logger
 
 if TYPE_CHECKING:
@@ -257,6 +258,73 @@ class Comtrade(BaseModel):
         if self.statuses is None:
             return None
         return self.statuses.get(index)
+
+    def get_changed_statuses(self) -> list[Status]:
+        """获取发生变位的数字量通道
+
+        使用 numpy 向量化计算逐通道的状态跳变，筛选出存在变位的数字量通道，
+        并在每个 Status 对象上填充 change_records 变位记录列表：
+        - 首条为 0 时刻（第 1 个采样点）的初始状态；
+        - 后续每条对应一次变位时刻的采样点号、时间戳、状态。
+
+        Returns:
+            list[Status]: 发生变位的数字量通道列表（数据为空或无变位时返回空列表）
+        """
+        if self.data is None or self.channel_num is None or not self.statuses:
+            return []
+
+        data = self.data
+        n_rows = data.shape[0]
+        if n_rows == 0:
+            return []
+
+        timestamps_us = data.iloc[:, 1].to_numpy(dtype=np.int64)
+        start_time = self.start_time
+
+        def _timestamp_at(sample_idx: int) -> datetime | None:
+            if start_time is None or sample_idx < 0 or sample_idx >= n_rows:
+                return None
+            return start_time + timedelta(microseconds=int(timestamps_us[sample_idx]))
+
+        analog_count = self.channel_num.analog
+        changed: list[Status] = []
+        for status in self.statuses.values():
+            if status is None or status.index is None:
+                continue
+            col_index = analog_count + status.index + 1
+            if col_index >= data.shape[1]:
+                continue
+
+            values = data.iloc[:, col_index].to_numpy(dtype=np.int8)
+            if values.size == 0:
+                continue
+
+            initial_state = int(values[0])
+            records = [
+                StatusChangeRecord(
+                    sample_point=1,
+                    timestamp=_timestamp_at(0),
+                    state=initial_state,
+                )
+            ]
+
+            if values.size > 1:
+                diff = np.diff(values.astype(np.int16))
+                change_positions = np.nonzero(diff != 0)[0] + 1
+                for pos in change_positions:
+                    records.append(
+                        StatusChangeRecord(
+                            sample_point=int(pos) + 1,
+                            timestamp=_timestamp_at(int(pos)),
+                            state=int(values[int(pos)]),
+                        )
+                    )
+
+            if len(records) > 1:
+                status.change_records = records
+                changed.append(status)
+
+        return changed
 
     # -- 导出 --
 

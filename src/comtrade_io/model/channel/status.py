@@ -1,8 +1,44 @@
-from pydantic import ConfigDict, Field
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from .channel import ChannelBaseModel
 from ..description import ReferenceBaseModel
 from ..type import Contact
+
+
+class StatusChangeRecord(BaseModel):
+    """数字量通道变位记录
+
+    记录某一采样点处的状态信息，用于描述数字量通道在初始时刻及每次变位时刻的状态。
+
+    属性:
+        sample_point: 采样点号（1-based）
+        timestamp: 该采样点对应的绝对时间戳
+        state: 该采样点处的状态值（0/1）
+    """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    sample_point: int = Field(..., description="采样点号（1-based）")
+    timestamp: datetime | None = Field(default=None, description="采样点绝对时间戳")
+    state: int = Field(..., description="采样点状态值（0/1）")
+
+    def __iter__(self):
+        return iter((self.sample_point, self.timestamp, self.state))
+
+    def __repr__(self) -> str:
+        return (
+            f"StatusChangeRecord(sample_point={self.sample_point}, "
+            f"timestamp={self.timestamp}, state={self.state})"
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "sample_point": self.sample_point,
+            "timestamp": self.timestamp,
+            "state": self.state,
+        }
 
 
 class Status(ChannelBaseModel, ReferenceBaseModel):
@@ -26,6 +62,10 @@ class Status(ChannelBaseModel, ReferenceBaseModel):
     )
     equipment_no: str | None = Field(
         default=None, description="保护/断路器/刀闸序号，如Relay_#1、Breaker_#1"
+    )
+    change_records: list[StatusChangeRecord] | None = Field(
+        default=None,
+        description="变位记录列表，含0时刻初始状态及每次变位时刻的采样点号、时间戳、状态",
     )
 
     def __str__(self) -> str:

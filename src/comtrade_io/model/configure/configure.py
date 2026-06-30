@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field, model_serializer
 from ..channel.analog import Analog
 from ..channel.status import Status
 from ..description import Description, Segment
-from ...parser.description.data_time_parser import format_datetime_for_cfg
 
 
 class Configure(BaseModel):
@@ -32,6 +31,8 @@ class Configure(BaseModel):
         return data
 
     def __str__(self):
+        from ...parser.description.data_time_parser import format_datetime_for_cfg
+
         cfg_content = ""
         cfg_content += self.description.header.__str__() + "\n"
         cfg_content += self.description.channel_num.__str__() + "\n"
