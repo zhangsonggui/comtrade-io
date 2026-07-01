@@ -25,6 +25,7 @@ class Sampling(BaseModel):
         索引约定：``start_point`` / ``end_point`` 均为 0-based，遵循左闭右开
         ``[start, end)``，可直接用于序列切片。
         """
+
         segments = self.segments
         if len(segments) < 2:
             return self

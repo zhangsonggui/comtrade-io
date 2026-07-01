@@ -19,9 +19,14 @@ class Segment(BaseModel):
         cycle_point_num: 该段每周波采样点数
         count: 该段采样点数
     """
+
     samp: int = Field(..., description="采样率，单位（Hz）", gt=0)
-    end_point: int = Field(..., description="该段结束采样点号（0-based，左闭右开的右端点）", gt=0)
-    start_point: int | None = Field(default=None, description="该段起始采样点号（0-based，左闭右开的左端点）")
+    end_point: int = Field(
+        ..., description="该段结束采样点号（0-based，左闭右开的右端点）", gt=0
+    )
+    start_point: int | None = Field(
+        default=None, description="该段起始采样点号（0-based，左闭右开的左端点）"
+    )
     cycle_point_num: float | None = Field(default=None, description="该段周期采样点数")
     count: int | None = Field(default=None, description="该段采样点数")
 
