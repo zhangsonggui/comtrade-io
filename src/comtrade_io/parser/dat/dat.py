@@ -19,10 +19,20 @@ CYCLE_TIME_MS = 20.0
 @dataclass
 class DatFile:
     config: Configure
+    analog_precision: int = 3
+
+    def __post_init__(self) -> None:
+        try:
+            self.analog_precision = int(self.analog_precision)
+        except (TypeError, ValueError):
+            self.analog_precision = 3
 
     @classmethod
     def from_file(
-        cls, config: Configure, file_name: str | Path
+        cls,
+        config: Configure,
+        file_name: str | Path,
+        analog_precision: int = 3,
     ) -> Optional[pd.DataFrame]:
         path = Path(file_name)
         if not path.exists():
@@ -41,13 +51,18 @@ class DatFile:
                     continue
             else:
                 text = raw_bytes.decode("utf-8", errors="replace")
-            return cls.from_str(config, text)
+            return cls.from_str(config, text, analog_precision=analog_precision)
         else:
-            return cls.from_bytes(config, raw_bytes)
+            return cls.from_bytes(config, raw_bytes, analog_precision=analog_precision)
 
     @classmethod
-    def from_str(cls, config: Configure, text: str) -> Optional[pd.DataFrame]:
-        dat = cls(config=config)
+    def from_str(
+        cls,
+        config: Configure,
+        text: str,
+        analog_precision: int = 3,
+    ) -> Optional[pd.DataFrame]:
+        dat = cls(config=config, analog_precision=analog_precision)
         logger.info("开始解析ASCII内存数据")
         df = dat._parse_ascii(text)
         if df is None:
@@ -58,8 +73,13 @@ class DatFile:
         return df
 
     @classmethod
-    def from_bytes(cls, config: Configure, data: bytes) -> Optional[pd.DataFrame]:
-        dat = cls(config=config)
+    def from_bytes(
+        cls,
+        config: Configure,
+        data: bytes,
+        analog_precision: int = 3,
+    ) -> Optional[pd.DataFrame]:
+        dat = cls(config=config, analog_precision=analog_precision)
         logger.info("开始解析二进制内存数据")
         df = dat._parse_binary(data)
         if df is None:
@@ -201,8 +221,27 @@ class DatFile:
             offsets = np.array([a.offset for a in analog_list])
             cols = list(range(2, 2 + analog_count))
             content.iloc[:, cols] = content.iloc[:, cols] * multipliers + offsets
+            self._apply_analog_precision(content, cols)
             logger.debug(f"模拟量转换完成: {analog_count}个通道")
         return content
+
+    def _apply_analog_precision(
+        self, content: pd.DataFrame, analog_cols: list[int]
+    ) -> None:
+        """按 analog_precision 对模拟量列四舍五入保留小数位。
+
+        当 precision 不在 [1, 6] 范围内时，不调整数值精度。
+        """
+        precision = int(self.analog_precision)
+        if precision < 1 or precision > 6:
+            logger.debug(f"analog_precision={precision} 超出 [1, 6] 范围，跳过精度调整")
+            return
+        if not analog_cols:
+            return
+        sub = content.iloc[:, analog_cols]
+        rounded = np.round(sub.to_numpy(dtype=np.float64), decimals=precision)
+        content.iloc[:, analog_cols] = rounded
+        logger.debug(f"模拟量小数精度已应用: 保留{precision}位小数")
 
     def _validate_shape(self, df: pd.DataFrame) -> Optional[pd.DataFrame]:
         config = self.config
