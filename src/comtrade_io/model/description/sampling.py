@@ -21,6 +21,9 @@ class Sampling(BaseModel):
           - 将原始值存入 Segment.count
           - 计算累计 end_point
           - 计算 start_point
+
+        索引约定：``start_point`` / ``end_point`` 均为 0-based，遵循左闭右开
+        ``[start, end)``，可直接用于序列切片。
         """
         segments = self.segments
         if len(segments) < 2:
@@ -38,7 +41,7 @@ class Sampling(BaseModel):
         for seg in segments:
             count_val = seg.end_point
             object.__setattr__(seg, "count", count_val)
-            object.__setattr__(seg, "start_point", cumulative + 1)
+            object.__setattr__(seg, "start_point", cumulative)
             cumulative += count_val
             object.__setattr__(seg, "end_point", cumulative)
         return self

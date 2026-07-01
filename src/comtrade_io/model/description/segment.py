@@ -9,13 +9,19 @@ class Segment(BaseModel):
 
     字符串表示形如: "1920,1000"
 
+    索引约定：``start_point`` / ``end_point`` 均为 0-based，遵循左闭右开
+    ``[start, end)``，可直接用于序列切片。
+
     属性:
-        samp: 采样点数，每个采样段的采样点数量，必须大于0
-        end_point: 结束采样点数，该采样段结束时的累计采样点数，必须大于0
+        samp: 采样率（Hz），每段采样频率，必须大于0
+        end_point: 该段结束采样点号（0-based，左闭右开的右端点，累计值）
+        start_point: 该段起始采样点号（0-based，左闭右开的左端点）
+        cycle_point_num: 该段每周波采样点数
+        count: 该段采样点数
     """
     samp: int = Field(..., description="采样率，单位（Hz）", gt=0)
-    end_point: int = Field(..., description="该段结束采样点号", gt=0)
-    start_point: int | None = Field(default=None, description="该段起始采样点号")
+    end_point: int = Field(..., description="该段结束采样点号（0-based，左闭右开的右端点）", gt=0)
+    start_point: int | None = Field(default=None, description="该段起始采样点号（0-based，左闭右开的左端点）")
     cycle_point_num: float | None = Field(default=None, description="该段周期采样点数")
     count: int | None = Field(default=None, description="该段采样点数")
 

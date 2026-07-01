@@ -3,6 +3,7 @@ import pytest
 from comtrade_io.model.description import Sampling, Segment
 from comtrade_io.parser.description import SamplingParser
 
+
 def test_str_full():
     nr1 = Segment(samp=1920, end_point=1000)
     nr2 = Segment(samp=3840, end_point=2000)
@@ -78,16 +79,16 @@ def test_auto_fix_non_cumulative_end_points():
     s4 = Segment(samp=2000, end_point=4000)
     sampling = Sampling(freq=50.0, segments=[s1, s2, s3, s4])
     assert sampling.segments[0].end_point == 7000
-    assert sampling.segments[0].start_point == 1
+    assert sampling.segments[0].start_point == 0
     assert sampling.segments[0].count == 7000
     assert sampling.segments[1].end_point == 7840
-    assert sampling.segments[1].start_point == 7001
+    assert sampling.segments[1].start_point == 7000
     assert sampling.segments[1].count == 840
     assert sampling.segments[2].end_point == 12640
-    assert sampling.segments[2].start_point == 7841
+    assert sampling.segments[2].start_point == 7840
     assert sampling.segments[2].count == 4800
     assert sampling.segments[3].end_point == 16640
-    assert sampling.segments[3].start_point == 12641
+    assert sampling.segments[3].start_point == 12640
     assert sampling.segments[3].count == 4000
 
 
