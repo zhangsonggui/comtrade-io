@@ -63,6 +63,10 @@ class CfgToEquipment:
             transformers=transformers or None,
         )
         eg.validate_and_supplement()
+        if eg.buses is not None and len(eg.buses) == 0:
+            eg.buses = None
+        if eg.transformers is not None and len(eg.transformers) == 0:
+            eg.transformers = None
         return eg
 
     @staticmethod

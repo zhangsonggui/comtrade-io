@@ -134,14 +134,14 @@ class Comtrade(BaseModel):
 
     def get_analog_channel(self, index: int) -> Analog | None:
         analog = self.get_analog_channel_info(index)
-        if analog is None:
+        if analog is None or self.data is None:
             return None
         analog.data = self.data.iloc[:, index + 1].to_numpy()
         return analog
 
     def get_status_channel(self, index: int) -> Status | None:
         digital = self.get_status_channel_info(index)
-        if digital is None:
+        if digital is None or self.data is None:
             return None
         digital.data = self.data.iloc[:, index + self.channel_num.analog + 1].to_numpy()
         return digital

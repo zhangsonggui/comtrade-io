@@ -240,7 +240,7 @@ def find_buses(buses: list[Bus], equip: str, voltage_level: int | None) -> list[
             matched.append(bus)
     if not matched and voltage_level is not None:
         voltage_kv = voltage_level / 1000
-        for bus in buses:
+        for bus in sorted(buses, key=lambda b: b.index):
             if bus.rated_primary_voltage == voltage_kv:
                 matched.append(bus)
                 if len(matched) >= 2:

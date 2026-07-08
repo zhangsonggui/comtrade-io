@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
+from ...utils.timer import timer
+
 if TYPE_CHECKING:
     from ..comtrade_file import ComtradeFile
 
@@ -147,6 +149,7 @@ class CfgFile:
         return configure
 
     @classmethod
+    @timer(name="CfgFile.from_file")
     def from_file(cls, file_name: str | Path | ComtradeFile) -> Configure | None:
         """从文件名中解析配置文件
 
@@ -166,13 +169,12 @@ class CfgFile:
             return None
         cfg_path = fp.path
         logger.debug(f"正在读取配置文件: {cfg_path}")
-        try:
-            cfg_content = cfg_path.read_text(encoding="GBK", errors="replace")
-        except UnicodeDecodeError:
-            logger.warning(f"配置文件{cfg_path}编码不是GBK编码，尝试使用UTF8解析")
+        cfg_content = cfg_path.read_text(encoding="GBK", errors="replace")
+        if "\ufffd" in cfg_content:
+            logger.warning(f"配置文件{cfg_path}包含非GBK字符，尝试使用UTF8解析")
             try:
-                cfg_content = cfg_path.read_text(encoding="utf-8", errors="replace")
-            except UnicodeDecodeError:
+                cfg_content = cfg_path.read_text(encoding="utf-8")
+            except (UnicodeDecodeError, ValueError):
                 logger.error(f"配置文件{cfg_path}编码不是UTF8编码，请检查文件编码")
                 raise
         try:

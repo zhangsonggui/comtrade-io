@@ -184,9 +184,9 @@ class TestCfgToEquipment:
     def test_transformer_with_voltage_channels(self):
         cfg = _cfg(
             analogs=[
-                _analog(1, "220kV1号主变高压侧电压Ua", Phase.PHASE_A, Unit.V),
-                _analog(2, "220kV1号主变高压侧电压Ub", Phase.PHASE_B, Unit.V),
-                _analog(3, "220kV1号主变高压侧电压Uc", Phase.PHASE_C, Unit.V),
+                _analog(1, "220kV1号主变高压侧电压Ua", Phase.PHASE_A, Unit.V, primary=220000, secondary=100),
+                _analog(2, "220kV1号主变高压侧电压Ub", Phase.PHASE_B, Unit.V, primary=220000, secondary=100),
+                _analog(3, "220kV1号主变高压侧电压Uc", Phase.PHASE_C, Unit.V, primary=220000, secondary=100),
                 _analog(21, "1号主变高压侧电流Ia", Phase.PHASE_A, Unit.A),
                 _analog(22, "1号主变高压侧电流Ib", Phase.PHASE_B, Unit.A),
                 _analog(23, "1号主变高压侧电流Ic", Phase.PHASE_C, Unit.A),

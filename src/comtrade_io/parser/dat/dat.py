@@ -10,6 +10,7 @@ from ...model.configure import Configure
 from ...model.description.sampling import Sampling, Segment
 from ...model.type import DataType
 from ...utils import get_logger
+from ...utils.timer import timer
 
 logger = get_logger()
 
@@ -28,6 +29,7 @@ class DatFile:
             self.analog_precision = 3
 
     @classmethod
+    @timer(name="DatFile.from_file")
     def from_file(
         cls,
         config: Configure,

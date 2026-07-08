@@ -10,6 +10,7 @@ from . import CfgFile
 from ..model.configure import Configure
 from ..model.equipment import EquipmentGroup
 from ..utils import FilePath, get_logger
+from ..utils.timer import timer
 
 if TYPE_CHECKING:
     from ..model.comtrade import Comtrade
@@ -86,6 +87,7 @@ class ComtradeFile(BaseModel):
         return result
 
     @classmethod
+    @timer(name="ComtradeFile.from_file")
     def from_file(cls, file_name: str | Path) -> Comtrade | None:
         """从传统 COMTRADE 多文件解析为 Comtrade 对象
 
