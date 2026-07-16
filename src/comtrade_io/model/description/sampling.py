@@ -1,6 +1,7 @@
 """采样信息模型
 描述：用于描述波形的采样信息，包含频率和采样段列表。
 """
+
 from typing import List
 
 from pydantic import BaseModel, Field, model_validator
@@ -61,7 +62,7 @@ class Sampling(BaseModel):
         """
         freq_str = f"{self.freq}"
         segments_len = len(self.segments)
-        segment_str = '\n'.join([str(segment) for segment in self.segments])
+        segment_str = "\n".join([str(segment) for segment in self.segments])
         if segment_str:
             return f"{freq_str}\n{segments_len}\n{segment_str}"
         return freq_str

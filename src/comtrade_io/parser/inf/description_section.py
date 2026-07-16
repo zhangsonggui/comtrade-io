@@ -37,7 +37,7 @@ class DescriptionSection:
         """
         station_name = data.get("Station_Name", "")
         rec_dev_name = data.get("Recording_Device_ID", "")
-        version_str = data.get('Revision_Year', '1991')
+        version_str = data.get("Revision_Year", "1991")
         version = Version.from_value(version_str)
 
         description = Description(

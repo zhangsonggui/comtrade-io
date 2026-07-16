@@ -23,11 +23,11 @@ def _to_json(data: dict, indent: int | None = None) -> str:
     """
 
     def convert(obj):
-        if hasattr(obj, 'value'):
+        if hasattr(obj, "value"):
             return obj.value
         if isinstance(obj, UUID):
             return str(obj)
-        if hasattr(obj, '__dict__'):
+        if hasattr(obj, "__dict__"):
             return str(obj)
         return obj
 
@@ -43,8 +43,9 @@ def _to_json(data: dict, indent: int | None = None) -> str:
     return json.dumps(data, ensure_ascii=False, default=str, indent=indent)
 
 
-def save_json(comtrade: "Comtrade", output_file_path: "Path | str",
-              indent: int | None = None) -> bool:
+def save_json(
+    comtrade: "Comtrade", output_file_path: "Path | str", indent: int | None = None
+) -> bool:
     """将Comtrade对象保存为JSON文件（包含dat数据）
 
     参数:
@@ -55,7 +56,7 @@ def save_json(comtrade: "Comtrade", output_file_path: "Path | str",
     返回:
         成功与否
     """
-    data = comtrade.model_dump(mode='python')
+    data = comtrade.model_dump(mode="python")
     data.pop("cfg", None)
     data.pop("file", None)
 
@@ -97,4 +98,4 @@ def export_json(
     from . import _resolve_export_path
 
     path = _resolve_export_path(output_path, ".json")
-    return save_json(comtrade, path, indent=kwargs.get('indent'))
+    return save_json(comtrade, path, indent=kwargs.get("indent"))

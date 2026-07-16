@@ -2,13 +2,16 @@
 数据解析工具函数模块
 包含通用的数据类型转换和解析功能
 """
+
 import re
 from typing import Any
 
-_NUMERIC_PATTERN = re.compile(r'[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?')
+_NUMERIC_PATTERN = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
 
 
-def _convert_to_float(value: Any, default: float = 0.0, key: str | None = None, strip_chars: str = ",") -> float:
+def _convert_to_float(
+    value: Any, default: float = 0.0, key: str | None = None, strip_chars: str = ","
+) -> float:
     """
     内部通用浮点数转换函数
 

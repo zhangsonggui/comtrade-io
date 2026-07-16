@@ -1,5 +1,6 @@
 """DFR 文件编排器（主入口）。"""
 
+import struct
 from datetime import datetime
 from pathlib import Path
 from typing import Union
@@ -48,7 +49,7 @@ def extract_sections(dfr_path: Union[str, Path]) -> DfrSection:
         bs = BinarySection.from_raw(raw)
         bin_header = bs.bin_header
         frame_data = bs.frame_data
-    except Exception as e:
+    except (ValueError, OSError, struct.error) as e:
         logger.warning(f"解析二进制头失败: {e}")
         bin_header = b""
 
@@ -75,7 +76,7 @@ class DfrFile:
             wndr = WndrSection.from_text(self.sections.cfg_text)
             file_mtime = datetime.fromtimestamp(self.file_path.stat().st_mtime)
             return wndr_to_configure(wndr, file_mtime)
-        except Exception as e:
+        except (ValueError, IndexError, TypeError) as e:
             logger.error(f"解析 DFR 配置失败: {e}")
             return None
 
@@ -87,7 +88,7 @@ class DfrFile:
             raw = self.file_path.read_bytes()
             bs = BinarySection.from_raw(raw)
             return bs.to_dataframe(cfg)
-        except Exception as e:
+        except (ValueError, OSError, TypeError) as e:
             logger.error(f"解析 DFR 数据失败: {e}")
             return None
 

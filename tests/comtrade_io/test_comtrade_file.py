@@ -28,9 +28,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.cfg"
             cfg_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(cfg_path)
-            
+
             assert result.cfg_path.path == cfg_path
             assert result.cfg_path.is_exists is True
             assert result.cfg_path.is_empty is False
@@ -40,9 +40,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             dat_path = Path(tmp) / "test.DAT"
             dat_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(dat_path)
-            
+
             assert result.dat_path.path == dat_path
             assert result.dat_path.is_exists is True
 
@@ -51,9 +51,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             dmf_path = Path(tmp) / "test.dmf"
             dmf_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(dmf_path)
-            
+
             assert result.dmf_path.path == dmf_path
             assert result.dmf_path.is_exists is True
 
@@ -62,9 +62,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             hdr_path = Path(tmp) / "test.HDR"
             hdr_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(hdr_path)
-            
+
             assert result.hdr_path.path == hdr_path
             assert result.hdr_path.is_exists is True
 
@@ -73,9 +73,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             inf_path = Path(tmp) / "test.INF"
             inf_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(inf_path)
-            
+
             assert result.inf_path.path == inf_path
             assert result.inf_path.is_exists is True
 
@@ -84,9 +84,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.CFG"
             cfg_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(cfg_path)
-            
+
             assert result.cfg_path.path == cfg_path
             assert result.dat_path.path.name.endswith(".DAT")
             assert result.hdr_path.path.name.endswith(".HDR")
@@ -97,9 +97,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.cfg"
             cfg_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(cfg_path)
-            
+
             assert result.cfg_path.path == cfg_path
             assert ".dat" in str(result.dat_path.path)
             assert result.dat_path.path.name.endswith(".dat")
@@ -113,9 +113,9 @@ class TestComtradeFileFromPath:
             base.with_suffix(".dmf").write_text("dmf")
             base.with_suffix(".hdr").write_text("hdr")
             base.with_suffix(".inf").write_text("inf")
-            
+
             result = ComtradeFile.from_path(base.with_suffix(".cfg"))
-            
+
             assert result.cfg_path.is_exists is True
             assert result.dat_path.is_exists is True
             assert result.dmf_path.is_exists is True
@@ -127,9 +127,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.cfg"
             cfg_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(cfg_path)
-            
+
             assert result.cfg_path.is_exists is True
             assert result.dat_path.is_exists is False
             assert result.dmf_path.is_exists is False
@@ -141,9 +141,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.cfg"
             cfg_path.write_text("")
-            
+
             result = ComtradeFile.from_path(cfg_path)
-            
+
             assert result.cfg_path.is_exists is True
             assert result.cfg_path.is_empty is True
 
@@ -152,9 +152,9 @@ class TestComtradeFileFromPath:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.cfg"
             cfg_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(str(cfg_path))
-            
+
             assert result.cfg_path.path == cfg_path
 
 
@@ -166,10 +166,10 @@ class TestComtradeFileRepr:
         with tempfile.TemporaryDirectory() as tmp:
             cfg_path = Path(tmp) / "test.cfg"
             cfg_path.write_text("content")
-            
+
             result = ComtradeFile.from_path(cfg_path)
             repr_str = repr(result)
-            
+
             assert "ComtradeFile" in repr_str
             assert "cfg_path" in repr_str
 
@@ -177,5 +177,5 @@ class TestComtradeFileRepr:
         """测试空时的 repr"""
         result = ComtradeFile()
         repr_str = repr(result)
-        
+
         assert "ComtradeFile" in repr_str

@@ -86,7 +86,11 @@ class CfgToEquipment:
             bus = Bus(
                 index=len(buses) + 1,
                 name=equip,
-                rated_primary_voltage=a_phase.primary / a_phase.secondary / 10 if a_phase.secondary else 0.0,
+                rated_primary_voltage=(
+                    a_phase.primary / a_phase.secondary / 10
+                    if a_phase.secondary
+                    else 0.0
+                ),
                 rated_secondary_voltage=a_phase.secondary,
                 voltage=ACVBranch.from_analog_channels(analogs),
                 acvs=analogs,
@@ -154,9 +158,7 @@ class CfgToEquipment:
                 ).append(item)
 
         transformers: list[Transformer] = []
-        supplement_buses: dict[
-            tuple[str, TransWindLocation, int | None], Bus
-        ] = {}
+        supplement_buses: dict[tuple[str, TransWindLocation, int | None], Bus] = {}
         for equip, winding_groups in sorted(
             transformer_groups.items(),
             key=lambda item: min(
@@ -210,7 +212,11 @@ class CfgToEquipment:
                         vol_items,
                         statuses,
                     )
-                rated_voltage = bus.rated_primary_voltage if bus else ((voltage_level / 1000) if voltage_level else 0.0)
+                rated_voltage = (
+                    bus.rated_primary_voltage
+                    if bus
+                    else ((voltage_level / 1000) if voltage_level else 0.0)
+                )
                 zgap_ch, zsgap_ch = find_grounding_channels(all_analogs, equip)
                 winding_model = TransformerWinding(
                     bus_id=bus.index if bus else 0,

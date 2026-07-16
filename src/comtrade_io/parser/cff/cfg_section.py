@@ -10,6 +10,6 @@ class CfgSection:
     def from_str(cls, text: str) -> Configure | None:
         try:
             return CfgFile.from_str(text)
-        except Exception as e:
+        except (ValueError, IndexError, TypeError) as e:
             logger.error(f"解析 CFF 中的 CFG 配置失败: {e}")
             return None

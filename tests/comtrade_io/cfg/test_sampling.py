@@ -38,8 +38,8 @@ def test_from_dict_case():
         "freq": 60.0,
         "segments": [
             {"samp": 1920, "end_point": 1000},
-            {"samp": 3840, "end_point": 2000}
-        ]
+            {"samp": 3840, "end_point": 2000},
+        ],
     }
     sampling = SamplingParser.from_dict(data)
     assert len(sampling.segments) == 2
@@ -48,10 +48,7 @@ def test_from_dict_case():
 
 
 def test_from_dict_with_str_segments():
-    data = {
-        "freq": 60.0,
-        "segments": ["1920,1000", "3840,2000"]
-    }
+    data = {"freq": 60.0, "segments": ["1920,1000", "3840,2000"]}
     sampling = SamplingParser.from_dict(data)
     assert len(sampling.segments) == 2
     assert sampling.segments[0].samp == 1920

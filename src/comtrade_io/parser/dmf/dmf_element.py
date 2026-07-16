@@ -5,6 +5,7 @@ DMF元素模块
 该模型包含母线、线路、变压器等设备，以及模拟量和开关量通道。
 支持从XML文件读取、解析和写入数据模型。
 """
+
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.etree.ElementTree import Element
@@ -34,11 +35,15 @@ class DmfFile(EquipmentGroup):
         返回:
             DMFElement: 数据模型实例
         """
-        if not ns or 'scl' not in ns or not isinstance(ns, dict):
+        if not ns or "scl" not in ns or not isinstance(ns, dict):
             uri = None
-            if isinstance(element.tag, str) and element.tag.startswith('{') and '}' in element.tag:
-                uri = element.tag[1:element.tag.index('}')]
-            ns = {'scl': uri} if uri else {'scl': 'http://www.iec.ch/61850/2003/SCL'}
+            if (
+                isinstance(element.tag, str)
+                and element.tag.startswith("{")
+                and "}" in element.tag
+            ):
+                uri = element.tag[1 : element.tag.index("}")]
+            ns = {"scl": uri} if uri else {"scl": "http://www.iec.ch/61850/2003/SCL"}
 
         # 先解析模拟通道和开关量通道，以便后续解析时可以传入
         analog_channels = cls._find_channels(element, ns, "AnalogChannel")
@@ -47,18 +52,21 @@ class DmfFile(EquipmentGroup):
         def find_elements(tag_name: str, element_class) -> list:
             """查找并解析指定类型的元素"""
             elements = cls._find_all_elements(element, ns, tag_name)
-            if not hasattr(element_class, 'from_xml'):
+            if not hasattr(element_class, "from_xml"):
                 return []
             # 使用element类解析XML元素
-            return [element_class.from_xml(el, ns, analog_channels, status_channels) for el in elements]
+            return [
+                element_class.from_xml(el, ns, analog_channels, status_channels)
+                for el in elements
+            ]
 
         dmf_element = cls(
-                description=DescriptionElement.from_xml(element, ns),
-                buses=find_elements('Bus', BusElement),
-                lines=find_elements('Line', LineElement),
-                transformers=find_elements('Transformer', TransformerElement),
-                analogs=analog_channels,
-                statuses=status_channels
+            description=DescriptionElement.from_xml(element, ns),
+            buses=find_elements("Bus", BusElement),
+            lines=find_elements("Line", LineElement),
+            transformers=find_elements("Transformer", TransformerElement),
+            analogs=analog_channels,
+            statuses=status_channels,
         )
 
         # 关联线路和母线
@@ -80,24 +88,26 @@ class DmfFile(EquipmentGroup):
         """
         elements = []
         # 尝试多种方式查找元素
-        if 'scl' in ns:
-            elements = parent.findall(f'scl:{tag_name}', ns)
-        if not elements and 'ns' in ns:
-            elements = parent.findall(f'ns:{tag_name}', ns)
+        if "scl" in ns:
+            elements = parent.findall(f"scl:{tag_name}", ns)
+        if not elements and "ns" in ns:
+            elements = parent.findall(f"ns:{tag_name}", ns)
         if not elements:
             # 尝试使用命名空间URI直接查找
             for prefix, uri in ns.items():
                 if uri:
-                    elements = parent.findall(f'.//{{{uri}}}{tag_name}')
+                    elements = parent.findall(f".//{{{uri}}}{tag_name}")
                     if elements:
                         break
         if not elements:
             # 尝试不带前缀
-            elements = parent.findall(f'.//{tag_name}')
+            elements = parent.findall(f".//{tag_name}")
         return elements
 
     @classmethod
-    def _find_channels(cls, element: Element, ns: dict, channel_type: str = "AnalogChannel") -> dict:
+    def _find_channels(
+        cls, element: Element, ns: dict, channel_type: str = "AnalogChannel"
+    ) -> dict:
         """查找并解析通道为字典"""
         elements = cls._find_all_elements(element, ns, channel_type)
         result = {}
@@ -122,7 +132,10 @@ class DmfFile(EquipmentGroup):
             if line.bus_index == 0:
                 # bus_index 为 0，查找 v_rtg 相同的 Bus
                 for bus in self.buses:
-                    if abs(bus.rated_primary_voltage - line.rated_primary_voltage) < 0.001:
+                    if (
+                        abs(bus.rated_primary_voltage - line.rated_primary_voltage)
+                        < 0.001
+                    ):
                         line.buses.append(bus)
             else:
                 # bus_index 不为 0，查找 index 相同的 Bus
@@ -148,21 +161,19 @@ class DmfFile(EquipmentGroup):
             return None
         dmf_path = fp.path
 
-        ns = {
-            "scl": "http://www.iec.ch/61850/2003/SCL"
-        }
+        ns = {"scl": "http://www.iec.ch/61850/2003/SCL"}
         logger.debug(f"正在解析{dmf_path}")
         try:
             tree = ET.parse(dmf_path)
             root = tree.getroot()
             _dmf = cls.from_xml(root, ns)
             return EquipmentGroup(
-                    description=_dmf.description,
-                    buses=_dmf.buses,
-                    lines=_dmf.lines,
-                    transformers=_dmf.transformers,
-                    analogs=_dmf.analogs,
-                    statuses=_dmf.statuses
+                description=_dmf.description,
+                buses=_dmf.buses,
+                lines=_dmf.lines,
+                transformers=_dmf.transformers,
+                analogs=_dmf.analogs,
+                statuses=_dmf.statuses,
             )
         except ET.ParseError as e:
             error_str = f"文件{dmf_path}解析错误,{str(e)}"
@@ -170,7 +181,7 @@ class DmfFile(EquipmentGroup):
             return None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     file_name = r"/example/dat/GHBZ_220kV线路故障_20230512_194525.dmf"
     dmf = DmfFile.from_file(file_name)
     print(dmf)

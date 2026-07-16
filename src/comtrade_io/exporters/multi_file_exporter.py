@@ -26,12 +26,12 @@ def export_multi_file(
     if cf.inf_path.path:
         try:
             comtrade.write_inf(str(cf.inf_path.path))
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             logger.warning(f"INF 文件导出失败（不影响整体导出）: {e}")
     if cf.dmf_path.path:
         try:
             comtrade.write_dmf(str(cf.dmf_path.path))
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             logger.warning(f"DMF 文件导出失败（不影响整体导出）: {e}")
     logger.info(f"多文件导出成功: {cf.cfg_path.path}")
     return True

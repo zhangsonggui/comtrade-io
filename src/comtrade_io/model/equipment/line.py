@@ -10,17 +10,25 @@ from .line_param import (
 )
 from ..type import CurrentBranchNum
 
+
 class Line(Equipment):
     """线路部件模型"""
+
     bus_index: int = Field(default=0, description="母线索引号")
     rated_primary_voltage: float = Field(default=220.0, description="一次额定电压")
     rated_primary_current: float = Field(default=1.0, description="一次额定电流")
     rated_secondary_current: float = Field(default=1.0, description="二次额定电流")
     line_length: float = Field(default=0.0, description="线路长度")
-    current_bran_num: CurrentBranchNum = Field(default=CurrentBranchNum.B1, description="电流分段数")
+    current_bran_num: CurrentBranchNum = Field(
+        default=CurrentBranchNum.B1, description="电流分段数"
+    )
     impedance: Impedance = Field(default_factory=Impedance, description="线路阻抗")
-    capacitance: Capacitance = Field(default_factory=Capacitance, description="线路电容")
-    mutual_inductance: MutualInductance = Field(default_factory=MutualInductance, description="线路互感")
+    capacitance: Capacitance = Field(
+        default_factory=Capacitance, description="线路电容"
+    )
+    mutual_inductance: MutualInductance = Field(
+        default_factory=MutualInductance, description="线路互感"
+    )
     currents: list[ACCBranch] = Field(default_factory=list, description="交流电流通道")
     buses: list[Bus] = Field(default_factory=list, description="关联的母线列表")
 
@@ -36,7 +44,7 @@ class Line(Equipment):
             f'ARtgSnd="{self.rated_secondary_current}"',
             f'LinLen="{self.line_length}"',
             f'bran_num="{self.current_bran_num.value}"',
-            f'line_uuid="{self.uuid}"'
+            f'line_uuid="{self.uuid}"',
         ]
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"\t<scl:Line {' '.join(attrs)} />"
@@ -61,7 +69,13 @@ class Line(Equipment):
 
         tv_chn_parts = []
         for bus in self.buses:
-            channels = [bus.voltage.ua, bus.voltage.ub, bus.voltage.uc, bus.voltage.un, bus.voltage.ul]
+            channels = [
+                bus.voltage.ua,
+                bus.voltage.ub,
+                bus.voltage.uc,
+                bus.voltage.un,
+                bus.voltage.ul,
+            ]
             tv_chn_parts.extend(str(chn.index) for chn in channels if chn is not None)
         tv_chn_str = ",".join(tv_chn_parts)
         attrs = [
@@ -76,6 +90,6 @@ class Line(Equipment):
             f"REACTOR=-1(Ω)",
             f"TA_CHNS={ta_chn_str}",
             f"TV_CHNS={tv_chn_str}",
-            f"STATUS_CHNS={sta_chn_str}"
+            f"STATUS_CHNS={sta_chn_str}",
         ]
         return "\n".join(attrs)

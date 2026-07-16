@@ -3,6 +3,7 @@ DMF设备部件基类模块
 
 定义DMF设备部件的基类，提供从XML元素解析设备通用属性的功能。
 """
+
 from typing import List, Set
 from xml.etree.ElementTree import Element
 
@@ -14,16 +15,16 @@ from ...utils import parse_int
 
 def _find_all_elements(element: Element, ns: dict, tag_name: str) -> List[Element]:
     elems = []
-    if 'scl' in ns:
-        elems = element.findall(f'scl:{tag_name}', ns)
-    if not elems and 'ns' in ns:
-        elems = element.findall(f'ns:{tag_name}', ns)
+    if "scl" in ns:
+        elems = element.findall(f"scl:{tag_name}", ns)
+    if not elems and "ns" in ns:
+        elems = element.findall(f"ns:{tag_name}", ns)
     if not elems:
         elems = element.findall(tag_name)
     if not elems:
         for prefix, uri in ns.items():
             if uri:
-                elems = element.findall(f'{{{uri}}}{tag_name}')
+                elems = element.findall(f"{{{uri}}}{tag_name}")
                 if elems:
                     break
     return elems
@@ -93,10 +94,10 @@ def _extract_analog_indices(element: Element, ns: dict) -> Set[int]:
 def _extract_status_indices(element: Element, ns: dict) -> Set[int]:
     indices = _extract_indices(element, ns, STATUS_TAG_ATTRS)
 
-    protect_elems = _find_all_elements(element, ns, 'SDL_Protect')
+    protect_elems = _find_all_elements(element, ns, "SDL_Protect")
     for chn in protect_elems:
         for attr in chn.keys():
-            if attr.startswith(('a_trip', 'b_trip', 'c_trip', 'reclose')):
+            if attr.startswith(("a_trip", "b_trip", "c_trip", "reclose")):
                 val = chn.get(attr)
                 if val:
                     idx = parse_int(val)
@@ -134,8 +135,12 @@ def parse_ans_from_xml(
     )
 
 
-def parse_sts_from_xml(element: Element, ns: dict, status_channels: dict = None,
-                       use_scl_prefix: bool = True) -> List[Status]:
+def parse_sts_from_xml(
+    element: Element,
+    ns: dict,
+    status_channels: dict = None,
+    use_scl_prefix: bool = True,
+) -> List[Status]:
     return _parse_channels_from_xml(
         element, ns, status_channels, _extract_status_indices
     )
@@ -145,24 +150,25 @@ class EquipmentElement:
     """DMF设备部件基类"""
 
     @classmethod
-    def from_xml(cls,
-                 element: Element,
-                 ns: dict,
-                 analog_channels: dict = None,
-                 status_channels: dict = None) -> Equipment:
-        index = parse_int(element.get('idx', 1))
-        name = element.get('bus_name', element.get('line_name', element.get('trm_name', '')))
-        reference = element.get('srcRef', '')
-        uuid = element.get('bus_uuid', element.get('line_uuid', element.get('transformer_uuid', '')))
+    def from_xml(
+        cls,
+        element: Element,
+        ns: dict,
+        analog_channels: dict = None,
+        status_channels: dict = None,
+    ) -> Equipment:
+        index = parse_int(element.get("idx", 1))
+        name = element.get(
+            "bus_name", element.get("line_name", element.get("trm_name", ""))
+        )
+        reference = element.get("srcRef", "")
+        uuid = element.get(
+            "bus_uuid", element.get("line_uuid", element.get("transformer_uuid", ""))
+        )
 
         anas = parse_ans_from_xml(element, ns, analog_channels)
         stas = parse_sts_from_xml(element, ns, status_channels)
 
         return Equipment(
-                index=index,
-                name=name,
-                reference=reference,
-                uuid=uuid,
-                anas=anas,
-                stas=stas
+            index=index, name=name, reference=reference, uuid=uuid, anas=anas, stas=stas
         )

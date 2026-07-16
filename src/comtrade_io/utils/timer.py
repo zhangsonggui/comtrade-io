@@ -13,7 +13,8 @@ _logger = get_logger(__name__)
 def timer(func: Optional[Callable[..., Any]] = None, *, name: str = "Function") -> Any:
     """
     装饰器：显示函数运行耗时
-    也可以作为上下文管理器使用
+
+    支持同步函数与异步函数，会自动识别协程函数并返回异步包装器。
 
     用法:
         @timer
@@ -24,8 +25,11 @@ def timer(func: Optional[Callable[..., Any]] = None, *, name: str = "Function") 
         def my_func():
             ...
 
-        with timer("code_block"):
-            # code block
+    提示:
+        若需对代码块计时，请使用 :class:`Timer` 上下文管理器::
+
+            with Timer("code_block"):
+                # code block
     """
     if func is None:
         return lambda f: _wrap_timer(f, name)

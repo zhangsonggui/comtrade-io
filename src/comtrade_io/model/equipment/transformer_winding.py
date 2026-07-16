@@ -4,6 +4,7 @@ from ..channel.analog import Analog
 from .branch import ACCBranch, ACVBranch
 from ..type import CurrentBranchNum, TransWindLocation, WindFlag
 
+
 class WindGroup(BaseModel):
     """
     绕组标识类
@@ -14,6 +15,7 @@ class WindGroup(BaseModel):
         wind_flag: 绕组标识符，如Y（星形）、D（三角形）等
         angle: 绕组角度，表示星形连接绕组的相角偏移
     """
+
     wind_flag: WindFlag = Field(default=WindFlag.Y, description="绕组接线方式")
     angle: int = Field(default=0, description="绕组角度")
 
@@ -51,6 +53,7 @@ class Igap(BaseModel):
         zgap: 中性点直接接地电流的通道
         zsgap: 中性点经间隙接地电流的通道
     """
+
     zgap: Analog | None = Field(default=None, description="中性点直接接地电流的通道")
     zsgap: Analog | None = Field(default=None, description="中性点经间隙接地电流的通道")
 
@@ -86,12 +89,17 @@ class TransformerWinding(BaseModel):
         currents: 交流电流通道列表，包含该绕组的电流分支信息
         igap: 中性点电流信息，包含接地电流的通道号
     """
+
     bus_id: int = Field(default=0, description="母线索引号")
-    trans_wind_location: TransWindLocation = Field(default=TransWindLocation.HIGH, description="绕组位置")
+    trans_wind_location: TransWindLocation = Field(
+        default=TransWindLocation.HIGH, description="绕组位置"
+    )
     reference: str | None = Field(default="", description="IEC61850参引")
     rated_voltage: float = Field(default=0.0, description="额定电压")
     rated_current: float = Field(default=0.0, description="一次额定电流")
-    bran_num: CurrentBranchNum = Field(default=CurrentBranchNum.B1, description="分路数")
+    bran_num: CurrentBranchNum = Field(
+        default=CurrentBranchNum.B1, description="分路数"
+    )
     wind_group: WindGroup = Field(default_factory=WindGroup, description="绕组标识符")
     voltage: ACVBranch = Field(default_factory=ACVBranch, description="交流电压通道")
     currents: list[ACCBranch] = Field(default_factory=list, description="交流电流通道")
@@ -110,7 +118,7 @@ class TransformerWinding(BaseModel):
             f'ARtg="{self.rated_current}"',
             f'bran_num="{self.bran_num.value}"',
             f'bus_ID="{self.bus_id}"',
-            f'wG="{str(self.wind_group)}"'
+            f'wG="{str(self.wind_group)}"',
         ]
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"<scl:TransformerWinding {' '.join(attrs)}>"
@@ -140,7 +148,7 @@ class TransformerWinding(BaseModel):
         acv = [ac.index for ac in (self.voltage.ua, self.voltage.ub, self.voltage.uc)]
         attrs = [
             f"{_flag}_PARAM={str(self.wind_group)},{self.rated_voltage}(kV),{self.bran_num.value}",
-            f"TV_CHNS={','.join(str(x) for x in acv)}"
+            f"TV_CHNS={','.join(str(x) for x in acv)}",
         ]
         for idx, acc_bran in enumerate(self.currents):
             acc_ids = [acc.index for acc in (acc_bran.ia, acc_bran.ib, acc_bran.ic)]

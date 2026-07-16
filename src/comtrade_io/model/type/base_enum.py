@@ -2,7 +2,7 @@ import json
 from enum import Enum
 from typing import Any, Dict, TypeVar, cast
 
-T = TypeVar('T', bound='BaseEnum')
+T = TypeVar("T", bound="BaseEnum")
 
 
 class BaseEnum(Enum):
@@ -90,9 +90,7 @@ class BaseEnum(Enum):
             else:
                 available_values.append(m._value_)
 
-        raise ValueError(
-            f"无效的{cls.__name__}值: {value}，可选值: {available_values}"
-        )
+        raise ValueError(f"无效的{cls.__name__}值: {value}，可选值: {available_values}")
 
     @classmethod
     def get_member_by_value(cls, value: Any) -> T | None:
@@ -150,11 +148,7 @@ class BaseEnum(Enum):
         返回:
             Dict[str, Any]: 包含枚举信息的字典
         """
-        return {
-            "name" : self.name,
-            "value": self.value,
-            "desc" : self.description
-        }
+        return {"name": self.name, "value": self.value, "desc": self.description}
 
     def to_json(self, ensure_ascii: bool = False) -> str:
         """直接序列化为JSON字符串

@@ -13,7 +13,7 @@ class AnalogSection(Analog):
     """
 
     @staticmethod
-    def from_dict(data: dict) -> 'Analog':
+    def from_dict(data: dict) -> "Analog":
         """从字典数据创建 Analog 对象
 
         支持两种数据来源:
@@ -30,7 +30,11 @@ class AnalogSection(Analog):
         name = data.get("Channel_ID") or data.get("name")
         phase = Phase.from_value(data.get("Phase_ID", "") or data.get("phase", ""))
         reference = data.get("Monitored_Component") or data.get("reference", "")
-        unit = Unit.from_value(data.get("Unit", "") or data.get("Channel_Units", "") or data.get("unit", ""))
+        unit = Unit.from_value(
+            data.get("Unit", "")
+            or data.get("Channel_Units", "")
+            or data.get("unit", "")
+        )
 
         def to_float(val, default):
             if val is None:
@@ -63,22 +67,22 @@ class AnalogSection(Analog):
             idx_org = int(idx_org) if isinstance(idx_org, str) else idx_org
 
         analog_obj = Analog(
-                index=index,
-                name=name,
-                phase=phase,
-                reference=reference,
-                unit=unit,
-                multiplier=multiplier,
-                offset=offset,
-                delay=delay,
-                min_value=min_value,
-                max_value=max_value,
-                primary=primary,
-                secondary=secondary,
-                tran_side=tran_side,
-                freq=freq,
-                au=analog_au,
-                bu=analog_bu,
+            index=index,
+            name=name,
+            phase=phase,
+            reference=reference,
+            unit=unit,
+            multiplier=multiplier,
+            offset=offset,
+            delay=delay,
+            min_value=min_value,
+            max_value=max_value,
+            primary=primary,
+            secondary=secondary,
+            tran_side=tran_side,
+            freq=freq,
+            au=analog_au,
+            bu=analog_bu,
         )
 
         if idx_org is not None:

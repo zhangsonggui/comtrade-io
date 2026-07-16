@@ -123,14 +123,14 @@ uv sync --no-dev
 uv run python -m comtrade_io.example.main binary_inf
 ```
 
-## Pre-existing Test Failures (not caused by changes)
-
-2 tests fail regardless of changes:
-
-1. `test_comtrade_model_to_inf_with_parameters` — module `comtrade_io.model.comtrade_model` doesn't exist
-2. `test_parse_float_invalid_raises` — `parse_float()` no longer raises `ValueError` (returns default)
+## Pre-existing Test Status
 
 - 1 test skipped on Windows: `test_file_path_is_enabled_with_not_readable` (no permission emulation)
+
+历史上曾存在的两个固定失败项已修复：
+
+1. `test_comtrade_model_to_inf_with_parameters` — 已通过
+2. `test_parse_float_invalid_raises` — 已通过（测试已改为验证返回 default 值的行为）
 
 ## Test Data
 

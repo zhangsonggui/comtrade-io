@@ -18,7 +18,7 @@ class StatusSection(Status):
     """
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Status':
+    def from_dict(cls, data: dict) -> "Status":
         """从字典数据创建 Status 对象
 
         支持两种数据来源:

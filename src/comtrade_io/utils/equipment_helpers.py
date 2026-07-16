@@ -286,7 +286,9 @@ def get_or_create_supplement_bus(
     bus = Bus(
         index=len(buses) + 1,
         name=f"{base_equip}{winding.description}电压",
-        rated_primary_voltage=a_phase.primary / a_phase.secondary / 10 if a_phase.secondary else 0.0,
+        rated_primary_voltage=(
+            a_phase.primary / a_phase.secondary / 10 if a_phase.secondary else 0.0
+        ),
         rated_secondary_voltage=a_phase.secondary,
         voltage=ACVBranch.from_analog_channels(analogs),
         acvs=analogs,
@@ -303,7 +305,11 @@ def acc_branch_channels(branch: ACCBranch) -> list[Analog]:
 
 
 def acv_branch_channels(branch: ACVBranch) -> list[Analog]:
-    return [c for c in (branch.ua, branch.ub, branch.uc, branch.un, branch.ul) if c is not None]
+    return [
+        c
+        for c in (branch.ua, branch.ub, branch.uc, branch.un, branch.ul)
+        if c is not None
+    ]
 
 
 def dedup_channels_by_index(channels: list[Analog]) -> list[Analog]:
@@ -319,11 +325,11 @@ def dedup_channels_by_index(channels: list[Analog]) -> list[Analog]:
 
 def collect_line_channels(line) -> tuple[list[Analog], list[Analog]]:
     accs: list[Analog] = []
-    for branch in (line.currents or []):
+    for branch in line.currents or []:
         accs.extend(acc_branch_channels(branch))
     accs.extend(line.accs or [])
     acvs: list[Analog] = []
-    for bus in (line.buses or []):
+    for bus in line.buses or []:
         if bus.voltage is not None:
             acvs.extend(acv_branch_channels(bus.voltage))
     acvs.extend(line.acvs or [])
@@ -333,12 +339,11 @@ def collect_line_channels(line) -> tuple[list[Analog], list[Analog]]:
 def collect_transformer_channels(transformer) -> tuple[list[Analog], list[Analog]]:
     accs: list[Analog] = []
     acvs: list[Analog] = []
-    for tw in (transformer.trans_winds or []):
-        for branch in (tw.currents or []):
+    for tw in transformer.trans_winds or []:
+        for branch in tw.currents or []:
             accs.extend(acc_branch_channels(branch))
         if tw.voltage is not None:
             acvs.extend(acv_branch_channels(tw.voltage))
     accs.extend(transformer.accs or [])
     acvs.extend(transformer.acvs or [])
     return dedup_channels_by_index(accs), dedup_channels_by_index(acvs)
-

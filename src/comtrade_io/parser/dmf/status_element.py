@@ -4,6 +4,7 @@
 定义开关量通道类，继承自Digital和DmfChannel，用于表示电力系统中的开关量测量通道。
 开关量通道用于采集断路器、隔离开关等设备的分合状态。
 """
+
 from xml.etree.ElementTree import Element
 
 from ...model.channel.status import Status
@@ -33,21 +34,21 @@ class StatusElement:
             element (Element): XML元素
             ns (dict, optional): 命名空间映射
             digital (Digital, optional): 用于对比和更新的Digital实例
-            
+
         返回:
             StatusChannel: StatusChannel实例
         """
-        _contact = element.get('contact', 'NormallyOpen')
-        _type = DigitalChannelType.from_value(element.get('type', ''))
-        _flag = DigitalChannelFlag.from_value(element.get('flag', ''))
+        _contact = element.get("contact", "NormallyOpen")
+        _type = DigitalChannelType.from_value(element.get("type", ""))
+        _flag = DigitalChannelFlag.from_value(element.get("flag", ""))
         if _type != _flag.type:
             _type = _flag.type
 
         return Status(
-                index=parse_int(element.get('idx_cfg', 1)),
-                idx_org=parse_int(element.get('idx_org', 1)),
-                type=_type,
-                flag=_flag,
-                contact=Contact.from_name(_contact),
-                reference=element.get('srcRef', '')
+            index=parse_int(element.get("idx_cfg", 1)),
+            idx_org=parse_int(element.get("idx_org", 1)),
+            type=_type,
+            flag=_flag,
+            contact=Contact.from_name(_contact),
+            reference=element.get("srcRef", ""),
         )

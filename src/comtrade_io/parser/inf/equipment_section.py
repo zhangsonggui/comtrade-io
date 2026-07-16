@@ -6,6 +6,7 @@ from ...utils import get_logger
 
 logger = get_logger()
 
+
 def parse_number_with_unit(s: str) -> float:
     """从带单位的字符串中提取数值
 
@@ -17,7 +18,7 @@ def parse_number_with_unit(s: str) -> float:
     返回:
         float: 提取的数值，未匹配到数字时返回 0.0
     """
-    match = re.search(r'\d+\.?\d*', s)
+    match = re.search(r"\d+\.?\d*", s)
     return float(match.group()) if match else 0.0
 
 
@@ -32,7 +33,7 @@ def parse_four_values(s: str) -> list[float]:
     返回:
         list[float]: 最多四个浮点数值
     """
-    parts = s.split(',')
+    parts = s.split(",")
     return [parse_number_with_unit(p) for p in parts[:4]]
 
 
@@ -47,7 +48,7 @@ def parse_two_values(s: str) -> list[float]:
     返回:
         list[float]: 最多两个浮点数值
     """
-    parts = s.split(',')
+    parts = s.split(",")
     return [parse_number_with_unit(p) for p in parts[:2]]
 
 
@@ -109,10 +110,12 @@ class EquipmentSection:
     """
 
     @classmethod
-    def from_dict(cls,
-                  data: dict,
-                  analog_channels: dict[int, Analog],
-                  status_channels: dict[int, Status]) -> Equipment:
+    def from_dict(
+        cls,
+        data: dict,
+        analog_channels: dict[int, Analog],
+        status_channels: dict[int, Status],
+    ) -> Equipment:
         """从字典数据创建 Equipment 基类对象
 
         参数:
@@ -125,9 +128,9 @@ class EquipmentSection:
         """
         index = data.get("index", None)
         uuid = data.get("SYS_ID", "")
-        name_str = data.get('DEV_ID', data.get('Name', ''))
-        if ',' in name_str:
-            _, name = name_str.split(',', 1)
+        name_str = data.get("DEV_ID", data.get("Name", ""))
+        if "," in name_str:
+            _, name = name_str.split(",", 1)
         else:
             name = name_str
         if not name:
@@ -140,9 +143,6 @@ class EquipmentSection:
             f"设备节解析: index={index}, name={name}, "
             f"电压通道={len(voltages)}, 电流通道={len(currents)}, 开关量通道={len(stas)}"
         )
-        return Equipment(index=index,
-                         uuid=uuid,
-                         name=name,
-                         acvs=voltages,
-                         accs=currents,
-                         stas=stas)
+        return Equipment(
+            index=index, uuid=uuid, name=name, acvs=voltages, accs=currents, stas=stas
+        )

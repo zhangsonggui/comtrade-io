@@ -1,24 +1,26 @@
 from .base_enum import BaseEnum
 from .channel_type import AnalogChannelType, DigitalChannelType
 
+
 class AnalogChannelFlag(BaseEnum):
     """模拟量通道标志枚举
 
     定义模拟量通道的物理量类型，如电压、电流、功率、阻抗等。
     每个枚举值包含：(标志代码, 通道类型, 描述)
     """
+
     TV = ("ACV", AnalogChannelType.A, "工频交流电压")
     TA = ("ACC", AnalogChannelType.A, "工频交流电流")
     DV = ("DV", AnalogChannelType.D, "直流电压")
     DA = ("DA", AnalogChannelType.D, "直流电流")
-    HF = ('HF', AnalogChannelType.D, "高频")
-    FQ = ('FQ', AnalogChannelType.D, "频率")
-    AG = ('AG', AnalogChannelType.O, "相位")
-    AMP = ('AMP', AnalogChannelType.O, "幅值")
-    PW = ('PW', AnalogChannelType.O, "功率")
-    ZX = ('ZX', AnalogChannelType.O, "阻抗")
-    CONST = ('CONST', AnalogChannelType.O, "常量")
-    NONE = ('', AnalogChannelType.O, "常量")
+    HF = ("HF", AnalogChannelType.D, "高频")
+    FQ = ("FQ", AnalogChannelType.D, "频率")
+    AG = ("AG", AnalogChannelType.O, "相位")
+    AMP = ("AMP", AnalogChannelType.O, "幅值")
+    PW = ("PW", AnalogChannelType.O, "功率")
+    ZX = ("ZX", AnalogChannelType.O, "阻抗")
+    CONST = ("CONST", AnalogChannelType.O, "常量")
+    NONE = ("", AnalogChannelType.O, "常量")
 
 
 class DigitalChannelFlag(BaseEnum):
@@ -27,6 +29,7 @@ class DigitalChannelFlag(BaseEnum):
     定义数字量通道的信号类型，包括保护跳闸、断路器位置、开关量、告警等。
     每个枚举值包含：(标志代码, 通道类型, 描述)
     """
+
     GENERAL = ("general", DigitalChannelType.Other, "一般开关量")
     TR = ("Tr", DigitalChannelType.Relay_Act, "保护跳闸")
     Jump_A = ("TrPhsA", DigitalChannelType.Relay_Act, "跳A")

@@ -69,7 +69,7 @@ Trigger_Time=01/01/2024,00:00:01.000000
 File_Type=BINARY
 Time_Multiplier=1
             """.strip(),
-            encoding="utf-8"
+            encoding="utf-8",
         )
         inf = InfFile.from_file(p)
         assert inf is not None
@@ -102,7 +102,7 @@ Channel_ID=Ib
 Phase_ID=B
 Channel_Units=A
             """.strip(),
-            encoding="utf-8"
+            encoding="utf-8",
         )
         model = _eg_from_file(p)
         assert len(model.analogs) == 2
@@ -144,7 +144,7 @@ Channel_ID=Breaker2
 Phase_ID=B
 Normal_State=1
             """.strip(),
-                encoding="utf-8"
+            encoding="utf-8",
         )
         model = _eg_from_file(p)
         assert len(model.statuses) == 2
@@ -166,7 +166,7 @@ def test_parse_equipment_sections():
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
         p.write_text(
-                """
+            """
     [Public Analog_Channel_#1]
     Channel_ID=Ua
     Phase_ID=A
@@ -228,7 +228,7 @@ def test_parse_equipment_sections():
     H_TV_CHNS=1,2,3
     TA_Id_#5=4,5,6
                 """.strip(),
-            encoding="utf-8"
+            encoding="utf-8",
         )
         model = _eg_from_file(p)
 
@@ -268,7 +268,7 @@ def test_parse_with_name_field():
 [ZYHD Bus_#1]
 Name=BusDirect
             """.strip(),
-                encoding="utf-8"
+            encoding="utf-8",
         )
         model = _eg_from_file(p)
         assert len(model.buses) == 1
@@ -280,11 +280,11 @@ def test_parse_empty_name():
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "sample.inf"
         p.write_text(
-                """
+            """
     [ZYHD Bus_#5]
     DEV_ID=
                 """.strip(),
-            encoding="utf-8"
+            encoding="utf-8",
         )
         model = _eg_from_file(p)
         assert len(model.buses) == 1
@@ -368,7 +368,7 @@ def test_kv_pairs():
         "Key2 = Value2 ",
         "  Key3=Value3  ",
         "InvalidLine",
-        "Key4=Value4"
+        "Key4=Value4",
     ]
     result = _kv_pairs(lines)
     assert result["Key1"] == "Value1"
@@ -383,12 +383,12 @@ def test_encoding_handling():
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "gbk.inf"
         p.write_text(
-                """
+            """
     [Public Record_Information]
     Source=测试源
     Location=测试位置
                 """.strip(),
-                encoding="gbk"
+            encoding="gbk",
         )
         inf = InfFile.from_file(p)
         assert inf is not None
@@ -411,7 +411,9 @@ def test_read_real_binary_inf_file():
     # 但EquipmentGroup只包含analogs和statuses字典，我们可以验证这些字典的长度
     # 注意：EquipmentGroup中的analogs和statuses是字典，键从1开始
     assert len(model.analogs) == 155, f"模拟通道数量应为155，实际为{len(model.analogs)}"
-    assert len(model.statuses) == 201, f"状态通道数量应为201，实际为{len(model.statuses)}"
+    assert (
+        len(model.statuses) == 201
+    ), f"状态通道数量应为201，实际为{len(model.statuses)}"
 
     # 验证description中的站点名称（从文件第12行：Station_Name=220kV���վ����）
     # 注意：中文字符可能被正确解析，我们至少验证非空

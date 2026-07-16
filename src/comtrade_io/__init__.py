@@ -4,5 +4,6 @@ __version__ = version("comtrade_io")
 
 from .model.comtrade import Comtrade
 
+
 def version():
     return __version__

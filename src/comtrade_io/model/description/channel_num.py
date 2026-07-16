@@ -9,6 +9,7 @@ class ChannelNum(BaseModel):
     - analog: 模拟量通道数
     - digital: 数字量通道数
     """
+
     total: int = Field(..., description="通道总数", ge=0)
     analog: int = Field(..., description="模拟量通道数", ge=0)
     status: int = Field(..., description="数字量通道数", ge=0)

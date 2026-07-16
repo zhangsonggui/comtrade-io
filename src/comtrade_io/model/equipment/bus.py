@@ -4,11 +4,19 @@ from .branch import ACVBranch
 from .equipment import Equipment
 from ..type import TvInstallSite
 
+
 class Bus(Equipment):
     """母线部件模型"""
-    rated_primary_voltage: float = Field(default=220.0, description="一次额定电压（kV）")
-    rated_secondary_voltage: float = Field(default=100.0, description="二次额定电压（V）")
-    tv_install_site: TvInstallSite = Field(default=TvInstallSite.BUS, description="电压互感器安装位置")
+
+    rated_primary_voltage: float = Field(
+        default=220.0, description="一次额定电压（kV）"
+    )
+    rated_secondary_voltage: float = Field(
+        default=100.0, description="二次额定电压（V）"
+    )
+    tv_install_site: TvInstallSite = Field(
+        default=TvInstallSite.BUS, description="电压互感器安装位置"
+    )
     voltage: ACVBranch = Field(default_factory=ACVBranch, description="电压通道")
 
     def to_dmf(self) -> str:
@@ -25,7 +33,7 @@ class Bus(Equipment):
             f'VRtg="{self.rated_primary_voltage}"',
             f'VRtgSnd="{self.rated_secondary_voltage}"',
             f'VRtgSnd_Pos="{self.tv_install_site.value}"',
-            f'bus_uuid="{self.uuid}"'
+            f'bus_uuid="{self.uuid}"',
         ]
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"\t<scl:Bus {' '.join(attrs)}/>"
@@ -50,6 +58,6 @@ class Bus(Equipment):
             f"RATED_VALUE={self.rated_primary_voltage * 1000}V",
             f"TV_RATIO={self.rated_primary_voltage}kV/{self.rated_secondary_voltage}V",
             f"TV_CHNS={tv_chn_str}",
-            f"TV_POS={self.tv_install_site.value}"
+            f"TV_POS={self.tv_install_site.value}",
         ]
         return "\n".join(attrs)

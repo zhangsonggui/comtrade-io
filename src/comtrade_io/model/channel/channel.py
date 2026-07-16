@@ -27,6 +27,7 @@ class ChannelType(IdxOrgBaseModel):
         type: 通道类型，可以是模拟通道类型或数字通道类型
         flag: 通道标志，用于标识通道的具体用途
     """
+
     type: AnalogChannelType | DigitalChannelType | None = Field(
         default=None, description="通道类型"
     )
@@ -51,12 +52,13 @@ class ChannelBaseModel(ChannelType):
         equip: 被监视的电路元件
         data: 通道数据，一维数组
     """
+
     name: str | None = Field(default=None, description="通道标识")
     phase: Phase | None = Field(default=Phase.NONE, description="通道相别标识")
     equip: str | None = Field(default=None, description="被监视的电路元件")
     data: Any | None = Field(default=None, description="通道数据，一维数组")
 
-    @field_serializer('data')
+    @field_serializer("data")
     def serialize_data(self, data: Any) -> list | None:
         """序列化通道数据
 
@@ -86,7 +88,7 @@ class ChannelBaseModel(ChannelType):
         return f"{self.index},{self.name},{phase_value},{self.equip}"
 
     @classmethod
-    def from_str(cls, _str: str) -> 'ChannelBaseModel':
+    def from_str(cls, _str: str) -> "ChannelBaseModel":
         """从逗号分隔的字符串反序列化通道对象
 
         将配置文件中的通道信息字符串解析为ChannelBaseModel对象。
@@ -120,8 +122,8 @@ class ChannelBaseModel(ChannelType):
         if isinstance(other_value, BaseEnum):
             try:
                 return other_value == default
-            except Exception:
-                return other_value.name == getattr(default, 'name', None)
+            except (AttributeError, TypeError):
+                return other_value.name == getattr(default, "name", None)
         return other_value == default
 
     def sync_from(self, other) -> bool:

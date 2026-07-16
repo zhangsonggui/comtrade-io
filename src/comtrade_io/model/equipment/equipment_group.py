@@ -21,8 +21,11 @@ from ...utils.equipment_helpers import (
 
 logger = get_logger()
 
+
 class EquipmentGroup(BaseModel):
-    description: Description = Field(default_factory=Description, description="描述文件")
+    description: Description = Field(
+        default_factory=Description, description="描述文件"
+    )
     buses: list[Bus] | None = Field(default_factory=list, description="母线")
     lines: list[Line] | None = Field(default_factory=list, description="线路")
     transformers: list[Transformer] | None = Field(

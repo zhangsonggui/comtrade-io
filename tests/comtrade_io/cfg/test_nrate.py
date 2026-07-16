@@ -4,6 +4,7 @@ from pydantic import ValidationError
 from comtrade_io.model.description import Segment
 from comtrade_io.parser.description import SegmentParser
 
+
 def test_from_str_case():
     nr = SegmentParser.from_str("1920,1000")
     assert nr is not None

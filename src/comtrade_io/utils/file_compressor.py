@@ -1,6 +1,7 @@
 """
 文件压缩工具
 """
+
 from __future__ import annotations
 
 import zipfile
@@ -13,7 +14,9 @@ from .logging import get_logger
 logger = get_logger(__name__)
 
 
-def generate_filename_with_timestamp(suffix: str = ".zip", fmt: str = "%Y%m%d_%H%M%S_%f") -> str:
+def generate_filename_with_timestamp(
+    suffix: str = ".zip", fmt: str = "%Y%m%d_%H%M%S_%f"
+) -> str:
     """
     以当前时间生成文件名
 
@@ -70,7 +73,9 @@ class FileCompressor:
 
         # 如果未传入 zip_name，使用时间戳生成
         if zip_name is None:
-            zip_name = generate_filename_with_timestamp(suffix=".zip", fmt="%Y%m%d_%H%M%S_%f")
+            zip_name = generate_filename_with_timestamp(
+                suffix=".zip", fmt="%Y%m%d_%H%M%S_%f"
+            )
 
         zip_path = output_dir / zip_name
 
@@ -99,15 +104,13 @@ class FileCompressor:
         common_parent = None
         if preserve_structure and len(files_to_compress) > 1:
             try:
-                common_parent = Path(
-                    str(files_to_compress[0].parent)
-                ).resolve()
+                common_parent = Path(str(files_to_compress[0].parent)).resolve()
                 for file_path in files_to_compress[1:]:
                     current = Path(str(file_path.parent)).resolve()
                     # 找到公共父目录
                     while not str(current).startswith(str(common_parent)):
                         common_parent = common_parent.parent
-            except Exception:
+            except (OSError, ValueError):
                 # 如果无法计算公共父目录，使用第一个文件的目录
                 common_parent = files_to_compress[0].parent
 
@@ -134,7 +137,7 @@ class FileCompressor:
             logger.info(f"压缩完成: {zip_path} (共 {len(files_to_compress)} 个文件)")
             return zip_path
 
-        except Exception as e:
+        except (OSError, zipfile.BadZipFile, RuntimeError) as e:
             logger.error(f"压缩文件时出错: {e}")
             raise
 
@@ -143,7 +146,7 @@ class FileCompressor:
         """检查文件是否可读"""
         try:
             return path.exists() and path.is_file() and path.stat().st_size >= 0
-        except Exception:
+        except OSError:
             return False
 
 
@@ -165,4 +168,6 @@ def compress_files(
     Returns:
         压缩文件的完整路径
     """
-    return FileCompressor.compress_files(files, output_dir, zip_name, preserve_structure)
+    return FileCompressor.compress_files(
+        files, output_dir, zip_name, preserve_structure
+    )

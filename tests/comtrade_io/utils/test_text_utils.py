@@ -1,5 +1,6 @@
 from comtrade_io.utils.text_utils import text_split
 
+
 def test_single_line_basic():
     assert_list = text_split("a,b,c")
     assert assert_list == ["a", "b", "c"]

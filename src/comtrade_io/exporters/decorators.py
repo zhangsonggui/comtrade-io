@@ -20,6 +20,7 @@ logger = get_logger()
 
 class ExportFormat(str, Enum):
     """导出格式枚举"""
+
     MULTI_FILE = "multi_file"
     CFF = "cff"
     JSON = "json"
@@ -34,10 +35,13 @@ def export_format(func: Callable) -> Callable:
     """
 
     @wraps(func)
-    def wrapper(self, output_path: str | Path | ComtradeFile,
-                format: str = "multi_file",
-                data_format: str = "BINARY",
-                **kwargs) -> Any:
+    def wrapper(
+        self,
+        output_path: str | Path | ComtradeFile,
+        format: str = "multi_file",
+        data_format: str = "BINARY",
+        **kwargs,
+    ) -> Any:
         # 验证并转换格式枚举
         try:
             export_fmt = ExportFormat(format.lower())

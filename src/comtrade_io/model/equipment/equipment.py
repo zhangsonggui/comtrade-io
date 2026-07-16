@@ -4,10 +4,12 @@ from ..description import IndexBaseModel, ReferenceBaseModel
 from ..channel.analog import Analog
 from ..channel.status import Status
 
+
 class Equipment(IndexBaseModel, ReferenceBaseModel):
     """
     设备基础类
     """
+
     name: str = Field(..., description="设备名称")
     uuid: str = Field(default="", description="设备标识")
     stas: list[Status] = Field(default_factory=list, description="开关量通道")

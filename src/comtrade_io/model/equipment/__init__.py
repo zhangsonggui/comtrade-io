@@ -4,8 +4,8 @@ from .line import Line
 from .transformer import Transformer
 
 __all__ = [
-    'Line',
-    'Transformer',
-    'Bus',
-    'EquipmentGroup',
+    "Line",
+    "Transformer",
+    "Bus",
+    "EquipmentGroup",
 ]

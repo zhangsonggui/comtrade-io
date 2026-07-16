@@ -9,6 +9,6 @@ class InfSection:
     def from_str(cls, text: str):
         try:
             return InfFile.from_str(text).to_equipment_group()
-        except Exception as e:
+        except (ValueError, IndexError, TypeError) as e:
             logger.error(f"解析 CFF 中的 INF 信息失败: {e}")
             return None

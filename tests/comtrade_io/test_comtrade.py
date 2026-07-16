@@ -20,7 +20,9 @@ def comtrade():
 @pytest.fixture(scope="session")
 def expected_df():
     """从CSV文件加载期望数据（跳过标题行）"""
-    df = pd.read_csv(CSV_FILE, header=None, encoding="gbk", skiprows=1, low_memory=False)
+    df = pd.read_csv(
+        CSV_FILE, header=None, encoding="gbk", skiprows=1, low_memory=False
+    )
     return df
 
 
@@ -186,7 +188,12 @@ class TestGetTransformer:
         """测试变压器电压通道数据"""
         trans = comtrade.get_transformer("1号主变")
         for winding in trans.trans_winds:
-            for ch in [winding.voltage.ua, winding.voltage.ub, winding.voltage.uc, winding.voltage.un]:
+            for ch in [
+                winding.voltage.ua,
+                winding.voltage.ub,
+                winding.voltage.uc,
+                winding.voltage.un,
+            ]:
                 if ch.index is not None:
                     col_idx = ch.index + 2
                     actual = comtrade.get_data().iloc[:, col_idx].values
@@ -279,7 +286,12 @@ class TestDataConsistency:
         for bus in comtrade.buses:
             loaded_bus = comtrade.get_bus(bus.name)
             assert loaded_bus is not None
-            for ch in [loaded_bus.voltage.ua, loaded_bus.voltage.ub, loaded_bus.voltage.uc, loaded_bus.voltage.un]:
+            for ch in [
+                loaded_bus.voltage.ua,
+                loaded_bus.voltage.ub,
+                loaded_bus.voltage.uc,
+                loaded_bus.voltage.un,
+            ]:
                 if ch.index is not None:
                     col_idx = ch.index + 2
                     assert ch.data is not None

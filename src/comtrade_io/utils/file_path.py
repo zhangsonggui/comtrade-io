@@ -52,7 +52,9 @@ class FilePath(BaseModel):
         返回:
             FilePath: 根据 file_name 创建的 FilePath 实例
         """
-        if file_name is None or (isinstance(file_name, str) and file_name.strip() == ""):
+        if file_name is None or (
+            isinstance(file_name, str) and file_name.strip() == ""
+        ):
             return cls()
         if isinstance(file_name, str):
             file_name = Path(file_name.strip())
@@ -74,7 +76,7 @@ class FilePath(BaseModel):
         try:
             with open(self.path, "rb") as f:
                 f.read(1)
-        except Exception as e:
+        except (OSError, PermissionError) as e:
             logger.debug(f"文件{self.path}不可读: {e}")
             self.is_readable = False
 

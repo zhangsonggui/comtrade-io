@@ -65,7 +65,7 @@ class ACVBranch(BaseModel):
 
     @classmethod
     def from_xml(
-            cls, element: Element, ns: dict = None, analog_channels: dict = None
+        cls, element: Element, ns: dict = None, analog_channels: dict = None
     ) -> "ACVBranch":
         """
         从XML元素中解析交流电压分支
@@ -105,9 +105,7 @@ class ACVBranch(BaseModel):
         return (self.ua, self.ub, self.uc, self.ul, self.un)
 
     @classmethod
-    def from_analog_channels(
-            cls, analog_channels: list[Analog]
-    ) -> "ACVBranch":
+    def from_analog_channels(cls, analog_channels: list[Analog]) -> "ACVBranch":
         """
         根据模拟通道列表自动生成ACVBranch实例
 
@@ -199,7 +197,7 @@ class ACCBranch(BaseModel):
 
     @classmethod
     def from_xml(
-            cls, element: Element, ns: dict = None, analog_channels: dict = None
+        cls, element: Element, ns: dict = None, analog_channels: dict = None
     ) -> "ACCBranch":
         """
         从XML元素中解析交流电流分支
@@ -240,9 +238,7 @@ class ACCBranch(BaseModel):
         return (self.ia, self.ib, self.ic, self.i0)
 
     @classmethod
-    def from_analog_channels(
-            cls, channels: list[Analog]
-    ) -> list['ACCBranch']:
+    def from_analog_channels(cls, channels: list[Analog]) -> list["ACCBranch"]:
         """
         根据模拟通道列表自动生成ACCBranch实例
 
@@ -260,10 +256,10 @@ class ACCBranch(BaseModel):
             ACCBranch: 交流电流分支实例
         """
         current_phase_map = {
-            Phase.PHASE_A: 'ia',
-            Phase.PHASE_B: 'ib',
-            Phase.PHASE_C: 'ic',
-            Phase.PHASE_N: 'i0'
+            Phase.PHASE_A: "ia",
+            Phase.PHASE_B: "ib",
+            Phase.PHASE_C: "ic",
+            Phase.PHASE_N: "i0",
         }
 
         current_channels = []
@@ -280,7 +276,7 @@ class ACCBranch(BaseModel):
             end_idx = min(start_idx + branch_size, len(current_channels))
             branch_channels = current_channels[start_idx:end_idx]
 
-            kwargs = {'idx': i + 1}
+            kwargs = {"idx": i + 1}
             for channel in branch_channels:
                 if channel.phase in current_phase_map:
                     attr_name = current_phase_map[channel.phase]

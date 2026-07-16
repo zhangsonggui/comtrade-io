@@ -5,6 +5,7 @@ import pytest
 from comtrade_io.model.description import ChannelNum
 from comtrade_io.parser.description import ChannelNumParser
 
+
 def test_str_full():
     cn = ChannelNum(total=288, analog=96, status=192)
     assert str(cn) == "288,96A,192D"

@@ -3,6 +3,7 @@
 
 定义母线部件类，用于从XML元素解析母线模型。
 """
+
 from xml.etree.ElementTree import Element
 
 from .equipment_element import EquipmentElement
@@ -16,11 +17,13 @@ class BusElement(EquipmentElement):
     """母线部件处理"""
 
     @classmethod
-    def from_xml(cls,
-                 element: Element,
-                 ns: dict,
-                 analog_channels: dict = None,
-                 status_channels: dict = None) -> Bus:
+    def from_xml(
+        cls,
+        element: Element,
+        ns: dict,
+        analog_channels: dict = None,
+        status_channels: dict = None,
+    ) -> Bus:
         """
         从XML元素解析母线模型
 
@@ -36,28 +39,32 @@ class BusElement(EquipmentElement):
         base = super().from_xml(element, ns, analog_channels, status_channels)
 
         # 解析母线特定属性
-        v_rtg = parse_float(element.get('VRtg', 0.0))
-        v_rtg_snd = parse_float(element.get('VRtgSnd', 100.0))
-        v_rtg_snd_pos_str = element.get('VRtgSnd_Pos', "")
-        v_rtg_snd_pos = TvInstallSite.from_value(v_rtg_snd_pos_str, default=TvInstallSite.BUS)
+        v_rtg = parse_float(element.get("VRtg", 0.0))
+        v_rtg_snd = parse_float(element.get("VRtgSnd", 100.0))
+        v_rtg_snd_pos_str = element.get("VRtgSnd_Pos", "")
+        v_rtg_snd_pos = TvInstallSite.from_value(
+            v_rtg_snd_pos_str, default=TvInstallSite.BUS
+        )
 
         bus = Bus(
-                index=base.index,
-                name=base.name,
-                reference=base.reference,
-                uuid=base.uuid,
-                anas=base.anas,
-                stas=base.stas,
-                rated_primary_voltage=v_rtg,
-                rated_secondary_voltage=v_rtg_snd,
-                tv_install_site=v_rtg_snd_pos
+            index=base.index,
+            name=base.name,
+            reference=base.reference,
+            uuid=base.uuid,
+            anas=base.anas,
+            stas=base.stas,
+            rated_primary_voltage=v_rtg,
+            rated_secondary_voltage=v_rtg_snd,
+            tv_install_site=v_rtg_snd_pos,
         )
 
         # 查找 ACVChn 元素（支持带/不带命名空间）
-        acv_chn_elem = element.find('scl:ACVChn', ns) if 'scl' in ns else None
+        acv_chn_elem = element.find("scl:ACVChn", ns) if "scl" in ns else None
         if acv_chn_elem is None:
-            acv_chn_elem = element.find('ACVChn')
+            acv_chn_elem = element.find("ACVChn")
         if acv_chn_elem is not None:
-            bus.voltage = ACVBranch.from_xml(acv_chn_elem, ns, analog_channels=analog_channels)
+            bus.voltage = ACVBranch.from_xml(
+                acv_chn_elem, ns, analog_channels=analog_channels
+            )
 
         return bus

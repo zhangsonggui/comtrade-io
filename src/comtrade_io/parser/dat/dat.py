@@ -124,7 +124,7 @@ class DatFile:
                 header=None,
             )
             content = content.fillna(0)
-        except Exception as e:
+        except (pd.errors.ParserError, OSError, ValueError) as e:
             raise ValueError(f"读取ASCII数据失败: {e}")
 
         content = self._apply_type_mapping(content)

@@ -34,7 +34,7 @@ def test_from_json_case():
 
 
 def test_from_json_missing_field():
-    json_str = '{}'
+    json_str = "{}"
     with pytest.raises(Exception):
         DateTimeParser.from_json(json_str)
 

@@ -26,7 +26,7 @@ def export_csv(
 
     path = _resolve_export_path(output_path, ".csv")
 
-    headers = ['Point', 'Time']
+    headers = ["Point", "Time"]
     for idx in sorted(comtrade.analogs.keys()):
         a = comtrade.analogs[idx]
         headers.append(f"{a.name or f'A{idx}'}")

@@ -13,7 +13,7 @@ from loguru import logger
 # 环境文件路径
 _env_files = [
     Path(__file__).resolve().parents[1] / ".env",  # comtrade/.env
-    Path(__file__).resolve().parents[1] / ".." / ".env"  # repo root .env
+    Path(__file__).resolve().parents[1] / ".." / ".env",  # repo root .env
 ]
 
 # 默认配置常量
@@ -44,7 +44,7 @@ def _load_env() -> dict:
                         if "=" in line:
                             k, v = line.split("=", 1)
                             env[k.strip()] = v.strip().strip('"').strip("'")
-            except Exception:
+            except (OSError, UnicodeDecodeError):
                 # .env 文件加载失败不影响主流程，此时 logger 尚未初始化
                 pass
             break
@@ -57,7 +57,9 @@ _LOG_LEVEL = _env.get("LOG_LEVEL", _DEFAULT_LEVEL)
 _LOG_TO_FILE = _env.get("LOG_TO_FILE", "").lower() in ("true", "1", "yes", "on")
 _LOG_FILE_PATH = _env.get("LOG_FILE_PATH", _DEFAULT_LOG_FILE_PATH)
 _LOG_FILE_MAX_MB = int(_env.get("LOG_FILE_MAX_MB", _DEFAULT_LOG_FILE_MAX_MB) or 0)
-_LOG_FILE_BACKUP_COUNT = int(_env.get("LOG_FILE_BACKUP_COUNT", _DEFAULT_LOG_FILE_BACKUP_COUNT) or 0)
+_LOG_FILE_BACKUP_COUNT = int(
+    _env.get("LOG_FILE_BACKUP_COUNT", _DEFAULT_LOG_FILE_BACKUP_COUNT) or 0
+)
 
 # 全局配置标志
 _configured = False

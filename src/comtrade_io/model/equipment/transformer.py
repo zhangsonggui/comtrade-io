@@ -3,6 +3,7 @@ from pydantic import Field
 from .equipment import Equipment
 from .transformer_winding import TransformerWinding
 
+
 class Transformer(Equipment):
     """
     变压器类
@@ -17,9 +18,12 @@ class Transformer(Equipment):
         anas: 模拟通道列表，继承自基类
         stas: 开关量通道列表，继承自基类
     """
+
     capacity: float = Field(default=0.0, description="变压器额定功率")
     winding_num: int = Field(default=3, description="绕组数量")
-    trans_winds: list[TransformerWinding] = Field(default_factory=list, description="变压器绕组")
+    trans_winds: list[TransformerWinding] = Field(
+        default_factory=list, description="变压器绕组"
+    )
 
     def to_dmf(self):
         """
@@ -33,7 +37,7 @@ class Transformer(Equipment):
             f'trm_name="{self.name}"',
             f'srcRef="{self.reference}"',
             f'pwrRtg="{self.capacity}"',
-            f'transformer_uuid="{self.uuid}"'
+            f'transformer_uuid="{self.uuid}"',
         ]
         attrs = [attr for attr in attrs if attr is not None]
         xml = f"\t<scl:Transformer {' '.join(attrs)}>"
@@ -57,7 +61,7 @@ class Transformer(Equipment):
             f"DEV_ID={self.name}",
             f"SYS_ID={self.uuid}",
             f"CAPACITY={self.capacity}(MVA)",
-            f"WINDING_NUM={len(self.trans_winds)}"
+            f"WINDING_NUM={len(self.trans_winds)}",
         ]
         for trans_wind in self.trans_winds:
             attrs.append(trans_wind.to_inf())

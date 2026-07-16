@@ -142,7 +142,7 @@ class ComtradeFile(BaseModel):
             if data is None:
                 logger.warning(f"未能从 CFF 解析数据: {file_name}")
                 return None
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             logger.error(f"读取 CFF 单文件失败: {file_name}, {e}")
             return None
         logger.info(f"CFF 单文件读取完成: {file_name}")
@@ -164,7 +164,7 @@ class ComtradeFile(BaseModel):
             if data is None:
                 logger.warning(f"未能从 DFR 解析数据: {file_name}")
                 return None
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             logger.error(f"读取 DFR 单文件失败: {file_name}, {e}")
             return None
         logger.info(f"DFR 单文件读取完成: {file_name}")

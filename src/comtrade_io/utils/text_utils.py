@@ -5,10 +5,7 @@
 
 
 def text_split(
-        string: str,
-        split_char: str = ',',
-        strip: bool = True,
-        filter_empty: bool = True
+    string: str, split_char: str = ",", strip: bool = True, filter_empty: bool = True
 ) -> list[str]:
     """
     文本分割函数
@@ -28,9 +25,9 @@ def text_split(
     _str = str(string)
 
     # 统一处理换行符
-    if '\n' in _str or '\r' in _str:
-        _norm = _str.replace('\r\n', '\n').replace('\r', '\n')
-        lines = _norm.split('\n')
+    if "\n" in _str or "\r" in _str:
+        _norm = _str.replace("\r\n", "\n").replace("\r", "\n")
+        lines = _norm.split("\n")
     else:
         lines = [_str]
 
